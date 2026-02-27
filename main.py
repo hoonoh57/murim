@@ -11,7 +11,7 @@ def main():
     
     try:
         # 에이전트 초기화
-        # IS_MOCK 상테 확인 (기본 True)
+        # IS_MOCK 상태 확인 (기본 True)
         import os
         from dotenv import load_dotenv
         load_dotenv()
@@ -22,6 +22,21 @@ def main():
         img_gen = ImageGenerator(is_mock=is_mock)
         vid_gen = VideoGenerator(is_mock=is_mock)
         audio_gen = AudioGenerator(is_mock=is_mock)
+
+        # 메뉴 선택
+        print("\n[메뉴 선택]")
+        print(" 1. 정식 에피소드 제작 (Production)")
+        print(" 2. 작가 자가 습작 및 진화 (Training/習作)")
+        mode = input("\n번호를 선택하세요: ")
+
+        if mode == "2":
+            print("\n" + "-"*30)
+            print("   WRITER SELF-EVOLUTION MODE")
+            print("-"*30)
+            focus = input("이번 습작의 집중 포인트를 입력하세요 (예: 비장한 대사, 내공 묘사): ") or "정통 무협의 분위기"
+            result = writer.self_practice(focus)
+            print(f"\n{result}")
+            return
 
         # 1. 시나리오 생성 (Writer Agent)
         print(f"\n[STEP 1] 에피소드 기획 및 집필 (Mock: {is_mock})")
