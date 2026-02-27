@@ -1,0 +1,31 @@
+from typing import List, Dict, Optional
+from pydantic import BaseModel, Field
+
+class Scene(BaseModel):
+    id: str
+    time_range: str
+    description: str
+    camera: str
+    emotion: str
+    image_prompt: str
+    video_prompt: str
+
+class Critique(BaseModel):
+    persona: str
+    score: int = Field(ge=0, le=10)
+    comment: str
+    suggestions: List[str]
+
+class Scenario(BaseModel):
+    title: str
+    synopsis: str
+    script: str
+    scenes: List[Scene]
+    sound_guide: Dict[str, str]
+    critiques: Optional[List[Critique]] = None
+    final_score: Optional[float] = None
+
+class EpisodeRequest(BaseModel):
+    topic: str
+    events: str
+    version: int = 1
