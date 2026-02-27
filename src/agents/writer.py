@@ -4,9 +4,15 @@ from typing import List
 from src.core.models import Scenario, Scene, EpisodeRequest
 from src.api.ai_clients import ScenarioEngine
 
+from anthropic import Anthropic
+
 class WriterAgent:
     def __init__(self, is_mock: bool = True):
+        self.is_mock = is_mock
         self.engine = ScenarioEngine(is_mock=is_mock)
+        self.api_key = os.getenv("ANTHROPIC_API_KEY")
+        self.model = os.getenv("ANTHROPIC_MODEL", "claude-3-opus-20240229")
+        self.client = Anthropic(api_key=self.api_key) if not is_mock and self.api_key else None
         self.evolution_log_path = "outputs/evolution/writer_evolution.json"
         os.makedirs(os.path.dirname(self.evolution_log_path), exist_ok=True)
         
@@ -21,12 +27,22 @@ class WriterAgent:
         
         # 1. 습작 주제 선정 및 생성
         practice_topic = f"습작: {focus_point} 강화 훈련"
-        practice_events = "기존 스타일에서 벗어나 더 깊은 정통 무협의 정수를 담는 연습"
+        practice_events = f"무협의 정수를 담기 위한 {focus_point} 집중 수련"
         
         scenario = self.write_scenario(EpisodeRequest(topic=practice_topic, events=practice_events))
         
         # 2. 스스로 회고 (Self-Reflection)
-        reflection = f"이번 습작에서는 {focus_point}를 중점적으로 다루었습니다. 이전보다 표현의 깊이가 좋아졌으나, 여전히 감정 묘사에서 보완이 필요합니다."
+        if self.is_mock:
+            reflection = f"이번 습작에서는 {focus_point}를 중점적으로 다루었습니다. 이전보다 표현의 깊이가 좋아졌으나, 여전히 감정 묘사에서 보완이 필요합니다."
+        else:
+            print("[Writer] AI 자기 성찰(Self-Reflection) 진행 중...")
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=1000,
+                system="당신은 정통 무협 작가입니다. 자신이 방금 쓴 시나리오를 읽고, 장점과 개선점, 그리고 다음 수련 방향을 성찰하세요.",
+                messages=[{"role": "user", "content": f"작성한 시나리오:\n{scenario.script}\n\n위 시나리오를 바탕으로 자기 성찰 로그를 작성해주세요."}]
+            )
+            reflection = response.content[0].text
         
         # 3. 진화 로그 스토리지 업데이트
         self._save_evolution_record(practice_topic, focus_point, scenario, reflection)

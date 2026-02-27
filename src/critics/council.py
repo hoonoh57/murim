@@ -1,9 +1,15 @@
+import os
+import json
 from typing import List
+from anthropic import Anthropic
 from src.core.models import Scenario, Critique
 
 class CouncilAgent:
     def __init__(self, is_mock: bool = True):
         self.is_mock = is_mock
+        self.api_key = os.getenv("ANTHROPIC_API_KEY")
+        self.model = os.getenv("ANTHROPIC_MODEL", "claude-3-opus-20240229")
+        self.client = Anthropic(api_key=self.api_key) if not is_mock and self.api_key else None
         self.personas = [
             "정통무협 마니아 (고증 중시)",
             "영상 연출가 (비주얼 중시)",
@@ -20,7 +26,7 @@ class CouncilAgent:
         
         for persona in self.personas:
             if self.is_mock:
-                score = 8 # Mock score
+                score = 8
                 critique = Critique(
                     persona=persona,
                     score=score,
@@ -28,12 +34,33 @@ class CouncilAgent:
                     suggestions=["내공 묘사를 더 비장하게", "첫 장면 훅을 더 강하게"]
                 )
             else:
-                # Actual AI critique logic would go here
-                score = 7 
-                critique = Critique(persona=persona, score=score, comment="Good progress", suggestions=[])
+                print(f"[Council] {persona} 비평 중...")
+                prompt = f"당신은 '{persona}'입니다. 다음 무협 시나리오를 비평하고 0~10점의 점수와 의견을 JSON 형식으로 작성해주세요.\n시나리오 제목: {scenario.title}\n대본: {scenario.script}"
+                
+                response = self.client.messages.create(
+                    model=self.model,
+                    max_tokens=1000,
+                    system=f"당신은 무협 시나리오 비평가 {persona}입니다. 반드시 {{\"score\": 8, \"comment\": \"...\", \"suggestions\": [\"...\", \"...\"]}} 형식의 JSON으로만 답하세요.",
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                
+                try:
+                    content = response.content[0].text
+                    if "```json" in content:
+                        content = content.split("```json")[1].split("```")[0].strip()
+                    res_json = json.loads(content)
+                    critique = Critique(
+                        persona=persona,
+                        score=res_json.get("score", 7),
+                        comment=res_json.get("comment", ""),
+                        suggestions=res_json.get("suggestions", [])
+                    )
+                except Exception as e:
+                    print(f"[Council Error] {persona} 비평 실패: {e}")
+                    critique = Critique(persona=persona, score=7, comment="비평 오류", suggestions=[])
             
             critiques.append(critique)
-            total_score += score
+            total_score += critique.score
             
         scenario.critiques = critiques
         scenario.final_score = total_score / len(self.personas)

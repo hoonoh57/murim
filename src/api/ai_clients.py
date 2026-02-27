@@ -20,6 +20,7 @@ class ScenarioEngine:
     def __init__(self, api_key=None, is_mock=True):
         self.is_mock = is_mock
         self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
+        self.model = os.getenv("ANTHROPIC_MODEL", "claude-3-opus-20240229")
         self.client = Anthropic(api_key=self.api_key) if not is_mock and self.api_key else None
         from src.core.prompts import SYSTEM_PROMPT
         self.system_prompt = SYSTEM_PROMPT
@@ -45,9 +46,9 @@ class ScenarioEngine:
             }
         
         # Real API Call
-        print(f"[API] Calling Anthropic for: {topic}")
+        print(f"[API] Calling Anthropic ({self.model}) for: {topic}")
         message = self.client.messages.create(
-            model="claude-3-opus-20240229",
+            model=self.model,
             max_tokens=4000,
             system=self.system_prompt,
             messages=[

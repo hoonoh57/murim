@@ -15,5 +15,27 @@ class EvolutionLog(BaseModel):
     writer_id: str = "Heavenly_Writer_01"
     current_level: int = 1
     total_practices: int = 0
+    total_xp: int = 0
     experiences: List[str] = [] # 습득한 기술/노하우 목록
     practice_history: List[DraftPractice] = []
+
+    def add_practice(self, practice: DraftPractice):
+        self.practice_history.append(practice)
+        self.total_practices += 1
+        
+        # XP 계산: 습작 1회당 100 XP
+        self.total_xp += 100
+        print(f"[Evolution] XP gained: +100 (Total: {self.total_xp})")
+        
+        self.check_level_up()
+
+    def check_level_up(self):
+        # 레벨업 공식: 레벨 * 500 XP 필요
+        needed_xp = self.current_level * 500
+        if self.total_xp >= needed_xp:
+            self.current_level += 1
+            msg = f"✨ LEVEL UP! {self.current_level-1} -> {self.current_level} ✨"
+            self.experiences.append(f"Level {self.current_level} 달성")
+            print("\n" + "*"*30)
+            print(msg)
+            print("*"*30 + "\n")
