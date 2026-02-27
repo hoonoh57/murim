@@ -19,6 +19,13 @@ class EvolutionLog(BaseModel):
     experiences: List[str] = [] # 습득한 기술/노하우 목록
     practice_history: List[DraftPractice] = []
 
+    def add_practice(self, practice: DraftPractice, xp_amount: int):
+        self.practice_history.append(practice)
+        self.total_practices += 1
+        self.total_xp += xp_amount
+        print(f"[Evolution] {self.agent_id} XP gained: +{xp_amount} (Total: {self.total_xp})")
+        self.check_level_up()
+
     def check_level_up(self):
         # 레벨업 공식: 레벨 * 500 XP 필요
         needed_xp = self.current_level * 500

@@ -1,7 +1,7 @@
 import os
 import json
 from typing import List
-from src.core.models import Scenario, Scene, EpisodeRequest
+from src.core.models import Scenario, Scene, EpisodeRequest, Critique
 from src.api.ai_clients import ScenarioEngine
 from src.evolution.skill_tracker import DraftPractice
 from src.agents.base_agent import BaseAgent
@@ -16,7 +16,7 @@ class WriterAgent(BaseAgent):
         raw_data = self.engine.generate_episode(request.topic, request.events)
         return self._parse_scenario(raw_data, request.topic, request.events)
 
-    def revise_scenario(self, scenario: Scenario, critiques: List[dict]) -> Scenario:
+    def revise_scenario(self, scenario: Scenario, critiques: List[Critique]) -> Scenario:
         """비평가의 의견을 반영하여 시나리오를 수정합니다."""
         print(f"[Writer] Revising scenario based on council feedback...")
         

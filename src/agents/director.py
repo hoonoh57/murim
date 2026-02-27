@@ -2,6 +2,7 @@ import statistics
 from typing import List, Dict
 from src.agents.base_agent import BaseAgent
 from src.core.models import EpisodeRequest, Scenario
+from src.evolution.skill_tracker import DraftPractice, EvolutionLog
 
 class DirectorAgent(BaseAgent):
     def __init__(self, is_mock: bool = True):
@@ -9,7 +10,7 @@ class DirectorAgent(BaseAgent):
         
     def check_balance(self, agents: Dict[str, BaseAgent]) -> dict:
         """전 에이전트 레벨 조회 -> 편차 분석 -> 훈련 명령 생성"""
-        print("[Director] Checking ecosystem balance...")
+        print("\n[Director] Checking ecosystem balance...")
         levels = {name: agent.get_level() for name, agent in agents.items()}
         
         max_lv = max(levels.values())
@@ -34,37 +35,69 @@ class DirectorAgent(BaseAgent):
         }
         return report
 
+    def auto_train(self, report: dict, agents: Dict[str, BaseAgent]):
+        """밸런스 보고서에 따른 자동 훈련 실행"""
+        if not report["training_targets"]:
+            print("[Director] All agents are balanced. No auto-training needed.")
+            return
+
+        print(f"[Director] Auto-training initiated for {len(report['training_targets'])} agents.")
+        for target in report["training_targets"]:
+            agent_name = target["agent"]
+            agent = agents.get(agent_name)
+            if agent:
+                print(f" -> Training {agent_name} (Priority: {target['priority']})")
+                agent.self_practice(focus="Ecosystem Balance Optimization")
+
     def orchestrate_episode(self, topic: str, events: str, agents: Dict[str, BaseAgent]):
-        """전체 파이프라인 조율"""
+        """전체 파이프라인 조율 (비평-수정 루프 포함)"""
         print(f"\n[Director] Starting orchestration for: {topic}")
         
-        # 1. 시나리오 생성 (Writer)
         writer = agents.get("writer")
-        if not writer: return
+        if not writer: 
+            print("[Director] Error: WriterAgent not found.")
+            return None
         
+        # 1. 시나리오 생성 (Writer)
         print("\n[GATE 1] Scenario Generation")
         scenario = writer.write_scenario(EpisodeRequest(topic=topic, events=events))
         
-        # 2. 비평 및 승인
-        scenario = writer.council.evaluate(scenario)
-        if scenario.final_score < 7.0:
-            print("[Director] Scenario quality below threshold. Re-writing recommended.")
-            # 실제로는 여기서 루프를 돌거나 중단 가능
-        
-        print(f"[Director] Episode '{scenario.title}' is ready for production assets.")
+        # 2. 비평 및 수정 루프 (최대 3회)
+        attempts = 0
+        max_attempts = 3
+        while attempts < max_attempts:
+            attempts += 1
+            print(f"\n[Director] Quality Review - Attempt {attempts}/{max_attempts}")
+            scenario = writer.council.evaluate(scenario)
+            
+            if scenario.final_score >= 7.5:
+                print(f"[Director] Quality approved ({scenario.final_score:.1f}). Proceeding...")
+                break
+            
+            if attempts < max_attempts:
+                print(f"[Director] Quality ({scenario.final_score:.1f}) below threshold (7.5). Ordering REWORK.")
+                scenario = writer.revise_scenario(scenario, scenario.critiques)
+            else:
+                print(f"[Director] Maximum rework attempts reached. Current Score: {scenario.final_score:.1f}")
+
+        if scenario.final_score < 6.0:
+            print("[Director] KILL: Final quality unacceptable. Production cancelled.")
+            return None
+            
+        print(f"[Director] Episode '{scenario.title}' approved for production (Final Score: {scenario.final_score:.1f}).")
         return scenario
 
     def self_practice(self, focus: str):
         print(f"[Director] Self-practice: Optimizing orchestration rules for {focus}")
-        # 감독은 직접 산출물을 만들지 않으므로 규칙 최적화 시뮬레이션으로 대체
-        score_v1 = 7.0
-        score_v2 = 8.5 # Simulated improvement
+        # 감독 보너스는 오케스트레이션 성공률 등으로 계산 가능하나, 현재는 시뮬레이션
+        score_v1 = 7.0 + (self.log.current_level * 0.1)
+        score_v2 = min(9.5, score_v1 + 0.5)
         
         practice = DraftPractice(
             topic="Orchestration Optimization",
             focus_point=focus,
             scenario=Scenario(title="N/A", synopsis="N/A", script="N/A", scenes=[], sound_guide={}),
-            self_reflection="감독 로직을 최적화했습니다.",
+            self_reflection=f"감독 레벨 {self.log.current_level} 수련 완료. 조율 로직 최적화.",
             evolution_step=self.log.current_level
         )
         self.add_experience(practice, score_v1, score_v2)

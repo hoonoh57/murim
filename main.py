@@ -15,19 +15,38 @@ def main():
         load_dotenv()
         is_mock = os.getenv("IS_MOCK", "true").lower() == "true"
         
+        from src.agents.imaging import ImagingAgent
+        from src.agents.video import VideoAgent
+        from src.agents.audio import AudioAgent
+        from src.agents.camera import CameraAgent
+        from src.agents.art_direction import ArtDirectionAgent
+        from src.agents.marketing import MarketingAgent
+        
         director = DirectorAgent(is_mock=is_mock)
         writer = WriterAgent(is_mock=is_mock)
-        img_gen = ImageGenerator(is_mock=is_mock)
-        vid_gen = VideoGenerator(is_mock=is_mock)
-        audio_gen = AudioGenerator(is_mock=is_mock)
+        imaging = ImagingAgent(is_mock=is_mock)
+        video = VideoAgent(is_mock=is_mock)
+        audio = AudioAgent(is_mock=is_mock)
+        camera = CameraAgent(is_mock=is_mock)
+        art_dir = ArtDirectionAgent(is_mock=is_mock)
+        marketing = MarketingAgent(is_mock=is_mock)
 
-        agents = {"writer": writer, "director": director} # 추후 확장
+        agents = {
+            "director": director,
+            "writer": writer,
+            "imaging": imaging,
+            "video": video,
+            "audio": audio,
+            "camera": camera,
+            "art_direction": art_dir,
+            "marketing": marketing
+        }
 
         # 메뉴 선택
         print("\n[메뉴 선택]")
         print(" 1. 정식 에피소드 제작 (Production)")
         print(" 2. 작가 자가 습작 및 진화 (Training/習作)")
-        print(" 3. 시스템 밸런스 체크 (Balance Check)")
+        print(" 3. 시스템 밸런스 체크 및 자동 훈련 (Balance & Auto-Train)")
         mode = input("\n번호를 선택하세요: ")
 
         if mode == "3":
@@ -35,6 +54,11 @@ def main():
             print(f"\n[Balance Report] Gap: {report['gap']}, Balanced: {report['balanced']}")
             for target in report['training_targets']:
                 print(f" -> Training required for: {target['agent']} (Priority: {target['priority']})")
+            
+            if not report['balanced']:
+                do_train = input("\n부족한 에이전트를 자동 습작 시킬까요? (y/n): ").lower()
+                if do_train == 'y':
+                    director.auto_train(report, agents)
             return
 
         if mode == "2":
@@ -57,18 +81,19 @@ def main():
             print("제작이 중단되었습니다.")
             return
 
-        # 3. 비주얼 및 오디오 생성 (기존 로직 유지, 추후 에이전트로 전환)
+        # 3. 비주얼 및 오디오 생성
         print("\n[STEP 3] 리소스 제작")
         choice = input("\n리소스를 제작할까요? (y/n): ").lower()
         if choice != 'y': return
 
         for scene in scenario.scenes:
             print(f"\n--- {scene.id} 제작 ---")
-            img_path = img_gen.generate(scene.image_prompt)
-            vid_path = vid_gen.generate_from_image(img_path, scene.video_prompt)
+            img_path = imaging.generate(scene.image_prompt)
+            vid_path = video.generate_from_image(img_path, scene.video_prompt)
+            print(f"-> 비디오 경로: {vid_path}")
         
-        audio_path = audio_gen.tts(scenario.script)
-        print(f"-> 오디오 경로: {audio_path}")
+        audio_path = audio.tts(scenario.script)
+        print(f"-> 최종 오디오 경로: {audio_path}")
 
         print("\n" + "="*50)
         print("   [SUCCESS] 에피소드 제작 완료!")
