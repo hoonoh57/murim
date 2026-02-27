@@ -2,7 +2,6 @@ import os
 import json
 from anthropic import Anthropic
 from src.evolution.skill_tracker import EvolutionLog, DraftPractice
-from src.api.ai_clients import ScenarioEngine
 from pydantic import BaseModel
 
 from abc import ABC, abstractmethod

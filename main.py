@@ -1,7 +1,19 @@
+import os
+import traceback
+from dotenv import load_dotenv
+
 from src.agents.director import DirectorAgent
 from src.agents.writer import WriterAgent
+from src.agents.imaging import ImagingAgent
+from src.agents.video import VideoAgent
+from src.agents.audio import AudioAgent
+from src.agents.camera import CameraAgent
+from src.agents.art_direction import ArtDirectionAgent
+from src.agents.marketing import MarketingAgent
+
 from src.critics.council import CouncilAgent
 from src.api.ai_clients import ImageGenerator, VideoGenerator, AudioGenerator
+from src.core.models import EpisodeRequest
 
 def main():
     print("\n" + "="*50)
@@ -9,18 +21,8 @@ def main():
     print("="*50)
     
     try:
-        # 에이전트 초기화
-        import os
-        from dotenv import load_dotenv
         load_dotenv()
         is_mock = os.getenv("IS_MOCK", "true").lower() == "true"
-        
-        from src.agents.imaging import ImagingAgent
-        from src.agents.video import VideoAgent
-        from src.agents.audio import AudioAgent
-        from src.agents.camera import CameraAgent
-        from src.agents.art_direction import ArtDirectionAgent
-        from src.agents.marketing import MarketingAgent
         
         director = DirectorAgent(is_mock=is_mock)
         writer = WriterAgent(is_mock=is_mock)
@@ -101,7 +103,6 @@ def main():
 
     except Exception as e:
         print(f"\n[CRITICAL ERROR] {e}")
-        import traceback
         traceback.print_exc()
 
 if __name__ == "__main__":

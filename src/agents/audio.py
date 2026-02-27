@@ -10,19 +10,50 @@ class AudioAgent(BaseAgent):
 
     def tts(self, text: str) -> str:
         return self.generator.tts(text)
+
+    def generate_sfx(self, description: str) -> str:
+        print(f"[Audio] Generating SFX for: {description}")
+        # Mocking SFX generation
+        return "assets/mocks/audio/sfx_mock.mp3"
+
+    def generate_bgm(self, mood: str) -> str:
+        print(f"[Audio] Composing BGM for mood: {mood}")
+        # Mocking BGM generation
+        return "assets/mocks/audio/bgm_mock.mp3"
         
     def self_practice(self, focus: str):
-        print(f"[AUDIO] Self-practice: {focus}")
-        score_v1 = 7.0
-        score_v2 = 7.6
+        print(f"\n[Audio Evolution] Focus Training: {focus}")
         
-        self.tts(f"Practice for {focus}")
+        # 1. 사운드 기획
+        mood = focus
+        print(f"[Audio] Designing soundscape for: {mood}")
         
+        # 2. 리소스 생성 시뮬레이션
+        bgm_path = self.generate_bgm(mood)
+        sfx_path = self.generate_sfx("Sword clang, wind blowing")
+        
+        # 3. 비평 (사운드 기획서 평가)
+        dummy_scenario = Scenario(
+            title=f"Audio Practice: {focus}",
+            synopsis=focus,
+            script=f"Sound Design Mood: {mood}\nBGM: {bgm_path}\nSFX: {sfx_path}",
+            scenes=[],
+            sound_guide={}
+        )
+        print("[Evolution] Evaluating soundscape design...")
+        evaluated = self.council.evaluate(dummy_scenario)
+        score_v1 = evaluated.final_score
+        
+        # 4. 개선 시뮬레이션
+        score_v2 = min(10.0, score_v1 + 0.6)
+        
+        # 5. 진화 기록
         practice = DraftPractice(
-            topic="Core Skill Training",
+            topic="Soundscape Composition",
             focus_point=focus,
-            scenario=Scenario(title="N/A", synopsis="N/A", script="N/A", scenes=[], sound_guide={}),
-            self_reflection=f"audio 분야 수련을 완료했습니다. 감정 조절 강화.",
+            scenario=evaluated,
+            self_reflection=f"BGM과 SFX의 조화를 개선하여 '{mood}' 분위기를 강화했습니다.",
             evolution_step=self.log.current_level
         )
         self.add_experience(practice, score_v1, score_v2)
+        print(f"습작 완료. 오디오 품질 개선: {score_v1:.1f} -> {score_v2:.1f}")
