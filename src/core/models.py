@@ -24,8 +24,17 @@ class Scenario(BaseModel):
     sound_guide: Dict[str, str]
     critiques: Optional[List[Critique]] = None
     final_score: Optional[float] = None
+    assets: Optional[Dict] = None
 
 class EpisodeRequest(BaseModel):
     topic: str
     events: str
     version: int = 1
+
+class ProductionResult(BaseModel):
+    scenario: Scenario
+    image_paths: List[str] = []
+    video_paths: List[str] = []
+    audio_path: Optional[str] = None
+    marketing_meta: Optional[Dict] = None
+    status: str = "success"

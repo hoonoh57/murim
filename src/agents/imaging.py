@@ -8,8 +8,13 @@ class ImagingAgent(BaseAgent):
         super().__init__(agent_type="imaging", is_mock=is_mock)
         self.generator = ImageGenerator(is_mock=is_mock)
         
-    def generate(self, prompt: str) -> str:
-        return self.generator.generate(prompt)
+    def generate(self, prompt: str, style_guide: dict = None) -> str:
+        full_prompt = prompt
+        if style_guide:
+            palette = style_guide.get("palette", [])
+            style_name = style_guide.get("style", "")
+            full_prompt = f"{prompt}, Style: {style_name}, Colors: {', '.join(palette)}"
+        return self.generator.generate(full_prompt)
 
     def self_practice(self, focus: str):
         print(f"\n[Imaging Evolution] Focus Training: {focus}")

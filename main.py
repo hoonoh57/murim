@@ -11,10 +11,6 @@ from src.agents.camera import CameraAgent
 from src.agents.art_direction import ArtDirectionAgent
 from src.agents.marketing import MarketingAgent
 
-from src.critics.council import CouncilAgent
-from src.api.ai_clients import ImageGenerator, VideoGenerator, AudioGenerator
-from src.core.models import EpisodeRequest
-
 def main():
     print("\n" + "="*50)
     print("   MURIM AI FACTORY - AGENT ORCHESTRATION")

@@ -8,8 +8,13 @@ class VideoAgent(BaseAgent):
         super().__init__(agent_type="video", is_mock=is_mock)
         self.generator = VideoGenerator(is_mock=is_mock)
 
-    def generate_from_image(self, image_path: str, prompt: str) -> str:
-        return self.generator.generate_from_image(image_path, prompt)
+    def generate_from_image(self, image_path: str, prompt: str, camera_plan: dict = None) -> str:
+        full_prompt = prompt
+        if camera_plan:
+            angle = camera_plan.get("angle", "")
+            movement = camera_plan.get("movement", "")
+            full_prompt = f"{prompt}, Camera: {angle}, Motion: {movement}"
+        return self.generator.generate_from_image(image_path, full_prompt)
         
     def self_practice(self, focus: str):
         print(f"\n[Video Evolution] Focus Training: {focus}")

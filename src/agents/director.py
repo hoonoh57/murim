@@ -1,4 +1,3 @@
-import statistics
 from typing import List, Dict
 from src.agents.base_agent import BaseAgent
 from src.core.models import EpisodeRequest, Scenario
@@ -51,6 +50,7 @@ class DirectorAgent(BaseAgent):
 
     def orchestrate_episode(self, topic: str, events: str, agents: Dict[str, BaseAgent]):
         """전체 파이프라인 조율 (기획 -> 비평 -> 수정 -> 리소스 제작 -> 마케팅)"""
+        from src.core.models import ProductionResult
         print(f"\n[Director] Starting orchestration for: {topic}")
         
         # 0. 에이전트 확보
@@ -93,6 +93,9 @@ class DirectorAgent(BaseAgent):
 
         # 2. 프로덕션 기획 (Art Direction, Camera)
         print("\n[GATE 2] Production Planning")
+        style_guide = None
+        camera_plans = []
+        
         if art_dir:
             style_guide = art_dir.design_style_guide(scenario.synopsis)
             print(f" -> Style Guide Color: {style_guide.get('palette')}")
@@ -103,11 +106,18 @@ class DirectorAgent(BaseAgent):
 
         # 3. 리소스 제작 (Imaging, Video, Audio)
         print("\n[GATE 3] Resource Production")
+        image_paths = []
+        video_paths = []
+        audio_path = None
+        
         if imaging and video:
-            for scene in scenario.scenes:
+            for i, scene in enumerate(scenario.scenes):
                 print(f" -> Processing {scene.id}...")
-                img_path = imaging.generate(scene.image_prompt)
-                vid_path = video.generate_from_image(img_path, scene.video_prompt)
+                plan = camera_plans[i] if i < len(camera_plans) else None
+                img_path = imaging.generate(scene.image_prompt, style_guide=style_guide)
+                vid_path = video.generate_from_image(img_path, scene.video_prompt, camera_plan=plan)
+                image_paths.append(img_path)
+                video_paths.append(vid_path)
         
         if audio:
             audio_path = audio.tts(scenario.script)
@@ -115,12 +125,28 @@ class DirectorAgent(BaseAgent):
 
         # 4. 마케팅 (Marketing)
         print("\n[GATE 4] Marketing & Distribution")
+        marketing_meta = None
         if marketing:
-            meta = marketing.generate_assets(scenario)
-            print(f" -> Marketing Bundle: {meta.get('title')}")
+            marketing_meta = marketing.generate_assets(scenario)
+            print(f" -> Marketing Bundle: {marketing_meta.get('title')}")
+
+        # 5. 결과 정리
+        scenario.assets = {
+            "images": image_paths,
+            "videos": video_paths,
+            "audio": audio_path
+        }
+        
+        result = ProductionResult(
+            scenario=scenario,
+            image_paths=image_paths,
+            video_paths=video_paths,
+            audio_path=audio_path,
+            marketing_meta=marketing_meta
+        )
 
         print(f"\n[Director] Episode '{scenario.title}' processing complete!")
-        return scenario
+        return result
 
     def self_practice(self, focus: str):
         print(f"[Director] Self-practice: Optimizing orchestration rules for {focus}")
