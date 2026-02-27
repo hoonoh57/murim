@@ -23,5 +23,10 @@ class TestMarketingAgent(unittest.TestCase):
         self.assertGreaterEqual(practice.scenario.final_score, 0)
         self.assertLessEqual(practice.scenario.final_score, 10)
 
+    def tearDown(self):
+        import os
+        if os.path.exists(self.agent.log_file):
+            os.remove(self.agent.log_file)
+
 if __name__ == "__main__":
     unittest.main()

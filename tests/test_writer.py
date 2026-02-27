@@ -35,5 +35,10 @@ class TestWriterAgent(unittest.TestCase):
         self.assertIsInstance(revised, Scenario)
         self.assertTrue("Revised" in revised.title or "MOCK" in revised.title)
 
+    def tearDown(self):
+        import os
+        if os.path.exists(self.writer.log_file):
+            os.remove(self.writer.log_file)
+
 if __name__ == "__main__":
     unittest.main()

@@ -10,8 +10,11 @@ from src.agents.art_direction import ArtDirectionAgent
 from src.agents.marketing import MarketingAgent
 from src.core.models import ProductionResult
 
+import random
+
 class TestDirectorAgent(unittest.TestCase):
     def setUp(self):
+        random.seed(42)
         self.is_mock = True
         self.director = DirectorAgent(is_mock=self.is_mock)
         self.agents = {
@@ -23,6 +26,13 @@ class TestDirectorAgent(unittest.TestCase):
             "art_direction": ArtDirectionAgent(is_mock=self.is_mock),
             "marketing": MarketingAgent(is_mock=self.is_mock)
         }
+
+    def tearDown(self):
+        # Clean up any potential logs if practice was somehow called
+        import os
+        for agent in self.agents.values():
+            if os.path.exists(agent.log_file):
+                os.remove(agent.log_file)
 
     def test_orchestrate_episode_success(self):
         topic = "Test Topic"

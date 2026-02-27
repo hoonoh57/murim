@@ -18,9 +18,14 @@ class TestArtDirectionAgent(unittest.TestCase):
         practice = self.agent.log.practice_history[-1]
         
         self.assertGreater(self.agent.log.total_xp, initial_xp)
-        self.assertTrue(len(practice.self_reflection) > 5)
+        self.assertTrue(len(practice.self_reflection) > 10)
         self.assertGreaterEqual(practice.scenario.final_score, 0)
         self.assertLessEqual(practice.scenario.final_score, 10)
+
+    def tearDown(self):
+        import os
+        if os.path.exists(self.agent.log_file):
+            os.remove(self.agent.log_file)
 
 if __name__ == "__main__":
     unittest.main()
