@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>무림 AI 팩토리 — Human Relay</title>
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #13131a;
+            --bg-input: #1a1a25;
+            --border: #2a2a3a;
+            --gold: #d4a520;
+            --gold-light: #f0d060;
+            --red: #c0392b;
+            --green: #27ae60;
+            --blue: #3498db;
+            --text: #e8e8e8;
+            --text-dim: #888;
+            --text-bright: #fff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a0a0a 0%, #0a0a1a 100%);
+            border-bottom: 2px solid var(--gold);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header h1 {
+            font-size: 1.6em;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+        .header .subtitle {
+            color: var(--text-dim);
+            font-size: 0.85em;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Step Indicator */
+        .steps {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 30px;
+        }
+        .step {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.85em;
+            transition: all 0.3s;
+        }
+        .step.active {
+            background: linear-gradient(135deg, #2a1a0a, #1a1a2a);
+            border-color: var(--gold);
+            color: var(--gold);
+            font-weight: bold;
+        }
+        .step.done {
+            background: #0a1a0a;
+            border-color: var(--green);
+            color: var(--green);
+        }
+        .step .num { 
+            font-size: 1.2em; 
+            display: block; 
+            margin-bottom: 4px; 
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            color: var(--gold);
+            font-size: 1.1em;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Input Form */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.9em;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), #b8860b);
+            color: #000;
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(212,165,32,0.3); }
+        .btn-copy {
+            background: var(--blue);
+            color: #fff;
+        }
+        .btn-copy:hover { background: #2980b9; }
+        .btn-submit {
+            background: var(--green);
+            color: #fff;
+        }
+        .btn-submit:hover { background: #219a52; }
+        .btn-danger {
+            background: var(--red);
+            color: #fff;
+        }
+        .btn-sm { padding: 8px 16px; font-size: 0.85em; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        /* Prompt Display */
+        .prompt-box {
+            background: #0d0d15;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Consolas', 'D2Coding', monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 500px;
+            overflow-y: auto;
+            position: relative;
+        }
+        .prompt-box .copy-overlay {
+            position: sticky;
+            top: 0;
+            text-align: right;
+            margin-bottom: 8px;
+        }
+
+        /* Response Input */
+        .response-area {
+            width: 100%;
+            min-height: 300px;
+            padding: 16px;
+            background: var(--bg-input);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Consolas', 'D2Coding', monospace;
+            font-size: 0.85em;
+            line-height: 1.5;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        .response-area:focus {
+            outline: none;
+            border-color: var(--green);
+            border-style: solid;
+        }
+        .response-area::placeholder {
+            color: var(--text-dim);
+        }
+
+        /* Log Messages */
+        .log-panel {
+            background: #0a0a12;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.85em;
+            line-height: 1.8;
+        }
+        .log-panel .log-entry {
+            padding: 2px 0;
+            border-bottom: 1px solid #1a1a25;
+        }
+
+        /* Result Dashboard */
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .result-item {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .result-item h3 {
+            color: var(--gold);
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+        .result-item pre {
+            font-size: 0.8em;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            color: var(--text-dim);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* Score Badge */
+        .score-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .score-high { background: #0a2a0a; color: var(--green); border: 1px solid var(--green); }
+        .score-mid { background: #2a2a0a; color: var(--gold); border: 1px solid var(--gold); }
+        .score-low { background: #2a0a0a; color: var(--red); border: 1px solid var(--red); }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px; height: 16px;
+            border: 2px solid var(--text-dim);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Hidden */
+        .hidden { display: none !important; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .steps { flex-direction: column; }
+            .result-grid { grid-template-columns: 1fr; }
+            .header { padding: 16px 20px; }
+            .container { padding: 16px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div>
+        <h1>武林 AI FACTORY</h1>
+        <div class="subtitle">Human-Relay Batch Production System</div>
+    </div>
+    <div style="color: var(--text-dim); font-size: 0.85em;">
+        API 비용: <span style="color: var(--green); font-weight: bold;">₩0</span>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- Step Indicator -->
+    <div class="steps">
+        <div class="step active" id="step-0">
+            <span class="num">📝</span> 설정 입력
+        </div>
+        <div class="step" id="step-1">
+            <span class="num">①</span> 시나리오 생성
+        </div>
+        <div class="step" id="step-2">
+            <span class="num">②</span> 평가 + 기획
+        </div>
+        <div class="step" id="step-3">
+            <span class="num">③</span> 리소스 제작
+        </div>
+        <div class="step" id="step-4">
+            <span class="num">🎉</span> 완료
+        </div>
+    </div>
+
+    <!-- Phase 0: Input -->
+    <div id="phase-input" class="card fade-in">
+        <h2>🎬 에피소드 설정</h2>
+        <div class="form-group">
+            <label>주제 (예: 천마의 회귀, 화산파 수련)</label>
+            <input type="text" id="input-topic" placeholder="에피소드 주제를 입력하세요" value="천마의 첫 하산">
+        </div>
+        <div class="form-group">
+            <label>주요 사건 (예: 1화: 회귀와 첫 번째 경멸, 도전자 출현)</label>
+            <input type="text" id="input-events" placeholder="주요 사건을 입력하세요" value="1화: 하산 중 강도단과 조우, 전생 기억이 발동하며 첫 실전">
+        </div>
+        <button class="btn btn-primary" id="btn-start" onclick="startEpisode()">
+            ⚔️ 제작 시작
+        </button>
+    </div>
+
+    <!-- Phase: Batch Relay (재사용 영역) -->
+    <div id="phase-relay" class="hidden">
+        <!-- 프롬프트 표시 -->
+        <div class="card fade-in">
+            <h2 id="relay-title">📋 Round 1 — 배치 프롬프트</h2>
+            <p style="color: var(--text-dim); margin-bottom: 12px; font-size: 0.9em;">
+                아래 프롬프트를 복사하여 Claude 대화창에 붙여넣으세요.
+            </p>
+            <div class="prompt-box" id="prompt-display">
+                <div class="copy-overlay">
+                    <button class="btn btn-copy btn-sm" onclick="copyPrompt()">📋 전체 복사</button>
+                </div>
+                <div id="prompt-content"></div>
+            </div>
+        </div>
+
+        <!-- 응답 입력 -->
+        <div class="card fade-in">
+            <h2>📥 Claude 응답 붙여넣기</h2>
+            <p style="color: var(--text-dim); margin-bottom: 12px; font-size: 0.9em;">
+                Claude의 전체 응답을 아래에 붙여넣고 "전달" 버튼을 클릭하세요.
+            </p>
+            <textarea class="response-area" id="response-input" 
+                      placeholder="Claude의 응답을 여기에 붙여넣으세요...&#10;&#10;---[RES-001 | WriterAgent]---&#10;{...JSON 응답...}&#10;---[END RES-001]---"></textarea>
+            <div class="btn-group">
+                <button class="btn btn-submit" id="btn-submit" onclick="submitResponse()">
+                    ✅ 전달
+                </button>
+                <button class="btn btn-copy btn-sm" onclick="pasteResponse()">
+                    📋 클립보드에서 붙여넣기
+                </button>
+                <button class="btn btn-danger btn-sm hidden" id="btn-force-go" onclick="forceGo()">
+                    ⚡ 강제 GO (REWORK 무시)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase: Complete -->
+    <div id="phase-complete" class="hidden">
+        <div class="card fade-in">
+            <h2>🎉 제작 완료 — 결과 대시보드</h2>
+            <div id="result-dashboard" class="result-grid"></div>
+        </div>
+    </div>
+
+    <!-- Activity Log (항상 표시) -->
+    <div class="card" id="log-card">
+        <h2>📊 활동 로그</h2>
+        <div class="log-panel" id="log-panel">
+            <div class="log-entry" style="color: var(--text-dim);">시스템 대기 중...</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let currentRound = 0;
+    let currentBatchPrompt = "";
+
+    // ─── API Calls ───
+
+    async function startEpisode() {
+        const topic = document.getElementById("input-topic").value.trim();
+        const events = document.getElementById("input-events").value.trim();
+        if (!topic) { alert("주제를 입력해 주세요."); return; }
+
+        setLoading(true);
+        try {
+            const res = await fetch("/api/start", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ topic, events })
+            });
+            const data = await res.json();
+            if (data.error) { alert(data.error); return; }
+
+            currentRound = data.round;
+            currentBatchPrompt = data.batch_prompt;
+            updateLog(data.messages);
+            showRelayPhase(data.round, data.batch_prompt);
+            updateSteps(data.round);
+        } catch (e) {
+            alert("서버 연결 실패: " + e.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function submitResponse() {
+        const raw = document.getElementById("response-input").value.trim();
+        if (!raw) { alert("응답을 입력해 주세요."); return; }
+
+        setLoading(true);
+        try {
+            const res = await fetch("/api/submit_response", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ response: raw })
+            });
+            const data = await res.json();
+
+            if (data.error) {
+                addLog("❌ " + data.error);
+                if (data.hint) addLog("💡 " + data.hint);
+                if (data.messages) updateLog(data.messages);
+                setLoading(false);
+                return;
+            }
+
+            updateLog(data.messages);
+            document.getElementById("response-input").value = "";
+
+            if (data.round === 99 || data.status === "completed") {
+                // 완료
+                showComplete(data.summary);
+                updateSteps(99);
+            } else if (data.status === "killed") {
+                addLog("💀 제작이 중단되었습니다.");
+                showComplete(data.summary);
+            } else {
+                // 다음 라운드
+                currentRound = data.round;
+                currentBatchPrompt = data.batch_prompt;
+                showRelayPhase(data.round, data.batch_prompt);
+                updateSteps(data.round);
+
+                if (data.needs_rework) {
+                    document.getElementById("btn-force-go").classList.remove("hidden");
+                } else {
+                    document.getElementById("btn-force-go").classList.add("hidden");
+                }
+            }
+        } catch (e) {
+            alert("서버 오류: " + e.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function forceGo() {
+        if (!confirm("REWORK 판정을 무시하고 현재 시나리오로 리소스 제작을 진행합니까?")) return;
+        setLoading(true);
+        try {
+            const res = await fetch("/api/force_go", { method: "POST" });
+            const data = await res.json();
+            updateLog(data.messages);
+            currentRound = data.round;
+            currentBatchPrompt = data.batch_prompt;
+            showRelayPhase(data.round, data.batch_prompt);
+            document.getElementById("btn-force-go").classList.add("hidden");
+        } catch (e) {
+            alert("오류: " + e.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // ─── UI Helpers ───
+
+    function showRelayPhase(round, batchPrompt) {
+        document.getElementById("phase-input").classList.add("hidden");
+        document.getElementById("phase-relay").classList.remove("hidden");
+        document.getElementById("phase-complete").classList.add("hidden");
+
+        const titles = {
+            1: "📋 Round 1 — 시나리오 생성",
+            2: "📋 Round 2 — 평가 + 기획 (3개 병렬 요청)",
+            3: "📋 Round 3 — 리소스 제작 (4개 병렬 요청)"
+        };
+        document.getElementById("relay-title").textContent = titles[round] || `Round ${round}`;
+        document.getElementById("prompt-content").textContent = batchPrompt;
+        document.getElementById("response-input").value = "";
+        document.getElementById("response-input").placeholder = 
+            `Round ${round}의 Claude 응답을 여기에 붙여넣으세요...`;
+    }
+
+    function showComplete(summary) {
+        document.getElementById("phase-relay").classList.add("hidden");
+        document.getElementById("phase-complete").classList.remove("hidden");
+
+        const grid = document.getElementById("result-dashboard");
+        grid.innerHTML = "";
+
+        const items = [
+            { title: "📝 시나리오", data: summary.scenario, key: "title" },
+            { title: "⚖️ 평가 결과", data: summary.council, key: "average_score" },
+            { title: "🎨 아트 스타일", data: summary.style_guide, key: "style" },
+            { title: "🎬 카메라 계획", data: summary.camera_plans, key: "camera_plans" },
+            { title: "🖼️ 이미지 프롬프트", data: summary.imaging, key: "enhanced_prompts" },
+            { title: "🎥 비디오 모션", data: summary.video, key: "motion_plans" },
+            { title: "🔊 사운드스케이프", data: summary.audio, key: "bgm" },
+            { title: "📢 마케팅", data: summary.marketing, key: "youtube_title" }
+        ];
+
+        items.forEach(item => {
+            if (item.data) {
+                const el = document.createElement("div");
+                el.className = "result-item fade-in";
+                el.innerHTML = `
+                    <h3>${item.title}</h3>
+                    <pre>${JSON.stringify(item.data, null, 2)}</pre>
+                `;
+                grid.appendChild(el);
+            }
+        });
+    }
+
+    function updateSteps(round) {
+        for (let i = 0; i <= 4; i++) {
+            const el = document.getElementById(`step-${i}`);
+            el.classList.remove("active", "done");
+            if (round === 99) {
+                el.classList.add("done");
+            } else if (i < round) {
+                el.classList.add("done");
+            } else if (i === round) {
+                el.classList.add("active");
+            }
+        }
+    }
+
+    function updateLog(messages) {
+        if (!messages) return;
+        const panel = document.getElementById("log-panel");
+        panel.innerHTML = messages.map(m => 
+            `<div class="log-entry">${m}</div>`
+        ).join("");
+        panel.scrollTop = panel.scrollHeight;
+    }
+
+    function addLog(msg) {
+        const panel = document.getElementById("log-panel");
+        const entry = document.createElement("div");
+        entry.className = "log-entry";
+        entry.textContent = msg;
+        panel.appendChild(entry);
+        panel.scrollTop = panel.scrollHeight;
+    }
+
+    function setLoading(on) {
+        const btns = document.querySelectorAll(".btn");
+        btns.forEach(b => b.disabled = on);
+    }
+
+    // ─── Clipboard ───
+
+    function copyPrompt() {
+        const text = document.getElementById("prompt-content").textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = event.target;
+            const orig = btn.textContent;
+            btn.textContent = "✅ 복사 완료!";
+            btn.style.background = "#27ae60";
+            setTimeout(() => { btn.textContent = orig; btn.style.background = ""; }, 2000);
+        }).catch(() => {
+            // Fallback
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+            alert("복사 완료!");
+        });
+    }
+
+    async function pasteResponse() {
+        try {
+            const text = await navigator.clipboard.readText();
+            document.getElementById("response-input").value = text;
+            addLog("📋 클립보드에서 붙여넣기 완료");
+        } catch (e) {
+            addLog("⚠️ 클립보드 접근 권한이 필요합니다. 수동으로 붙여넣어 주세요.");
+        }
+    }
+</script>
+
+</body>
+</html>
