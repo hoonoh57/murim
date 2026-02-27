@@ -49,7 +49,7 @@ class BatchParser:
             content = content.strip()
             
             # JSON 추출 시도
-            parsed_json = self._extract_json(content)
+            parsed_json = self.extract_json(content)
             
             results[res_id] = ParsedResponse(
                 res_id=res_id,
@@ -60,7 +60,7 @@ class BatchParser:
         
         return results
 
-    def _extract_json(self, text: str) -> Optional[dict]:
+    def extract_json(self, text: str) -> Optional[dict]:
         """텍스트에서 JSON 객체를 추출합니다."""
         # ```json ... ``` 블록 우선 탐색
         json_block = re.search(r'```json\s*(.*?)```', text, re.DOTALL)
@@ -109,7 +109,7 @@ class BatchParser:
             content = re.sub(r'---\[END\s+RES-\d+\]---', '', content).strip()
             
             if content:
-                parsed_json = self._extract_json(content)
+                parsed_json = self.extract_json(content)
                 results[res_id] = ParsedResponse(
                     res_id=res_id,
                     owner=owner,

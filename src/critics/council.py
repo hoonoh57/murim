@@ -4,6 +4,7 @@ import random
 from typing import List
 from anthropic import Anthropic
 from src.core.models import Scenario, Critique
+from src.core.constants import COUNCIL_PERSONAS
 
 class CouncilAgent:
     def __init__(self, is_mock: bool = True):
@@ -11,14 +12,7 @@ class CouncilAgent:
         self.api_key = os.getenv("ANTHROPIC_API_KEY")
         self.model = os.getenv("ANTHROPIC_MODEL", "claude-3-opus-20240229")
         self.client = Anthropic(api_key=self.api_key) if not is_mock and self.api_key else None
-        self.personas = [
-            "정통무협 마니아 (고증 중시)",
-            "영상 연출가 (비주얼 중시)",
-            "대본 작가 (서사 구조 중시)",
-            "속도형 시청자 (도파민/자극 중시)",
-            "글로벌 팬 (보편적 정서 중시)",
-            "전략 마케터 (조회수/바이럴 중시)"
-        ]
+        self.personas = COUNCIL_PERSONAS
 
     def evaluate(self, scenario: Scenario) -> Scenario:
         print(f"[Council] Evaluating scenario: {scenario.title}")

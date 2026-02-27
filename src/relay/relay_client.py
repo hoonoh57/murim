@@ -67,7 +67,7 @@ class RelaySession:
             return {"success": True, "scenario": self.scenario_json}
         
         # JSON 파싱 실패 시 전체 응답에서 JSON 추출 시도
-        json_obj = self.parser._extract_json(raw_response)
+        json_obj = self.parser.extract_json(raw_response)
         if json_obj:
             self.scenario_json = json_obj
             self.messages.append(

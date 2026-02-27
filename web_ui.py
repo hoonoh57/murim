@@ -1,15 +1,16 @@
-"""
-MURIM AI Factory — 웹 UI 서버
-Flask 기반, 배치 릴레이 방식으로 Claude와 소통
-"""
-
 import os
 import json
+import uuid
 from flask import Flask, render_template, request, jsonify, session
+from dotenv import load_dotenv
 from src.relay.relay_client import RelaySession
 
+# Load environment variables
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+# Use a fixed key from .env for session persistence across restarts
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "murim_factory_stable_secret_dev_key")
 
 # 세션별 RelaySession 저장 (단순 구현: 메모리 저장)
 sessions_store: dict = {}
@@ -38,7 +39,6 @@ def start_episode():
         return jsonify({"error": "주제를 입력해 주세요."}), 400
     
     # 새 세션 생성
-    import uuid
     sid = str(uuid.uuid4())
     session["sid"] = sid
     

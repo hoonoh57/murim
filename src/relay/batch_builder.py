@@ -9,6 +9,7 @@ import json
 from typing import Dict, List, Optional
 from src.core.models import Scenario, Scene
 from src.core.prompts import SYSTEM_PROMPT
+from src.core.constants import COUNCIL_PERSONAS
 
 
 class BatchRequest:
@@ -69,15 +70,7 @@ class BatchBuilder:
         scenes_str = json.dumps(scenario_json.get("scenes", []), ensure_ascii=False, indent=2)
 
         # REQ-002: Council 평가 (6인 비평위원회)
-        personas = [
-            "정통무협 마니아 (고증 중시)",
-            "영상 연출가 (비주얼 중시)",
-            "대본 작가 (서사 구조 중시)",
-            "속독형 시청자 (도파민/자극 중시)",
-            "글로벌 팬 (보편적 접서 중시)",
-            "전략 마케터 (조회수/바이럴 중시)"
-        ]
-        persona_list = "\n".join([f"  {i+1}. {p}" for i, p in enumerate(personas)])
+        persona_list = "\n".join([f"  {i+1}. {p}" for i, p in enumerate(COUNCIL_PERSONAS)])
 
         requests.append(BatchRequest(
             req_id="REQ-002",
@@ -159,7 +152,7 @@ class BatchBuilder:
                 council_json.get("critiques", []), ensure_ascii=False, indent=2
             )
             requests.append(BatchRequest(
-                req_id="REQ-005",
+                req_id="REQ-005R",
                 owner="WriterAgent",
                 gate="GATE1-rework",
                 system_msg=SYSTEM_PROMPT,
