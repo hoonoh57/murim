@@ -1,0 +1,21 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Project specific
+config/settings.json
+assets/mocks/
+outputs/
+*.log
+
+# IDEs
+.vscode/
+.idea/
