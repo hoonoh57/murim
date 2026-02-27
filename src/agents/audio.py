@@ -13,13 +13,13 @@ class AudioAgent(BaseAgent):
 
     def generate_sfx(self, description: str) -> str:
         print(f"[Audio] Generating SFX for: {description}")
-        # Mocking SFX generation
-        return "assets/mocks/audio/sfx_mock.mp3"
+        from src.api.ai_clients import MockHelper
+        return MockHelper.get_mock_path("audio", "sfx_mock.mp3")
 
     def generate_bgm(self, mood: str) -> str:
         print(f"[Audio] Composing BGM for mood: {mood}")
-        # Mocking BGM generation
-        return "assets/mocks/audio/bgm_mock.mp3"
+        from src.api.ai_clients import MockHelper
+        return MockHelper.get_mock_path("audio", "bgm_mock.mp3")
         
     def self_practice(self, focus: str):
         print(f"\n[Audio Evolution] Focus Training: {focus}")

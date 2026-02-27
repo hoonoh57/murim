@@ -73,33 +73,18 @@ def main():
             return
 
         # 1. 정식 제작 (Director Orchestration)
-        print(f"\n[STEP 1] 에피소드 기획 (Director: {is_mock})")
+        print(f"\n[STEP 1] 에피소드 제작 개시 (Director: {is_mock})")
         topic = input("주제: ") or "천마의 회귀"
         events = input("요약: ") or "1화: 회귀와 첫 번째 경맥 돌파"
         
         scenario = director.orchestrate_episode(topic, events, agents)
         
-        if not scenario:
-            print("제작이 중단되었습니다.")
-            return
-
-        # 3. 비주얼 및 오디오 생성
-        print("\n[STEP 3] 리소스 제작")
-        choice = input("\n리소스를 제작할까요? (y/n): ").lower()
-        if choice != 'y': return
-
-        for scene in scenario.scenes:
-            print(f"\n--- {scene.id} 제작 ---")
-            img_path = imaging.generate(scene.image_prompt)
-            vid_path = video.generate_from_image(img_path, scene.video_prompt)
-            print(f"-> 비디오 경로: {vid_path}")
-        
-        audio_path = audio.tts(scenario.script)
-        print(f"-> 최종 오디오 경로: {audio_path}")
-
-        print("\n" + "="*50)
-        print("   [SUCCESS] 에피소드 제작 완료!")
-        print("="*50)
+        if scenario:
+            print("\n" + "="*50)
+            print(f"   [SUCCESS] '{scenario.title}' 제작 및 배포 완료!")
+            print("="*50)
+        else:
+            print("\n[FAIL] 제작 진행 중 중단되었습니다.")
 
     except Exception as e:
         print(f"\n[CRITICAL ERROR] {e}")

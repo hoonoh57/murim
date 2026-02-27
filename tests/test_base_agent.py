@@ -49,6 +49,13 @@ class TestBaseAgent(unittest.TestCase):
         self.agent.log.add_practice(practice, 100)
         self.assertEqual(self.agent.log.current_level, 2)
 
+    def test_abc_enforcement(self):
+        # Trying to instantiate a class without self_practice should raise TypeError
+        with self.assertRaises(TypeError):
+            class IncompleteAgent(BaseAgent):
+                pass
+            IncompleteAgent(agent_type="fail", is_mock=True)
+
     def tearDown(self):
         if os.path.exists(self.agent.log_file):
             os.remove(self.agent.log_file)

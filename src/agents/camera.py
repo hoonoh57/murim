@@ -1,3 +1,4 @@
+from typing import List
 from src.agents.base_agent import BaseAgent
 from src.evolution.skill_tracker import DraftPractice
 from src.core.models import Scenario

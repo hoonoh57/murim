@@ -50,19 +50,26 @@ class DirectorAgent(BaseAgent):
                 agent.self_practice(focus="Ecosystem Balance Optimization")
 
     def orchestrate_episode(self, topic: str, events: str, agents: Dict[str, BaseAgent]):
-        """전체 파이프라인 조율 (비평-수정 루프 포함)"""
+        """전체 파이프라인 조율 (기획 -> 비평 -> 수정 -> 리소스 제작 -> 마케팅)"""
         print(f"\n[Director] Starting orchestration for: {topic}")
         
+        # 0. 에이전트 확보
         writer = agents.get("writer")
+        art_dir = agents.get("art_direction")
+        camera = agents.get("camera")
+        imaging = agents.get("imaging")
+        video = agents.get("video")
+        audio = agents.get("audio")
+        marketing = agents.get("marketing")
+
         if not writer: 
             print("[Director] Error: WriterAgent not found.")
             return None
         
-        # 1. 시나리오 생성 (Writer)
-        print("\n[GATE 1] Scenario Generation")
+        # 1. 시나리오 생성 및 품질 관리 (Writer + Council)
+        print("\n[GATE 1] Scenario Generation & Review")
         scenario = writer.write_scenario(EpisodeRequest(topic=topic, events=events))
         
-        # 2. 비평 및 수정 루프 (최대 3회)
         attempts = 0
         max_attempts = 3
         while attempts < max_attempts:
@@ -71,7 +78,7 @@ class DirectorAgent(BaseAgent):
             scenario = writer.council.evaluate(scenario)
             
             if scenario.final_score >= 7.5:
-                print(f"[Director] Quality approved ({scenario.final_score:.1f}). Proceeding...")
+                print(f"[Director] Quality approved ({scenario.final_score:.1f}).")
                 break
             
             if attempts < max_attempts:
@@ -83,8 +90,36 @@ class DirectorAgent(BaseAgent):
         if scenario.final_score < 6.0:
             print("[Director] KILL: Final quality unacceptable. Production cancelled.")
             return None
-            
-        print(f"[Director] Episode '{scenario.title}' approved for production (Final Score: {scenario.final_score:.1f}).")
+
+        # 2. 프로덕션 기획 (Art Direction, Camera)
+        print("\n[GATE 2] Production Planning")
+        if art_dir:
+            style_guide = art_dir.design_style_guide(scenario.synopsis)
+            print(f" -> Style Guide Color: {style_guide.get('palette')}")
+        
+        if camera:
+            camera_plans = camera.plan_camera_angles(scenario.scenes)
+            print(f" -> Camera Planning completed for {len(camera_plans)} scenes.")
+
+        # 3. 리소스 제작 (Imaging, Video, Audio)
+        print("\n[GATE 3] Resource Production")
+        if imaging and video:
+            for scene in scenario.scenes:
+                print(f" -> Processing {scene.id}...")
+                img_path = imaging.generate(scene.image_prompt)
+                vid_path = video.generate_from_image(img_path, scene.video_prompt)
+        
+        if audio:
+            audio_path = audio.tts(scenario.script)
+            print(f" -> Final Audio created at: {audio_path}")
+
+        # 4. 마케팅 (Marketing)
+        print("\n[GATE 4] Marketing & Distribution")
+        if marketing:
+            meta = marketing.generate_assets(scenario)
+            print(f" -> Marketing Bundle: {meta.get('title')}")
+
+        print(f"\n[Director] Episode '{scenario.title}' processing complete!")
         return scenario
 
     def self_practice(self, focus: str):
