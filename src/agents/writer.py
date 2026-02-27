@@ -1,39 +1,16 @@
 import os
 import json
 from typing import List
-from anthropic import Anthropic
 from src.core.models import Scenario, Scene, EpisodeRequest
 from src.api.ai_clients import ScenarioEngine
-from datetime import datetime
-from src.critics.council import CouncilAgent
-from src.evolution.skill_tracker import EvolutionLog, DraftPractice
+from src.evolution.skill_tracker import DraftPractice
+from src.agents.base_agent import BaseAgent
 
-class WriterAgent:
+class WriterAgent(BaseAgent):
     def __init__(self, is_mock: bool = True):
-        self.is_mock = is_mock
+        super().__init__(agent_type="writer", is_mock=is_mock)
         self.engine = ScenarioEngine(is_mock=is_mock)
-        self.council = CouncilAgent(is_mock=is_mock)
-        self.api_key = os.getenv("ANTHROPIC_API_KEY")
-        self.model = os.getenv("ANTHROPIC_MODEL", "claude-3-opus-20240229")
-        self.client = Anthropic(api_key=self.api_key) if not is_mock and self.api_key else None
         
-        # Evolution Tracking
-        self.log = self._load_evolution_log()
-        self.log_file = "outputs/evolution/writer_evolution.json"
-        os.makedirs(os.path.dirname(self.log_file), exist_ok=True)
-        
-    def _load_evolution_log(self) -> EvolutionLog:
-        path = "outputs/evolution/writer_evolution.json"
-        if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                return EvolutionLog(**data)
-        return EvolutionLog()
-
-    def _save_log(self):
-        with open(self.log_file, "w", encoding="utf-8") as f:
-            json.dump(self.log.model_dump(), f, indent=4, ensure_ascii=False)
-
     def write_scenario(self, request: EpisodeRequest) -> Scenario:
         print(f"[Writer] Writing scenario for topic: {request.topic}")
         raw_data = self.engine.generate_episode(request.topic, request.events)
@@ -102,8 +79,7 @@ class WriterAgent:
             self_reflection=reflection,
             evolution_step=self.log.current_level
         )
-        self.log.add_practice(practice, score_v2)
-        self._save_log()
+        self.add_experience(practice, score_v1, score_v2)
         
         improvement = score_v2 - score_v1
         return f"습작 및 진화 완료. 점수 변화: {score_v1:.1f} -> {score_v2:.1f} ({improvement:+.1f})"
