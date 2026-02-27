@@ -1,78 +1,124 @@
 import os
 import json
 from typing import List
+from anthropic import Anthropic
 from src.core.models import Scenario, Scene, EpisodeRequest
 from src.api.ai_clients import ScenarioEngine
-
-from anthropic import Anthropic
+from datetime import datetime
+from src.critics.council import CouncilAgent
+from src.evolution.skill_tracker import EvolutionLog, DraftPractice
 
 class WriterAgent:
     def __init__(self, is_mock: bool = True):
         self.is_mock = is_mock
         self.engine = ScenarioEngine(is_mock=is_mock)
+        self.council = CouncilAgent(is_mock=is_mock)
         self.api_key = os.getenv("ANTHROPIC_API_KEY")
         self.model = os.getenv("ANTHROPIC_MODEL", "claude-3-opus-20240229")
         self.client = Anthropic(api_key=self.api_key) if not is_mock and self.api_key else None
-        self.evolution_log_path = "outputs/evolution/writer_evolution.json"
-        os.makedirs(os.path.dirname(self.evolution_log_path), exist_ok=True)
         
+        # Evolution Tracking
+        self.log = self._load_evolution_log()
+        self.log_file = "outputs/evolution/writer_evolution.json"
+        os.makedirs(os.path.dirname(self.log_file), exist_ok=True)
+        
+    def _load_evolution_log(self) -> EvolutionLog:
+        path = "outputs/evolution/writer_evolution.json"
+        if os.path.exists(path):
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return EvolutionLog(**data)
+        return EvolutionLog()
+
+    def _save_log(self):
+        with open(self.log_file, "w", encoding="utf-8") as f:
+            json.dump(self.log.model_dump(), f, indent=4, ensure_ascii=False)
+
     def write_scenario(self, request: EpisodeRequest) -> Scenario:
         print(f"[Writer] Writing scenario for topic: {request.topic}")
         raw_data = self.engine.generate_episode(request.topic, request.events)
         return self._parse_scenario(raw_data, request.topic, request.events)
 
-    def self_practice(self, focus_point: str) -> str:
-        """작가가 스스로 습작(習作)을 수행하고 기록을 남깁니다."""
-        print(f"[Writer] Starting self-practice focusing on: {focus_point}")
+    def revise_scenario(self, scenario: Scenario, critiques: List[dict]) -> Scenario:
+        """비평가의 의견을 반영하여 시나리오를 수정합니다."""
+        print(f"[Writer] Revising scenario based on council feedback...")
         
-        # 1. 습작 주제 선정 및 생성
-        practice_topic = f"습작: {focus_point} 강화 훈련"
-        practice_events = f"무협의 정수를 담기 위한 {focus_point} 집중 수련"
-        
-        scenario = self.write_scenario(EpisodeRequest(topic=practice_topic, events=practice_events))
-        
-        # 2. 스스로 회고 (Self-Reflection)
         if self.is_mock:
-            reflection = f"이번 습작에서는 {focus_point}를 중점적으로 다루었습니다. 이전보다 표현의 깊이가 좋아졌으나, 여전히 감정 묘사에서 보완이 필요합니다."
-        else:
-            print("[Writer] AI 자기 성찰(Self-Reflection) 진행 중...")
-            response = self.client.messages.create(
-                model=self.model,
-                max_tokens=1000,
-                system="당신은 정통 무협 작가입니다. 자신이 방금 쓴 시나리오를 읽고, 장점과 개선점, 그리고 다음 수련 방향을 성찰하세요.",
-                messages=[{"role": "user", "content": f"작성한 시나리오:\n{scenario.script}\n\n위 시나리오를 바탕으로 자기 성찰 로그를 작성해주세요."}]
-            )
-            reflection = response.content[0].text
+            scenario.title += " (Revised)"
+            scenario.script += "\n\n[Revision] 비평가들의 의견을 반영하여 묘사를 강화했습니다."
+            return scenario
+            
+        feedback_summary = "\n".join([f"- {c.persona}: {c.comment} (추천: {', '.join(c.suggestions)})" for c in critiques])
         
-        # 3. 진화 로그 스토리지 업데이트
-        self._save_evolution_record(practice_topic, focus_point, scenario, reflection)
+        prompt = f"다음은 당신이 쓴 무협 시나리오에 대한 6인 비평위원회의 의견입니다.\n\n{feedback_summary}\n\n이 의견들을 적극 반영하여 시나리오를 수정하고 JSON 형식으로 다시 작성해주세요.\n원본 제목: {scenario.title}\n원본 대본: {scenario.script}"
         
-        return f"습작 완료: {practice_topic}. 기록이 저장되었습니다."
+        response = self.client.messages.create(
+            model=self.model,
+            max_tokens=4000,
+            system="당신은 비평을 겸허히 수용하여 작품을 완성하는 대가(大家) 작가입니다. 반드시 JSON으로만 답하세요.",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        
+        try:
+            content = response.content[0].text
+            if "```json" in content:
+                content = content.split("```json")[1].split("```")[0].strip()
+            raw_data = json.loads(content)
+            return self._parse_scenario(raw_data, scenario.title, scenario.synopsis)
+        except Exception as e:
+            print(f"[Error] Revision failed: {e}")
+            return scenario
 
-    def _save_evolution_record(self, topic, focus, scenario, reflection):
-        import json
-        from datetime import datetime
+    def self_practice(self, focus_point: str) -> str:
+        """작가가 스스로 습작(習作)을 수행하고 비평-수정 루프를 거쳐 진화합니다."""
+        print(f"\n[Writer Evolution] Focus Training: {focus_point}")
         
-        record = {
-            "timestamp": datetime.now().isoformat(),
-            "topic": topic,
-            "focus_point": focus,
-            "reflection": reflection,
-            "scenario_title": scenario.title,
-            "skill_level_up": True
-        }
+        # 1. 초안 작성
+        req = EpisodeRequest(topic=f"습작: {focus_point}", events="자가 수련 중")
+        scenario = self.write_scenario(req)
         
-        # 간단한 JSON 로그 관리 (실제로는 EvolutionLog 모델 사용 권장)
-        history = []
-        if os.path.exists(self.evolution_log_path):
-            with open(self.evolution_log_path, "r", encoding="utf-8") as f:
-                history = json.load(f)
+        # 2. 1차 비평
+        print("\n[Evolution] 1st Round Critique...")
+        scenario = self.council.evaluate(scenario)
+        score_v1 = scenario.final_score
         
-        history.append(record)
+        # 3. 수정 집필
+        scenario = self.revise_scenario(scenario, scenario.critiques)
         
-        with open(self.evolution_log_path, "w", encoding="utf-8") as f:
-            json.dump(history, f, indent=4, ensure_ascii=False)
-        print(f"[Evolution] Practice record saved to {self.evolution_log_path}")
+        # 4. 2차 비평 (재평가)
+        print("\n[Evolution] 2nd Round Critique (Final Assessment)...")
+        scenario = self.council.evaluate(scenario)
+        score_v2 = scenario.final_score
+        
+        # 5. 자기 성찰
+        print("\n[Evolution] Self-Reflection...")
+        reflection = self._generate_reflection(scenario, score_v1, score_v2)
+        
+        # 6. 진화 기록 저장
+        practice = DraftPractice(
+            topic=req.topic,
+            focus_point=focus_point,
+            scenario=scenario,
+            self_reflection=reflection,
+            evolution_step=self.log.current_level
+        )
+        self.log.add_practice(practice, score_v2)
+        self._save_log()
+        
+        improvement = score_v2 - score_v1
+        return f"습작 및 진화 완료. 점수 변화: {score_v1:.1f} -> {score_v2:.1f} ({improvement:+.1f})"
+
+    def _generate_reflection(self, scenario, s1, s2) -> str:
+        if self.is_mock:
+            return f"1차 점수 {s1:.1f}에서 2차 {s2:.1f}로 개선되었습니다. 성공적인 수련이었습니다."
+            
+        response = self.client.messages.create(
+            model=self.model,
+            max_tokens=1000,
+            system="당신은 자신의 필력을 분석하는 작가입니다. 1차 비평 이후 어떻게 수정했는지, 그리고 점수 변화의 의미를 성찰하세요.",
+            messages=[{"role": "user", "content": f"1차 평점: {s1}, 2차 평점: {s2}\n최종 시나리오:\n{scenario.script}\n\n성찰 로그를 작성하세요."}]
+        )
+        return response.content[0].text
 
     def _parse_scenario(self, raw_data, topic, events) -> Scenario:
         if "error" in raw_data:

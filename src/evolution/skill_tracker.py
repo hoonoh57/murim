@@ -19,13 +19,15 @@ class EvolutionLog(BaseModel):
     experiences: List[str] = [] # 습득한 기술/노하우 목록
     practice_history: List[DraftPractice] = []
 
-    def add_practice(self, practice: DraftPractice):
+    def add_practice(self, practice: DraftPractice, score: float):
         self.practice_history.append(practice)
         self.total_practices += 1
         
-        # XP 계산: 습작 1회당 100 XP
-        self.total_xp += 100
-        print(f"[Evolution] XP gained: +100 (Total: {self.total_xp})")
+        # XP 계산: 평점 기반 (평점 * 20)
+        # 예: 8.5점 -> 170 XP
+        gained_xp = int(score * 20)
+        self.total_xp += gained_xp
+        print(f"[Evolution] Score: {score:.1f} -> XP gained: +{gained_xp} (Total: {self.total_xp})")
         
         self.check_level_up()
 

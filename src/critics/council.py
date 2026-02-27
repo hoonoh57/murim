@@ -61,7 +61,7 @@ class CouncilAgent:
             
             critiques.append(critique)
             total_score += critique.score
-            
+        
         scenario.critiques = critiques
         scenario.final_score = total_score / len(self.personas)
         
@@ -73,4 +73,26 @@ class CouncilAgent:
             verdict = "KILL"
         
         print(f"[Council] Final Average Score: {scenario.final_score:.1f} -> Verdict: {verdict}")
+        
+        # Save results
+        self._save_critique_to_file(scenario)
+        
         return scenario
+
+    def _save_critique_to_file(self, scenario: Scenario):
+        from datetime import datetime
+        dir_path = "outputs/critiques"
+        os.makedirs(dir_path, exist_ok=True)
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_path = f"{dir_path}/critique_{timestamp}.json"
+        
+        save_data = {
+            "title": scenario.title,
+            "final_score": scenario.final_score,
+            "critiques": [c.model_dump() for c in scenario.critiques]
+        }
+        
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(save_data, f, indent=4, ensure_ascii=False)
+        print(f"[Council] Critique archived to {file_path}")
