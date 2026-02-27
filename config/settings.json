@@ -1,0 +1,17 @@
+{
+  "api_keys": {
+    "openai": "YOUR_OPENAI_API_KEY",
+    "claude": "YOUR_CLAUDE_API_KEY",
+    "elevenlabs": "YOUR_ELEVENLABS_API_KEY",
+    "xai": "YOUR_XAI_API_KEY",
+    "midjourney": "YOUR_MIDJOURNEY_PROXY_API_KEY_IF_ANY",
+    "youtube": "YOUR_YOUTUBE_API_KEY"
+  },
+  "settings": {
+    "default_language": "ko",
+    "target_languages": ["en", "zh", "ja", "vi"],
+    "output_resolution": "1080p",
+    "character_consistency_method": "cref",
+    "main_character_ref_url": ""
+  }
+}
