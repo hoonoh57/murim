@@ -56,3 +56,25 @@ class BaseAgent(ABC):
         gained_xp = self.calculate_xp(score_v1, score_v2)
         self.log.add_practice(practice, gained_xp)
         self.save_log()
+
+    def _generate_reflection(self, scenario, score_v1: float, score_v2: float):
+        """AI 또는 MOCK을 사용하여 수련 결과에 대한 자기 성찰을 생성합니다."""
+        if self.is_mock:
+            return f"{self.agent_type} 분야 수련을 완료했습니다. 점수 향상: {score_v1:.1f} -> {score_v2:.1f}. 다음 수련에서는 고도화된 스킬을 연마하겠습니다."
+            
+        prompt = f"""
+        당신은 {self.agent_type} 분야에서 자가 수련 중인 에이전트입니다.
+        이번 수련의 결과는 다음과 같습니다:
+        - 초기 점수: {score_v1:.1f}
+        - 최종 점수: {score_v2:.1f}
+        
+        비평 위원회의 피드백을 통해 본인이 무엇을 배웠고 어떤 점이 개선되었는지, 
+        그리고 다음 수련에서는 무엇에 집중할지 1-2문장으로 한국어로 성찰하세요.
+        """
+        
+        response = self.client.messages.create(
+            model=self.model,
+            max_tokens=200,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.content[0].text.strip()

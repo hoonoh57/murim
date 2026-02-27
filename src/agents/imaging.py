@@ -16,18 +16,37 @@ class ImagingAgent(BaseAgent):
             full_prompt = f"{prompt}, Style: {style_name}, Colors: {', '.join(palette)}"
         return self.generator.generate(full_prompt)
 
+    def revise_prompt(self, original_prompt: str, critiques: list) -> str:
+        """비평을 바탕으로 프롬프트를 개선합니다."""
+        if self.is_mock:
+            return f"{original_prompt}, highly detailed, cinematic lighting, 8k masterpiece"
+            
+        print("[Imaging] AI is revising prompt based on critiques...")
+        critique_text = "\n".join([f"- {c.comment}" for c in critiques])
+        prompt = f"""
+        당신은 이미지 프롬프트 엔지니어입니다.
+        기존 프롬프트: {original_prompt}
+        비평 내용:
+        {critique_text}
+        
+        비평을 수렴하여 더 고퀄리티의 이미지를 생성할 수 있는 개선된 영어 프롬프트를 작성하세요. 
+        프롬프트 텍스트만 출력하세요.
+        """
+        response = self.client.messages.create(
+            model=self.model,
+            max_tokens=300,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.content[0].text.strip()
+
     def self_practice(self, focus: str):
         print(f"\n[Imaging Evolution] Focus Training: {focus}")
         
-        # 1. 프롬프트 생성 (초안)
+        # 1. 초안 프롬프트 생성
         prompt_v1 = f"Cinematic wuxia scene, {focus}, highly detailed, 8k"
         print(f"[Imaging] Generated initial prompt: {prompt_v1}")
         
-        # 2. 이미지 생성 (시뮬레이션)
-        img_path = self.generate(prompt_v1)
-        
-        # 3. 비평 (Council을 통한 시각적 적합성 평가)
-        # 이미지는 직접 평가 못하므로 프롬프트와 컨셉을 평가받음
+        # 2. 1차 비평
         dummy_scenario = Scenario(
             title=f"Imaging Practice: {focus}",
             synopsis=focus,
@@ -35,22 +54,35 @@ class ImagingAgent(BaseAgent):
             scenes=[],
             sound_guide={}
         )
-        print("[Evolution] Evaluating visual concept...")
-        evaluated = self.council.evaluate(dummy_scenario)
-        score_v1 = evaluated.final_score
+        print("\n[Evolution] 1st Round Critique...")
+        evaluated_v1 = self.council.evaluate(dummy_scenario)
+        score_v1 = evaluated_v1.final_score
         
-        # 4. 프롬프트 개선 루프 (시뮬레이션)
-        print(f"[Evolution] Improving prompt based on {score_v1:.1f} score...")
-        prompt_v2 = f"{prompt_v1}, volumetric lighting, masterwork, wuxia masterpiece"
-        img_path_v2 = self.generate(prompt_v2)
-        score_v2 = min(10.0, score_v1 + 0.8) # 개선 시뮬레이션
+        # 3. 프롬프트 수정
+        prompt_v2 = self.revise_prompt(prompt_v1, evaluated_v1.critiques)
+        print(f"[Imaging] Revised prompt: {prompt_v2}")
         
-        # 5. 진화 기록
+        # 4. 2차 비평 (재평가)
+        dummy_scenario_v2 = Scenario(
+            title=f"Imaging Practice: {focus} (Revised)",
+            synopsis=focus,
+            script=f"Visual Concept: {prompt_v2}",
+            scenes=[],
+            sound_guide={}
+        )
+        print("\n[Evolution] 2nd Round Critique (Final Assessment)...")
+        evaluated_v2 = self.council.evaluate(dummy_scenario_v2)
+        score_v2 = evaluated_v2.final_score
+        
+        # 5. 자기 성찰
+        reflection = self._generate_reflection(evaluated_v2, score_v1, score_v2)
+        
+        # 6. 진화 기록 저장
         practice = DraftPractice(
             topic="Visual Style & Prompt Engineering",
             focus_point=focus,
-            scenario=evaluated,
-            self_reflection=f"프롬프트 개선을 통해 시각적 밀도를 높였습니다. ({score_v1:.1f} -> {score_v2:.1f})",
+            scenario=evaluated_v2,
+            self_reflection=reflection,
             evolution_step=self.log.current_level
         )
         self.add_experience(practice, score_v1, score_v2)

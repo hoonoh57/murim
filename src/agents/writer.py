@@ -84,18 +84,6 @@ class WriterAgent(BaseAgent):
         improvement = score_v2 - score_v1
         return f"습작 및 진화 완료. 점수 변화: {score_v1:.1f} -> {score_v2:.1f} ({improvement:+.1f})"
 
-    def _generate_reflection(self, scenario, s1, s2) -> str:
-        if self.is_mock:
-            return f"1차 점수 {s1:.1f}에서 2차 {s2:.1f}로 개선되었습니다. 성공적인 수련이었습니다."
-            
-        response = self.client.messages.create(
-            model=self.model,
-            max_tokens=1000,
-            system="당신은 자신의 필력을 분석하는 작가입니다. 1차 비평 이후 어떻게 수정했는지, 그리고 점수 변화의 의미를 성찰하세요.",
-            messages=[{"role": "user", "content": f"1차 평점: {s1}, 2차 평점: {s2}\n최종 시나리오:\n{scenario.script}\n\n성찰 로그를 작성하세요."}]
-        )
-        return response.content[0].text
-
     def _parse_scenario(self, raw_data, topic, events) -> Scenario:
         if "error" in raw_data:
             return Scenario(title="Error", synopsis="", script="", scenes=[], sound_guide={})

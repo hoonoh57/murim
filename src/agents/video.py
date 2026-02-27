@@ -16,37 +16,69 @@ class VideoAgent(BaseAgent):
             full_prompt = f"{prompt}, Camera: {angle}, Motion: {movement}"
         return self.generator.generate_from_image(image_path, full_prompt)
         
+    def revise_plan(self, original_focus: str, critiques: list) -> str:
+        """비평을 바탕으로 영상 연출 및 모션 계획을 개선합니다."""
+        if self.is_mock:
+            return f"Enhanced motion: {original_focus} with better temporal stability and fluid transitions."
+            
+        critique_text = "\n".join([f"- {c.comment}" for c in critiques])
+        prompt = f"""
+        당신은 AI 영상 연출가입니다.
+        기존 연출 초점: {original_focus}
+        비평 내용:
+        {critique_text}
+        
+        비평을 수렴하여 영상의 자연스러움과 연출적 완성도를 높일 수 있는 개선된 연출 지시어(영문)를 작성하세요.
+        """
+        response = self.client.messages.create(
+            model=self.model,
+            max_tokens=300,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.content[0].text.strip()
+
     def self_practice(self, focus: str):
         print(f"\n[Video Evolution] Focus Training: {focus}")
         
-        # 1. 모델 선택 및 연출 기획
-        model = "Grok Imagine Video (Simulated)"
-        print(f"[Video] Selected model: {model} for {focus}")
-        
-        # 2. 영상 생성 시뮬레이션
-        vid_path = self.generate_from_image("mock_img.png", f"Motion focus: {focus}")
-        
-        # 3. 비평 (모션 및 연출 평가)
+        # 1. 초안 연출 기획
         dummy_scenario = Scenario(
             title=f"Video Practice: {focus}",
             synopsis=focus,
-            script=f"Motion Description: {focus}\nModel Used: {model}",
+            script=f"Motion Focus: {focus}",
             scenes=[],
             sound_guide={}
         )
-        print("[Evolution] Evaluating motion quality...")
-        evaluated = self.council.evaluate(dummy_scenario)
-        score_v1 = evaluated.final_score
         
-        # 4. 개선 시뮬레이션
-        score_v2 = min(10.0, score_v1 + 0.5)
+        # 2. 1차 비평
+        print("\n[Evolution] 1st Round Critique...")
+        evaluated_v1 = self.council.evaluate(dummy_scenario)
+        score_v1 = evaluated_v1.final_score
         
-        # 5. 진화 기록
+        # 3. 연출 계획 수정
+        revised_focus = self.revise_plan(focus, evaluated_v1.critiques)
+        print(f"[Video] Revised motion focus: {revised_focus}")
+        
+        # 4. 2차 비평 (재평가)
+        dummy_scenario_v2 = Scenario(
+            title=f"Video Practice: {focus} (Revised)",
+            synopsis=focus,
+            script=f"Revised Motion Focus: {revised_focus}",
+            scenes=[],
+            sound_guide={}
+        )
+        print("\n[Evolution] 2nd Round Critique (Final Assessment)...")
+        evaluated_v2 = self.council.evaluate(dummy_scenario_v2)
+        score_v2 = evaluated_v2.final_score
+        
+        # 5. 자기 성찰
+        reflection = self._generate_reflection(evaluated_v2, score_v1, score_v2)
+        
+        # 6. 진화 기록 저장
         practice = DraftPractice(
             topic="Motion Naturalness & Temporal Consistency",
             focus_point=focus,
-            scenario=evaluated,
-            self_reflection=f"프레임 간 일관성을 유지하며 {focus} 동작의 자연스러움을 개선했습니다.",
+            scenario=evaluated_v2,
+            self_reflection=reflection,
             evolution_step=self.log.current_level
         )
         self.add_experience(practice, score_v1, score_v2)

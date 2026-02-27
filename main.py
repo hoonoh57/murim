@@ -73,11 +73,11 @@ def main():
         topic = input("주제: ") or "천마의 회귀"
         events = input("요약: ") or "1화: 회귀와 첫 번째 경맥 돌파"
         
-        scenario = director.orchestrate_episode(topic, events, agents)
+        result = director.orchestrate_episode(topic, events, agents)
         
-        if scenario:
+        if result and result.scenario:
             print("\n" + "="*50)
-            print(f"   [SUCCESS] '{scenario.title}' 제작 및 배포 완료!")
+            print(f"   [SUCCESS] '{result.scenario.title}' 제작 및 배포 완료!")
             print("="*50)
         else:
             print("\n[FAIL] 제작 진행 중 중단되었습니다.")

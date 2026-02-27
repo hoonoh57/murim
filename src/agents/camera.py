@@ -12,34 +12,69 @@ class CameraAgent(BaseAgent):
         # Mocking planning logic
         return [{"scene_id": s.id, "angle": "Low Angle", "movement": "Push-in"} for s in scenes]
 
+    def revise_camera_plan(self, original_plan: str, critiques: list) -> str:
+        """비평을 바탕으로 카메라 연출 계획을 개선합니다."""
+        if self.is_mock:
+            return f"Enhanced Camera Strategy: {original_plan} with dynamic tracking and golden ratio framing."
+            
+        critique_text = "\n".join([f"- {c.comment}" for c in critiques])
+        prompt = f"""
+        당신은 촬영 감독입니다.
+        기존 연출 계획: {original_plan}
+        비평 내용:
+        {critique_text}
+        
+        비평을 수렴하여 시네마틱한 완성도를 높일 수 있는 개선된 카메라 연출 지시어(영문)를 작성하세요.
+        """
+        response = self.client.messages.create(
+            model=self.model,
+            max_tokens=300,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.content[0].text.strip()
+
     def self_practice(self, focus: str):
         print(f"\n[Camera Evolution] Focus Training: {focus}")
         
-        # 1. 연출 기획
-        concept = focus
-        print(f"[Camera] Designing cinematography for: {concept}")
-        
-        # 2. 비평 (연출 기획서 평가)
+        # 1. 초안 카메라 기획
         dummy_scenario = Scenario(
             title=f"Camera Practice: {focus}",
             synopsis=focus,
-            script=f"Cinematography Focus: {concept}\nCamera Grammar: {focus}",
+            script=f"Camera strategy: {focus}",
             scenes=[],
             sound_guide={}
         )
-        print("[Evolution] Evaluating cinematography design...")
-        evaluated = self.council.evaluate(dummy_scenario)
-        score_v1 = evaluated.final_score
         
-        # 4. 개선 시뮬레이션
-        score_v2 = min(10.0, score_v1 + 0.5)
+        # 2. 1차 비평
+        print("\n[Evolution] 1st Round Critique...")
+        evaluated_v1 = self.council.evaluate(dummy_scenario)
+        score_v1 = evaluated_v1.final_score
         
-        # 5. 진화 기록
+        # 3. 카메라 기획 수정
+        revised_plan = self.revise_camera_plan(focus, evaluated_v1.critiques)
+        print(f"[Camera] Revised strategy: {revised_plan}")
+        
+        # 4. 2차 비평 (재평가)
+        dummy_scenario_v2 = Scenario(
+            title=f"Camera Practice: {focus} (Revised)",
+            synopsis=focus,
+            script=f"Revised Camera Strategy: {revised_plan}",
+            scenes=[],
+            sound_guide={}
+        )
+        print("\n[Evolution] 2nd Round Critique (Final Assessment)...")
+        evaluated_v2 = self.council.evaluate(dummy_scenario_v2)
+        score_v2 = evaluated_v2.final_score
+        
+        # 5. 자기 성찰
+        reflection = self._generate_reflection(evaluated_v2, score_v1, score_v2)
+        
+        # 6. 진화 기록 저장
         practice = DraftPractice(
             topic="Cinematic Grammar & Composition",
             focus_point=focus,
-            scenario=evaluated,
-            self_reflection=f"시네마틱 문법을 적용하여 장면에 극적 긴장감을 더했습니다.",
+            scenario=evaluated_v2,
+            self_reflection=reflection,
             evolution_step=self.log.current_level
         )
         self.add_experience(practice, score_v1, score_v2)

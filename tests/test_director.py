@@ -5,6 +5,9 @@ from src.agents.writer import WriterAgent
 from src.agents.imaging import ImagingAgent
 from src.agents.video import VideoAgent
 from src.agents.audio import AudioAgent
+from src.agents.camera import CameraAgent
+from src.agents.art_direction import ArtDirectionAgent
+from src.agents.marketing import MarketingAgent
 from src.core.models import ProductionResult
 
 class TestDirectorAgent(unittest.TestCase):
@@ -15,7 +18,10 @@ class TestDirectorAgent(unittest.TestCase):
             "writer": WriterAgent(is_mock=self.is_mock),
             "imaging": ImagingAgent(is_mock=self.is_mock),
             "video": VideoAgent(is_mock=self.is_mock),
-            "audio": AudioAgent(is_mock=self.is_mock)
+            "audio": AudioAgent(is_mock=self.is_mock),
+            "camera": CameraAgent(is_mock=self.is_mock),
+            "art_direction": ArtDirectionAgent(is_mock=self.is_mock),
+            "marketing": MarketingAgent(is_mock=self.is_mock)
         }
 
     def test_orchestrate_episode_success(self):
