@@ -12,9 +12,13 @@ class CameraAgent(BaseAgent):
         
         emotion_map = {
             "epic": {"angle": "Extreme Wide Shot", "movement": "Slow Zoom-in"},
+            "비장함": {"angle": "Extreme Wide Shot", "movement": "Slow Zoom-in"},
             "action": {"angle": "Dutch Angle", "movement": "Handheld Shake"},
+            "전투": {"angle": "Dutch Angle", "movement": "Handheld Shake"},
             "sad": {"angle": "Close-up", "movement": "Static"},
-            "mystery": {"angle": "Low Angle", "movement": "Push-in"}
+            "슬픔": {"angle": "Close-up", "movement": "Static"},
+            "mystery": {"angle": "Low Angle", "movement": "Push-in"},
+            "신비": {"angle": "Low Angle", "movement": "Push-in"}
         }
         
         plan = []

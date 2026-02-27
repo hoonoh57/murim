@@ -9,6 +9,7 @@ class TestWriterAgent(unittest.TestCase):
 
     def test_self_practice_flow(self):
         # 5-step loop: Draft -> Critique 1 -> Revision -> Critique 2 -> Reflection
+        initial_xp = self.writer.log.total_xp
         result = self.writer.self_practice(focus_point="전투 씬의 긴장감 묘사")
         
         # Check if the result string contains score improvement info
@@ -21,6 +22,11 @@ class TestWriterAgent(unittest.TestCase):
         self.assertEqual(practice.focus_point, "전투 씬의 긴장감 묘사")
         self.assertIsNotNone(practice.self_reflection)
         self.assertIsInstance(practice.scenario, Scenario)
+        
+        # Strengthened assertions
+        self.assertGreater(self.writer.log.total_xp, initial_xp)
+        self.assertGreaterEqual(practice.scenario.final_score, 0)
+        self.assertLessEqual(practice.scenario.final_score, 10)
 
     def test_revise_scenario(self):
         scenario = Scenario(title="Title", synopsis="Syn", script="Script", scenes=[], sound_guide={})

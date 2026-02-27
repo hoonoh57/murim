@@ -1,5 +1,6 @@
 import os
 import json
+import random
 from typing import List
 from anthropic import Anthropic
 from src.core.models import Scenario, Critique
@@ -27,7 +28,9 @@ class CouncilAgent:
         for persona in self.personas:
             if self.is_mock:
                 # 수련 루프에서 점수 변화를 시뮬레이션하기 위해 'Revised' 키워드가 있으면 높은 점수 부여
-                score = 8.5 if "Revised" in scenario.title else 7.8
+                # 현실성을 위해 소량의 랜덤 변동(±0.2) 추가
+                base_score = 8.5 if "Revised" in scenario.title else 7.8
+                score = base_score + random.uniform(-0.2, 0.2)
                 critique = Critique(
                     persona=persona,
                     score=score,
