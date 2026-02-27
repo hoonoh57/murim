@@ -18,9 +18,15 @@ class VideoAgent(BaseAgent):
         
     def revise_plan(self, original_focus: str, critiques: list) -> str:
         """비평을 바탕으로 영상 연출 및 모션 계획을 개선합니다."""
+        if not critiques:
+            return original_focus
+
         if self.is_mock:
             return f"Enhanced motion: {original_focus} with better temporal stability and fluid transitions."
             
+        if not self.client:
+            return original_focus
+
         critique_text = "\n".join([f"- {c.comment}" for c in critiques])
         prompt = f"""
         당신은 AI 영상 연출가입니다.

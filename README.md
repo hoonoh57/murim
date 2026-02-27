@@ -14,6 +14,30 @@ AI 기술을 활용한 정통무협 유튜브 콘텐츠의 완전 자동화 제�
 ## 🏗 System Architecture (4-GATE Pipeline)
 시스템은 감독(Director) 에이전트의 주도하에 4단계 품질 검증 및 제작 과정을 거칩니다.
 
+```mermaid
+graph TD
+    A[Topic Input] --> G1[GATE 1: Scenario & Review]
+    G1 -->|Rework up to 3 times| G1
+    G1 -->|GO| G2[GATE 2: Production Planning]
+    G1 -->|KILL| End[Terminate]
+    
+    G2 --> Art[Art Direction: Style Guide]
+    G2 --> Cam[Camera: Cinematic Plan]
+    
+    Art --> G3[GATE 3: Resource Production]
+    Cam --> G3
+    
+    G3 --> Img[Imaging: Image Assets]
+    G3 --> Vid[Video: Motion Assets]
+    G3 --> Aud[Audio: TTS/BGM/SFX]
+    
+    Img --> G4[GATE 4: Marketing & Distribution]
+    Vid --> G4
+    Aud --> G4
+    
+    G4 --> Res[Production Result Bundle]
+```
+
 1. **GATE 1: Scenario & Review**: 작가가 시나리오를 집필하고 6인 비평위원회가 평가합니다. 기준 점수 미달 시 최대 3회 자동 수정을 거칩니다.
 2. **GATE 2: Production Planning**: 미술 감독과 카메라 감독이 세계관 스타일 가이드 및 장면별 연출 계획을 수립합니다.
 3. **GATE 3: Resource Production**: 비주얼(이미징), 모션(비디오), 사운드 에이전트가 연출 계획에 맞춰 리소스를 생성합니다.

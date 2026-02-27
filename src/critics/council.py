@@ -26,7 +26,8 @@ class CouncilAgent:
         
         for persona in self.personas:
             if self.is_mock:
-                score = 8
+                # 수련 루프에서 점수 변화를 시뮬레이션하기 위해 'Revised' 키워드가 있으면 높은 점수 부여
+                score = 8.5 if "Revised" in scenario.title else 7.8
                 critique = Critique(
                     persona=persona,
                     score=score,

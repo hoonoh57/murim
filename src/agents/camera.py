@@ -9,14 +9,35 @@ class CameraAgent(BaseAgent):
         
     def plan_camera_angles(self, scenes: List) -> List:
         print(f"[Camera] Planning camera angles for {len(scenes)} scenes.")
-        # Mocking planning logic
-        return [{"scene_id": s.id, "angle": "Low Angle", "movement": "Push-in"} for s in scenes]
+        
+        emotion_map = {
+            "epic": {"angle": "Extreme Wide Shot", "movement": "Slow Zoom-in"},
+            "action": {"angle": "Dutch Angle", "movement": "Handheld Shake"},
+            "sad": {"angle": "Close-up", "movement": "Static"},
+            "mystery": {"angle": "Low Angle", "movement": "Push-in"}
+        }
+        
+        plan = []
+        for s in scenes:
+            style = emotion_map.get(s.emotion.lower(), {"angle": "Eye Level", "movement": "Static"})
+            plan.append({
+                "scene_id": s.id,
+                "angle": style["angle"],
+                "movement": style["movement"]
+            })
+        return plan
 
     def revise_camera_plan(self, original_plan: str, critiques: list) -> str:
         """비평을 바탕으로 카메라 연출 계획을 개선합니다."""
+        if not critiques:
+            return original_plan
+
         if self.is_mock:
             return f"Enhanced Camera Strategy: {original_plan} with dynamic tracking and golden ratio framing."
             
+        if not self.client:
+            return original_plan
+
         critique_text = "\n".join([f"- {c.comment}" for c in critiques])
         prompt = f"""
         당신은 촬영 감독입니다.

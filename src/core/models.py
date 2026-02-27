@@ -12,7 +12,7 @@ class Scene(BaseModel):
 
 class Critique(BaseModel):
     persona: str
-    score: int = Field(ge=0, le=10)
+    score: float = Field(ge=0, le=10)
     comment: str
     suggestions: List[str]
 

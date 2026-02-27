@@ -23,9 +23,15 @@ class AudioAgent(BaseAgent):
         
     def revise_soundscape(self, original_mood: str, critiques: list) -> str:
         """비평을 바탕으로 사운드스케이프 기획을 개선합니다."""
+        if not critiques:
+            return original_mood
+
         if self.is_mock:
             return f"Enhanced {original_mood}: Better BGM/SFX layering and emotional resonance."
             
+        if not self.client:
+            return original_mood
+
         critique_text = "\n".join([f"- {c.comment}" for c in critiques])
         prompt = f"""
         당신은 사운드 디자이너입니다.

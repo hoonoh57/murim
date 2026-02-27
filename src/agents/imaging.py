@@ -18,9 +18,15 @@ class ImagingAgent(BaseAgent):
 
     def revise_prompt(self, original_prompt: str, critiques: list) -> str:
         """비평을 바탕으로 프롬프트를 개선합니다."""
+        if not critiques:
+            return original_prompt
+
         if self.is_mock:
             return f"{original_prompt}, highly detailed, cinematic lighting, 8k masterpiece"
             
+        if not self.client:
+            return original_prompt
+
         print("[Imaging] AI is revising prompt based on critiques...")
         critique_text = "\n".join([f"- {c.comment}" for c in critiques])
         prompt = f"""

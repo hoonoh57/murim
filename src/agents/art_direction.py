@@ -8,13 +8,28 @@ class ArtDirectionAgent(BaseAgent):
         
     def design_style_guide(self, worldview: str) -> dict:
         print(f"[ArtDirection] Designing style guide for: {worldview}")
+        
+        # 세계관 키워드에 따른 스타일 분기
+        if "어두운" in worldview or "피브람" in worldview:
+            return {"palette": ["#1A1A1A", "#8B0000", "#4B0082"], "style": "Dark/Grim Wuxia"}
+        elif "화려한" in worldview or "황실" in worldview:
+            return {"palette": ["#FFD700", "#DAA520", "#FFFFFF"], "style": "Imperial/Bright Wuxia"}
+        elif "신비로운" in worldview or "무당" in worldview:
+            return {"palette": ["#E0FFFF", "#4682B4", "#F0F8FF"], "style": "Mystical/Taoist Wuxia"}
+        
         return {"palette": ["#2D1B1B", "#DAA520"], "style": "Traditional Wuxia"}
 
     def revise_style_guide(self, original_concept: str, critiques: list) -> str:
         """비평을 바탕으로 스타일 가이드를 개선합니다."""
+        if not critiques:
+            return original_concept
+
         if self.is_mock:
             return f"Enhanced Style: {original_concept} with deeper textures and refined color theory."
             
+        if not self.client:
+            return original_concept
+
         critique_text = "\n".join([f"- {c.comment}" for c in critiques])
         prompt = f"""
         당신은 미술 감독입니다.

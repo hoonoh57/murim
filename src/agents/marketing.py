@@ -12,9 +12,15 @@ class MarketingAgent(BaseAgent):
 
     def revise_strategy(self, original_strategy: str, critiques: list) -> str:
         """비평을 바탕으로 마케팅 전략을 개선합니다."""
+        if not critiques:
+            return original_strategy
+
         if self.is_mock:
             return f"Enhanced Strategy: {original_strategy} with better CTR optimization and emotional hooks."
             
+        if not self.client:
+            return original_strategy
+
         critique_text = "\n".join([f"- {c.comment}" for c in critiques])
         prompt = f"""
         당신은 마케팅 전문가입니다.
