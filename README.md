@@ -71,6 +71,16 @@ graph TD
    ```
 
 ## 🎮 실행 방법
+
+### 1. Human-Relay Web UI (추천)
+API 비용 없이 Claude와 대화하며 단계별로 제작하는 방식입니다.
+```bash
+python web_ui.py
+```
+접속 주소: `http://localhost:8080`
+
+### 2. CLI 자동화 모드
+에이전트들이 설정된 API를 통해 자동으로 제작을 시뮬레이션합니다.
 ```bash
 python main.py
 ```
@@ -78,5 +88,5 @@ python main.py
 ## 🗺 로드맵
 - **Phase 0**: 인프라 및 리포 정리 (완료)
 - **Phase 1**: 핵심 에이전트 및 자가 진화 루프 구현 (완료)
-- **Phase 2**: 4-GATE 통합 프로덕션 파이프라인 고도화 (진행 중)
-- **Phase 3**: 다국어 채널 업로드 및 마케팅 자동화
+- **Phase 2**: 4-GATE 통합 프로덕션 파이프라인 및 Web UI (완료)
+- **Phase 3**: 다국어 채널 업로드 및 리얼 API 연동 고도화 (진행 중)

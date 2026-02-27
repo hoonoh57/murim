@@ -23,9 +23,9 @@ class ParsedResponse:
 class BatchParser:
     """배치 응답을 파싱하여 각 에이전트별 결과로 분배합니다."""
 
-    # RES 블록을 찾는 정규식 패턴
+    # RES 블록을 찾는 정규식 패턴 (숫자뿐 아니라 005R 등의 알파벳 접미사 포함 지원)
     BLOCK_PATTERN = re.compile(
-        r'---\[RES-(\d+)\s*\|\s*([^\]]+)\]---\s*'
+        r'---\[RES-([\w-]+)\s*\|\s*([^\]]+)\]---\s*'
         r'(.*?)'
         r'---\[END\s+RES-\1\]---',
         re.DOTALL
