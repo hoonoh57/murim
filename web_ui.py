@@ -223,9 +223,10 @@ def auto_run():
     if not topic:
         return jsonify({"error": "주제를 입력해 주세요."}), 400
         
-    api_key = os.getenv("GOOGLE_API_KEY")
-    if not api_key:
-        return jsonify({"error": "GOOGLE_API_KEY가 서버에 설정되어 있지 않습니다."}), 500
+    # 다중 키 또는 단일 키 확인
+    api_keys = os.getenv("GOOGLE_API_KEYS") or os.getenv("GOOGLE_API_KEY")
+    if not api_keys:
+        return jsonify({"error": "GOOGLE_API_KEY 또는 GOOGLE_API_KEYS가 서버에 설정되어 있지 않습니다."}), 500
         
     # 세션 생성
     sid = str(uuid.uuid4())
@@ -233,8 +234,8 @@ def auto_run():
     relay = RelaySession(topic=topic, events=events or "자동 생성")
     sessions_store[sid] = relay
     
-    # 자동화 실행
-    client = GeminiFreeClient(api_key=api_key)
+    # 자동화 실행 (GeminiFreeClient가 내부적으로 다중 키 파싱 및 로테이션 수행)
+    client = GeminiFreeClient(api_keys=api_keys)
     automator = RelayAutomator(relay, client)
     
     try:

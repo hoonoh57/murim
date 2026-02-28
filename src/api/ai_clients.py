@@ -18,28 +18,68 @@ class MockHelper:
         return path
 
 class GeminiFreeClient:
-    """Google Gemini 무료 API (Generative AI SDK) 클라이언트"""
+    """Google Gemini 무료 API (Generative AI SDK) 클라이언트 - 다중 키 및 자동 전환 지원"""
     
-    def __init__(self, api_key=None, model_name="gemini-1.5-flash"):
-        self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
-        if not self.api_key:
+    def __init__(self, api_keys=None, model_name="gemini-1.5-flash"):
+        # api_keys는 리스트이거나 쉼표로 구분된 문자열일 수 있음
+        raw_keys = api_keys or os.getenv("GOOGLE_API_KEYS") or os.getenv("GOOGLE_API_KEY")
+        if isinstance(raw_keys, str):
+            self.api_keys = [k.strip() for k in raw_keys.split(",") if k.strip()]
+        else:
+            self.api_keys = raw_keys or []
+            
+        if not self.api_keys:
             print("[WARNING] GOOGLE_API_KEY가 없습니다. Mock 모드로 동작하거나 오류가 발생할 수 있습니다.")
-        
+            
+        self.current_key_index = 0
+        self.model_name = model_name
+        self._setup_model()
+
+    def _setup_model(self):
+        if not self.api_keys:
+            self.model = None
+            return
+
         import google.generativeai as genai
-        genai.configure(api_key=self.api_key)
-        self.model = genai.GenerativeModel(model_name)
+        current_key = self.api_keys[self.current_key_index]
+        genai.configure(api_key=current_key)
+        self.model = genai.GenerativeModel(self.model_name)
+        print(f"[Gemini] Using API Key {self.current_key_index + 1}/{len(self.api_keys)}: {current_key[:8]}...")
+
+    def _switch_to_next_key(self) -> bool:
+        """다음 사용 가능한 키로 전환. 모든 키를 소진하면 False 반환."""
+        if len(self.api_keys) <= 1:
+            return False
+            
+        self.current_key_index += 1
+        if self.current_key_index >= len(self.api_keys):
+            print("[Gemini] All registered API keys have been exhausted.")
+            return False
+            
+        self._setup_model()
+        return True
 
     def generate_response(self, prompt: str) -> str:
-        """배치 프롬프트에 대한 응답을 생성합니다."""
-        if not self.api_key:
+        """배치 프롬프트에 대한 응답을 생성하며, 할당량 초과 시 키를 자동 전환합니다."""
+        if not self.api_keys:
             return "---[RES-001 | WriterAgent]---\n{\"title\": \"Mock\", \"script\": \"Key missing\"}\n---[END RES-001]---"
 
-        try:
-            response = self.model.generate_content(prompt)
-            return response.text
-        except Exception as e:
-            print(f"[Gemini ERROR] {e}")
-            return f"Error: {e}"
+        while True:
+            try:
+                response = self.model.generate_content(prompt)
+                return response.text
+            except Exception as e:
+                err_msg = str(e).lower()
+                # 429 Resource Exhausted 또는 Quota 관련 에러 감지
+                if "429" in err_msg or "resource_exhausted" in err_msg or "quota" in err_msg:
+                    print(f"[Gemini Quota Error] Key {self.current_key_index + 1} exhausted.")
+                    if self._switch_to_next_key():
+                        print(f"[Gemini] Retrying with Key {self.current_key_index + 1}...")
+                        time.sleep(1) # 짧은 지연 후 재시도
+                        continue
+                
+                print(f"[Gemini ERROR] {e}")
+                return f"Error: {e}"
 
 class ScenarioEngine:
 # ... (rest of the existing file)
