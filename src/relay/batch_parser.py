@@ -19,6 +19,23 @@ class ParsedResponse:
         self.parsed_json = parsed_json
         self.is_json = parsed_json is not None
 
+    def to_dict(self) -> dict:
+        return {
+            "res_id": self.res_id,
+            "owner": self.owner,
+            "raw_text": self.raw_text,
+            "parsed_json": self.parsed_json
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> 'ParsedResponse':
+        return cls(
+            res_id=data.get("res_id", ""),
+            owner=data.get("owner", ""),
+            raw_text=data.get("raw_text", ""),
+            parsed_json=data.get("parsed_json")
+        )
+
 
 class BatchParser:
     """배치 응답을 파싱하여 각 에이전트별 결과로 분배합니다."""

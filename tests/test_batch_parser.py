@@ -83,5 +83,13 @@ RES-002 | Council
         self.assertIsNotNone(resp)
         self.assertEqual(resp.res_id, "RES-001")
 
+    def test_parsed_response_serialization(self):
+        resp = ParsedResponse("RES-001", "Owner", "Raw", {"k": "v"})
+        data = resp.to_dict()
+        new_resp = ParsedResponse.from_dict(data)
+        self.assertEqual(new_resp.res_id, "RES-001")
+        self.assertEqual(new_resp.owner, "Owner")
+        self.assertEqual(new_resp.parsed_json["k"], "v")
+
 if __name__ == "__main__":
     unittest.main()

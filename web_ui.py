@@ -12,9 +12,37 @@ app = Flask(__name__)
 # Use a fixed key from .env for session persistence across restarts
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "murim_factory_stable_secret_dev_key")
 
-# 세션별 RelaySession 저장 (단순 구현: 메모리 저장)
+# 세션별 RelaySession 저장 (메모리 + 파일)
 sessions_store: dict = {}
+SESSIONS_DIR = "sessions"
 
+def save_session_to_file(sid: str, relay: RelaySession):
+    """세션을 JSON 파일로 저장"""
+    if not os.path.exists(SESSIONS_DIR):
+        os.makedirs(SESSIONS_DIR)
+    
+    filepath = os.path.join(SESSIONS_DIR, f"{sid}.json")
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(relay.to_dict(), f, ensure_ascii=False, indent=2)
+
+def load_all_sessions():
+    """서버 시작 시 저정된 세션들을 메모리로 로드"""
+    if not os.path.exists(SESSIONS_DIR):
+        return
+    
+    count = 0
+    for filename in os.listdir(SESSIONS_DIR):
+        if filename.endswith(".json"):
+            sid = filename[:-5]
+            filepath = os.path.join(SESSIONS_DIR, filename)
+            try:
+                with open(filepath, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    sessions_store[sid] = RelaySession.from_dict(data)
+                    count += 1
+            except Exception as e:
+                print(f"Error loading session {filename}: {e}")
+    print(f"Loaded {count} sessions from disk.")
 
 def get_session() -> RelaySession:
     sid = session.get("sid")
@@ -46,6 +74,7 @@ def start_episode():
     sessions_store[sid] = relay
     
     batch_text = relay.start_round1()
+    save_session_to_file(sid, relay)
     
     return jsonify({
         "round": 1,
@@ -58,6 +87,7 @@ def start_episode():
 def submit_response():
     """사용자가 Claude 응답을 붙여넣으면 파싱 후 다음 라운드 진행"""
     relay = get_session()
+    sid = session.get("sid")
     if not relay:
         return jsonify({"error": "세션이 없습니다. 새로 시작해 주세요."}), 400
     
@@ -68,6 +98,7 @@ def submit_response():
         return jsonify({"error": "응답을 입력해 주세요."}), 400
     
     current = relay.current_round
+    response_data = {}
     
     if current == 1:
         # Round 1 응답 처리 → Round 2 프롬프트 생성
@@ -80,33 +111,33 @@ def submit_response():
             }), 422
         
         batch_text = relay.start_round2()
-        return jsonify({
+        response_data = {
             "round": 2,
             "batch_prompt": batch_text,
             "messages": relay.messages,
             "scenario_preview": relay.scenario_json
-        })
+        }
     
     elif current == 2:
         # Round 2 응답 처리 → Round 3 프롬프트 생성
         result = relay.process_round2_response(raw_response)
         
         if result.get("killed"):
-            return jsonify({
+            response_data = {
                 "round": -1,
                 "status": "killed",
                 "messages": relay.messages,
                 "summary": relay.get_summary()
-            })
-        
-        batch_text = relay.start_round3()
-        return jsonify({
-            "round": 3,
-            "batch_prompt": batch_text,
-            "messages": relay.messages,
-            "needs_rework": result.get("needs_rework", False),
-            "council_result": relay.council_json
-        })
+            }
+        else:
+            batch_text = relay.start_round3()
+            response_data = {
+                "round": 3,
+                "batch_prompt": batch_text,
+                "messages": relay.messages,
+                "needs_rework": result.get("needs_rework", False),
+                "council_result": relay.council_json
+            }
     
     elif current == 3:
         # Round 3 응답 처리
@@ -115,21 +146,25 @@ def submit_response():
         if result.get("reworked"):
             # Rework 완료 → Round 2로 복귀
             batch_text = relay.start_round2()
-            return jsonify({
+            response_data = {
                 "round": 2,
                 "batch_prompt": batch_text,
                 "messages": relay.messages,
                 "reworked": True
-            })
-        
-        # 제작 완료
-        return jsonify({
-            "round": 99,
-            "status": "completed",
-            "messages": relay.messages,
-            "summary": relay.get_summary()
-        })
+            }
+        else:
+            # 제작 완료
+            response_data = {
+                "round": 99,
+                "status": "completed",
+                "messages": relay.messages,
+                "summary": relay.get_summary()
+            }
     
+    if response_data:
+        save_session_to_file(sid, relay)
+        return jsonify(response_data)
+        
     return jsonify({"error": "알 수 없는 상태"}), 400
 
 
@@ -137,10 +172,13 @@ def submit_response():
 def force_go():
     """REWORK 판정이지만 강제로 GO 진행"""
     relay = get_session()
+    sid = session.get("sid")
     if not relay:
         return jsonify({"error": "세션이 없습니다."}), 400
     
     batch_text = relay.start_round3(force_go=True)
+    save_session_to_file(sid, relay)
+    
     return jsonify({
         "round": 3,
         "batch_prompt": batch_text,
@@ -184,6 +222,9 @@ def download_result():
 
 if __name__ == "__main__":
     os.makedirs("templates", exist_ok=True)
+    os.makedirs(SESSIONS_DIR, exist_ok=True)
+    load_all_sessions()
+    
     print("\n" + "=" * 50)
     print("  MURIM AI FACTORY — Human Relay UI")
     print("  http://localhost:8080")

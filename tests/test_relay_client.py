@@ -53,10 +53,16 @@ class TestRelaySession(unittest.TestCase):
         self.assertEqual(self.session.rework_count, 1)
         self.assertIn("REQ-005R", prompt)
 
-    def test_get_summary(self):
-        summary = self.session.get_summary()
-        self.assertEqual(summary["topic"], "Topic")
-        self.assertIn("status", summary)
+    def test_serialization(self):
+        self.session.start_round1()
+        data = self.session.to_dict()
+        self.assertEqual(data["topic"], "Topic")
+        self.assertEqual(data["status"], "round1")
+        
+        new_session = RelaySession.from_dict(data)
+        self.assertEqual(new_session.topic, "Topic")
+        self.assertEqual(new_session.status, "round1")
+        self.assertEqual(new_session.current_round, 1)
 
 if __name__ == "__main__":
     unittest.main()

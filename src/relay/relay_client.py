@@ -230,5 +230,48 @@ class RelaySession:
             "audio": self.audio_json,
             "marketing": self.marketing_json,
             "messages": self.messages,
-            "rework_count": self.rework_count
+            "rework_count": self.rework_count,
+            "current_round": self.current_round
         }
+
+    def to_dict(self) -> dict:
+        """세션 상태 전체를 딕셔너리로 변환 (저장용)"""
+        data = self.get_summary()
+        
+        # round_results 직렬화
+        serialized_results = {}
+        for round_num, results in self.round_results.items():
+            serialized_results[str(round_num)] = {
+                res_id: resp.to_dict() for res_id, resp in results.items()
+            }
+        data["round_results"] = serialized_results
+        return data
+
+    @classmethod
+    def from_dict(cls, data: dict) -> 'RelaySession':
+        """딕셔너리로부터 세션 복구"""
+        session = cls(topic=data.get("topic", ""), events=data.get("events", ""))
+        session.status = data.get("status", "initialized")
+        session.current_round = data.get("current_round", 0)
+        session.rework_count = data.get("rework_count", 0)
+        session.messages = data.get("messages", [])
+        
+        session.scenario_json = data.get("scenario")
+        session.council_json = data.get("council")
+        session.style_guide_json = data.get("style_guide")
+        session.camera_plans_json = data.get("camera_plans")
+        session.imaging_json = data.get("imaging")
+        session.video_json = data.get("video")
+        session.audio_json = data.get("audio")
+        session.marketing_json = data.get("marketing")
+        
+        # round_results 복구
+        raw_results = data.get("round_results", {})
+        for round_str, results_dict in raw_results.items():
+            round_num = int(round_str)
+            session.round_results[round_num] = {
+                res_id: ParsedResponse.from_dict(resp_data) 
+                for res_id, resp_data in results_dict.items()
+            }
+        
+        return session
