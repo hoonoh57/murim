@@ -289,7 +289,7 @@ class BatchBuilder:
         lines.append(f"[응답 형식 가이드]")
         lines.append(f"아래 형식들을 답변에 그대로 포함시켜 주세요:")
         for req in requests:
-            res_id = req.req_id.split('-')[1]
+            res_id = req.req_id.replace("REQ-", "")
             lines.append(f"---[RES-{res_id} | {req.owner}]---")
             lines.append(f"(이곳에 {req.response_format.upper()} 응답 작성)")
             lines.append(f"---[END RES-{res_id}]---")

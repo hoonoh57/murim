@@ -26,9 +26,12 @@ def save_session_to_file(sid: str, relay: RelaySession):
         json.dump(relay.to_dict(), f, ensure_ascii=False, indent=2)
 
 def load_all_sessions():
-    """서버 시작 시 저정된 세션들을 메모리로 로드"""
+    """서버 시작 시 저장된 세션들을 메모리로 로드"""
     if not os.path.exists(SESSIONS_DIR):
         return
+    
+    # 오래된 세션 정리 (7일 초과)
+    cleanup_old_sessions(days=7)
     
     count = 0
     for filename in os.listdir(SESSIONS_DIR):
@@ -43,6 +46,29 @@ def load_all_sessions():
             except Exception as e:
                 print(f"Error loading session {filename}: {e}")
     print(f"Loaded {count} sessions from disk.")
+
+def cleanup_old_sessions(days: int = 7):
+    """지정한 일수보다 오래된 세션 파일 삭제"""
+    if not os.path.exists(SESSIONS_DIR):
+        return
+    
+    import time
+    now = time.time()
+    cutoff = now - (days * 86400)
+    
+    removed = 0
+    for filename in os.listdir(SESSIONS_DIR):
+        if filename.endswith(".json"):
+            filepath = os.path.join(SESSIONS_DIR, filename)
+            if os.path.getmtime(filepath) < cutoff:
+                try:
+                    os.remove(filepath)
+                    removed += 1
+                except Exception as e:
+                    print(f"Failed to remove old session {filename}: {e}")
+    
+    if removed > 0:
+        print(f"Cleaned up {removed} sessions older than {days} days.")
 
 def get_session() -> RelaySession:
     sid = session.get("sid")
