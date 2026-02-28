@@ -75,6 +75,14 @@ RES-002 | Council
         self.assertIn("RES-002", results)
         self.assertEqual(results["RES-001"].owner, "Writer")
 
+    def test_fallback_parse_alphanumeric(self):
+        raw = "이것은 클로드의 답변입니다.\nRES-005R | WriterAgent\n{\"title\": \"Re-written\"}\n---[END RES-005R]---"
+        results = self.parser.parse(raw)
+        self.assertIn("RES-005R", results)
+        resp = results["RES-005R"]
+        self.assertEqual(resp.owner, "WriterAgent")
+        self.assertEqual(resp.parsed_json["title"], "Re-written")
+
     def test_get_by_owner(self):
         results = {
             "RES-001": ParsedResponse("RES-001", "WriterAgent", "...", {"t": 1})

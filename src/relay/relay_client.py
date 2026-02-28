@@ -178,13 +178,17 @@ class RelaySession:
         results = self.parser.parse(raw_response)
         self.round_results[3] = results
         
-        # Rework 경로인 경우: 수정된 시나리오로 교체하고 Round 2로 복귀 가능
+        # Rework 경로인 경우: WriterAgent의 수정본 수신 확인
         writer_resp = self.parser.get_by_owner(results, "Writer")
         if writer_resp and writer_resp.parsed_json:
             self.scenario_json = writer_resp.parsed_json
             self.messages.append(
                 f"📝 수정 시나리오 수신: \"{self.scenario_json.get('title', 'N/A')}\""
             )
+            # Rework 성공 → 다시 평가(Round 2) 단계로 상태 변경
+            self.status = "round2"
+            # start_round2()에서 2로 재조정되지만, 여기서 미리 맞춰둠 (정합성)
+            self.current_round = 2
             return {"success": True, "reworked": True}
         
         # GO 경로: 리소스 결과 수집

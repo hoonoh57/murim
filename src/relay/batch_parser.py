@@ -112,18 +112,19 @@ class BatchParser:
         """
         results = {}
         
-        # 느슨한 패턴: RES-숫자와 owner를 찾고, 다음 RES나 END까지를 내용으로 간주
+        # 느슨한 패턴: RES-ID와 owner를 찾고, 다음 RES나 END까지를 내용으로 간주
         loose_pattern = re.compile(
-            r'(?:---\s*\[?\s*)?RES-(\d+)\s*[\|\:]?\s*([^\]\-\n]+)(?:\s*\]?\s*---)?'
-            r'\s*(.*?)(?=(?:---\s*\[?\s*)?RES-\d+|$)',
+            r'(?:---\s*\[?\s*)?RES-([\w-]+)\s*[\|\:]?\s*([^\]\-\n]+)(?:\s*\]?\s*---)?'
+            r'\s*(.*?)(?=(?:---\s*\[?\s*)?RES-[\w-]+|$)',
             re.DOTALL | re.IGNORECASE
         )
         
         matches = loose_pattern.findall(raw_response)
-        for num, owner, content in matches:
-            res_id = f"RES-{num}"
+        for id_part, owner, content in matches:
+            res_id = f"RES-{id_part}"
             owner = owner.strip().rstrip(']').strip()
-            content = re.sub(r'---\[END\s+RES-\d+\]---', '', content).strip()
+            # END RES-XXX 구문 제거 (다양한 ID 형식 대응)
+            content = re.sub(r'---\[?END\s+RES-[\w-]+\s*\]?---', '', content, flags=re.IGNORECASE).strip()
             
             if content:
                 parsed_json = self.extract_json(content)

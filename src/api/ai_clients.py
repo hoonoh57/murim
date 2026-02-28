@@ -59,12 +59,13 @@ class GeminiFreeClient:
         self._setup_model()
         return True
 
-    def generate_response(self, prompt: str) -> str:
+    def generate_response(self, prompt: str, max_retries: int = 5) -> str:
         """배치 프롬프트에 대한 응답을 생성하며, 할당량 초과 시 키를 자동 전환합니다."""
         if not self.api_keys:
             return "---[RES-001 | WriterAgent]---\n{\"title\": \"Mock\", \"script\": \"Key missing\"}\n---[END RES-001]---"
 
-        while True:
+        retries = 0
+        while retries < max_retries:
             try:
                 response = self.model.generate_content(prompt)
                 return response.text
@@ -76,10 +77,13 @@ class GeminiFreeClient:
                     if self._switch_to_next_key():
                         print(f"[Gemini] Retrying with Key {self.current_key_index + 1}...")
                         time.sleep(1) # 짧은 지연 후 재시도
+                        retries += 1
                         continue
                 
                 print(f"[Gemini ERROR] {e}")
                 return f"Error: {e}"
+        
+        return "Error: Maximum retries reached for API key rotation."
 
 class ScenarioEngine:
 # ... (rest of the existing file)

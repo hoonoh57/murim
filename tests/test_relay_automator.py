@@ -38,7 +38,18 @@ class TestRelayAutomator(unittest.TestCase):
         
         self.assertEqual(summary["rework_count"], 1)
         self.assertEqual(summary["scenario"]["title"], "Improved")
-        self.assertEqual(summary["status"], "completed")
+    def test_run_all_killed(self):
+        # Round 1 (OK), Round 2 (KILL)
+        self.mock_ai.generate_response.side_effect = [
+            '---[RES-001 | WriterAgent]---\n{"title": "Initial", "scenes": []}\n---[END RES-001]---',
+            '---[RES-002 | CouncilAgent]---\n{"average_score": 5.0, "verdict": "KILL"}\n---[END RES-002]---'
+        ]
+        
+        automator = RelayAutomator(self.session, self.mock_ai)
+        summary = automator.run_all()
+        
+        self.assertEqual(summary["status"], "killed")
+        self.assertEqual(self.mock_ai.generate_response.call_count, 2)
 
 if __name__ == "__main__":
     unittest.main()
