@@ -122,6 +122,7 @@
     <script>
         let currentRound = 0;
         let currentBatchPrompt = "";
+        let currentOutputDir = "";  // ✅ [NEW] 자동 저장 경로 추적
 
         // ─── API Calls ───
 
@@ -177,7 +178,9 @@
                 }
 
                 updateLog(data.messages);
-                showComplete(data.summary);
+                // ✅ [NEW] 저장 경로 수신
+                if (data.output_dir) currentOutputDir = data.output_dir;
+                showComplete(data.summary, data.output_dir);
                 updateSteps(99);
                 addLog("🎉 자동 제작이 성공적으로 완료되었습니다!");
             } catch (e) {
@@ -213,12 +216,13 @@
                 document.getElementById("response-input").value = "";
 
                 if (data.round === 99 || data.status === "completed") {
-                    // 완료
-                    showComplete(data.summary);
+                    // ✅ [NEW] 저장 경로 수신 후 완료 화면
+                    if (data.output_dir) currentOutputDir = data.output_dir;
+                    showComplete(data.summary, data.output_dir);
                     updateSteps(99);
                 } else if (data.status === "killed") {
                     addLog("💀 제작이 중단되었습니다.");
-                    showComplete(data.summary);
+                    showComplete(data.summary, null);
                 } else {
                     // 다음 라운드
                     currentRound = data.round;
@@ -276,7 +280,8 @@
                 `Round ${round}의 Claude 응답을 여기에 붙여넣으세요...`;
         }
 
-        function showComplete(summary) {
+        // ✅ [NEW] output_dir 파라미터 추가
+        function showComplete(summary, outputDir) {
             document.getElementById("phase-relay").classList.add("hidden");
             document.getElementById("phase-complete").classList.remove("hidden");
 
@@ -305,7 +310,40 @@
             `;
             grid.appendChild(headerEl);
 
-            // ── 2. 에이전트별 결과 카드 ──
+            // ── 2. ✅ [NEW] 자동 저장 경로 카드 ──
+            if (outputDir) {
+                const saveEl = document.createElement("div");
+                saveEl.className = "result-item fade-in";
+                saveEl.style.gridColumn = "1 / -1";
+                saveEl.style.borderLeft = "3px solid var(--green)";
+
+                const dirName = outputDir.split(/[\\/]/).pop();
+                saveEl.innerHTML = `
+                    <h3>💾 자동 저장 완료</h3>
+                    <div style="margin-top:8px;">
+                        <div style="font-family: monospace; background: var(--bg-dark, #111); padding: 10px 14px; border-radius:6px; font-size:0.9em; color: var(--green);">
+                            📁 ${outputDir}/
+                        </div>
+                        <div style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; font-size:0.85em; color: var(--text-dim);">
+                            <span>📄 episode.json</span>
+                            <span>📄 scenario.json</span>
+                            <span>📄 marketing.json</span>
+                            <span>📂 prompts/image_prompts.json</span>
+                            <span>📂 prompts/video_prompts.json</span>
+                            <span>📂 prompts/audio_guide.json</span>
+                            <span>📂 images/ (Phase 4)</span>
+                            <span>📂 videos/ (Phase 4)</span>
+                            <span>📂 audio/ (Phase 4)</span>
+                        </div>
+                        <div style="margin-top:8px; font-size:0.82em; color: var(--text-dim);">
+                            ✅ 다음 Phase에서 <code>outputs/${dirName}/prompts/image_prompts.json</code>을 바로 읽어 이미지를 생성할 수 있습니다.
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(saveEl);
+            }
+
+            // ── 3. 에이전트별 결과 카드 ──
             const items = [
                 {
                     title: "📝 시나리오", data: summary.scenario, highlight: "title",
@@ -364,7 +402,7 @@
                 grid.appendChild(el);
             });
 
-            // ── 3. 다운로드 + 새 에피소드 버튼 (전체 너비) ──
+            // ── 4. 다운로드 + 새 에피소드 버튼 (전체 너비) ──
             const actionsEl = document.createElement("div");
             actionsEl.className = "result-item fade-in";
             actionsEl.style.gridColumn = "1 / -1";
@@ -377,7 +415,7 @@
                 </div>
                 <div class="btn-group" style="justify-content:center;">
                     <button class="btn btn-primary" onclick="downloadJSON()">
-                        💾 전체 JSON 다운로드
+                        💾 episode.json 다운로드
                     </button>
                     <button class="btn btn-copy" onclick="copyFullJSON()">
                         📋 JSON 클립보드 복사
@@ -430,7 +468,7 @@
             btns.forEach(b => b.disabled = on);
         }
 
-        // ─── Clipboard ───
+        // ─── Clipboard / Download ───
 
         function copyPrompt() {
             const text = document.getElementById("prompt-content").textContent;
@@ -441,7 +479,6 @@
                 btn.style.background = "#27ae60";
                 setTimeout(() => { btn.textContent = orig; btn.style.background = ""; }, 2000);
             }).catch(() => {
-                // Fallback
                 const ta = document.createElement("textarea");
                 ta.value = text;
                 document.body.appendChild(ta);
@@ -463,6 +500,7 @@
         }
 
         function downloadJSON() {
+            // ✅ [NEW] outputs 폴더의 episode.json 다운로드 (서버 파일 서빙)
             window.location.href = "/api/download";
         }
 

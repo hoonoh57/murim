@@ -1,7 +1,7 @@
 import os
 import json
 import uuid
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify, session, send_file
 from dotenv import load_dotenv
 from src.relay.relay_client import RelaySession
 from src.relay.relay_automator import RelayAutomator
@@ -17,6 +17,8 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY", "murim_factory_stable_secret_dev_
 # 세션별 RelaySession 저장 (메모리 + 파일)
 sessions_store: dict = {}
 SESSIONS_DIR = "sessions"
+OUTPUTS_DIR  = "outputs"   # ✅ [NEW] 구조화 출력 디렉토리
+
 
 def save_session_to_file(sid: str, relay: RelaySession):
     """세션을 JSON 파일로 저장"""
@@ -26,6 +28,7 @@ def save_session_to_file(sid: str, relay: RelaySession):
     filepath = os.path.join(SESSIONS_DIR, f"{sid}.json")
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(relay.to_dict(), f, ensure_ascii=False, indent=2)
+
 
 def load_all_sessions():
     """서버 시작 시 저장된 세션들을 메모리로 로드"""
@@ -49,6 +52,7 @@ def load_all_sessions():
                 print(f"Error loading session {filename}: {e}")
     print(f"Loaded {count} sessions from disk.")
 
+
 def cleanup_old_sessions(days: int = 7):
     """지정한 일수보다 오래된 세션 파일 삭제"""
     if not os.path.exists(SESSIONS_DIR):
@@ -71,6 +75,7 @@ def cleanup_old_sessions(days: int = 7):
     
     if removed > 0:
         print(f"Cleaned up {removed} sessions older than {days} days.")
+
 
 def get_session() -> RelaySession:
     sid = session.get("sid")
@@ -129,7 +134,6 @@ def submit_response():
     response_data = {}
     
     if current == 1:
-        # Round 1 응답 처리 → Round 2 프롬프트 생성
         result = relay.process_round1_response(raw_response)
         if not result["success"]:
             return jsonify({
@@ -147,7 +151,6 @@ def submit_response():
         }
     
     elif current == 2:
-        # Round 2 응답 처리 → Round 3 프롬프트 생성
         result = relay.process_round2_response(raw_response)
         
         if result.get("killed"):
@@ -168,11 +171,9 @@ def submit_response():
             }
     
     elif current == 3:
-        # Round 3 응답 처리
         result = relay.process_round3_response(raw_response)
         
         if result.get("reworked"):
-            # Rework 완료 → Round 2로 복귀
             batch_text = relay.start_round2()
             response_data = {
                 "round": 2,
@@ -181,12 +182,14 @@ def submit_response():
                 "reworked": True
             }
         else:
-            # 제작 완료
+            # ✅ [NEW] 파이프라인 완료 → outputs/ 폴더에 구조화 자동 저장
+            output_dir = relay.save_to_outputs(OUTPUTS_DIR)
             response_data = {
                 "round": 99,
                 "status": "completed",
                 "messages": relay.messages,
-                "summary": relay.get_summary()
+                "summary": relay.get_summary(),
+                "output_dir": output_dir  # UI에 저장 경로 전달
             }
     
     if response_data:
@@ -223,28 +226,28 @@ def auto_run():
     if not topic:
         return jsonify({"error": "주제를 입력해 주세요."}), 400
         
-    # 다중 키 또는 단일 키 확인
     api_keys = os.getenv("GOOGLE_API_KEYS") or os.getenv("GOOGLE_API_KEY")
     if not api_keys:
         return jsonify({"error": "GOOGLE_API_KEY 또는 GOOGLE_API_KEYS가 서버에 설정되어 있지 않습니다."}), 500
         
-    # 세션 생성
     sid = str(uuid.uuid4())
     session["sid"] = sid
     relay = RelaySession(topic=topic, events=events or "자동 생성")
     sessions_store[sid] = relay
     
-    # 자동화 실행 (GeminiFreeClient가 내부적으로 다중 키 파싱 및 로테이션 수행)
     client = GeminiFreeClient(api_keys=api_keys)
     automator = RelayAutomator(relay, client)
     
     try:
         summary = automator.run_all()
+        # ✅ [NEW] 자동 제작 완료 → outputs/ 폴더에 구조화 자동 저장
+        output_dir = relay.save_to_outputs(OUTPUTS_DIR)
         save_session_to_file(sid, relay)
         return jsonify({
             "status": "completed",
             "messages": relay.messages,
-            "summary": summary
+            "summary": relay.get_summary(),
+            "output_dir": output_dir  # UI에 저장 경로 전달
         })
     except Exception as e:
         return jsonify({"error": f"자동화 중 오류 발생: {str(e)}"}), 500
@@ -261,17 +264,30 @@ def get_summary():
 
 @app.route("/api/download", methods=["GET"])
 def download_result():
-    """제작 결과 JSON 파일 다운로드"""
+    """
+    제작 결과 JSON 파일 다운로드.
+    outputs/ 폴더에 저장된 episode.json을 우선 서빙하고,
+    없으면 메모리 요약을 동적으로 반환합니다.
+    """
     from flask import Response
-    from datetime import datetime
+    from datetime import datetime as dt
     
     relay = get_session()
     if not relay:
         return jsonify({"error": "세션이 없습니다."}), 400
     
-    summary = relay.get_summary()
-    filename = f"murim_episode_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    # ✅ [NEW] outputs 폴더의 파일이 있으면 그것을 서빙
+    if relay.output_dir and os.path.isfile(os.path.join(relay.output_dir, "episode.json")):
+        return send_file(
+            os.path.join(relay.output_dir, "episode.json"),
+            mimetype="application/json",
+            as_attachment=True,
+            download_name=f"episode_{os.path.basename(relay.output_dir)}.json"
+        )
     
+    # Fallback: 메모리 요약 동적 직렬화
+    summary = relay.get_summary()
+    filename = f"murim_episode_{dt.now().strftime('%Y%m%d_%H%M%S')}.json"
     json_str = json.dumps(summary, ensure_ascii=False, indent=2)
     
     return Response(
@@ -284,9 +300,65 @@ def download_result():
     )
 
 
+# ✅ [NEW] outputs 디렉토리 에피소드 목록 API
+@app.route("/api/outputs", methods=["GET"])
+def list_outputs():
+    """outputs/ 폴더에 저장된 에피소드 목록 반환"""
+    if not os.path.exists(OUTPUTS_DIR):
+        return jsonify({"episodes": []})
+    
+    episodes = []
+    for dir_name in sorted(os.listdir(OUTPUTS_DIR), reverse=True):
+        dir_path = os.path.join(OUTPUTS_DIR, dir_name)
+        if not os.path.isdir(dir_path) or not dir_name.startswith("ep"):
+            continue
+        
+        ep_info = {"dir": dir_name, "files": []}
+        episode_file = os.path.join(dir_path, "episode.json")
+        if os.path.isfile(episode_file):
+            try:
+                with open(episode_file, "r", encoding="utf-8") as f:
+                    ep_data = json.load(f)
+                ep_info["topic"] = ep_data.get("topic", "")
+                ep_info["status"] = ep_data.get("status", "")
+                title = (ep_data.get("scenario") or {}).get("title", "")
+                ep_info["title"] = title
+            except Exception:
+                pass
+        
+        # 저장된 파일 목록
+        for root, _, files in os.walk(dir_path):
+            for fname in files:
+                rel = os.path.relpath(os.path.join(root, fname), dir_path)
+                ep_info["files"].append(rel)
+        
+        episodes.append(ep_info)
+    
+    return jsonify({"episodes": episodes})
+
+
+# ✅ [NEW] outputs 에피소드 개별 파일 서빙 API
+@app.route("/api/outputs/<ep_dir>/<path:filepath>", methods=["GET"])
+def serve_output_file(ep_dir: str, filepath: str):
+    """outputs/{ep_dir}/{filepath} 파일을 직접 서빙합니다."""
+    # 경로 탈출 방지 (보안)
+    safe_dir = os.path.basename(ep_dir)
+    full_path = os.path.realpath(os.path.join(OUTPUTS_DIR, safe_dir, filepath))
+    outputs_root = os.path.realpath(OUTPUTS_DIR)
+    
+    if not full_path.startswith(outputs_root):
+        return jsonify({"error": "잘못된 경로"}), 400
+    
+    if not os.path.isfile(full_path):
+        return jsonify({"error": "파일을 찾을 수 없습니다."}), 404
+    
+    return send_file(full_path, as_attachment=True)
+
+
 if __name__ == "__main__":
     os.makedirs("templates", exist_ok=True)
     os.makedirs(SESSIONS_DIR, exist_ok=True)
+    os.makedirs(OUTPUTS_DIR,  exist_ok=True)  # ✅ [NEW] outputs 폴더 보장
     load_all_sessions()
     
     print("\n" + "=" * 50)

@@ -38,6 +38,8 @@ class TestRelayAutomator(unittest.TestCase):
         
         self.assertEqual(summary["rework_count"], 1)
         self.assertEqual(summary["scenario"]["title"], "Improved")
+        self.assertEqual(summary["status"], "completed")
+
     def test_run_all_killed(self):
         # Round 1 (OK), Round 2 (KILL)
         self.mock_ai.generate_response.side_effect = [

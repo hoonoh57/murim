@@ -4,7 +4,10 @@ Human-Relay 클라이언트
 - 라운드별 상태 관리
 """
 
+import os
+import re
 import json
+from datetime import datetime
 from typing import Dict, Optional, List
 from src.relay.batch_builder import BatchBuilder, BatchRequest
 from src.relay.batch_parser import BatchParser, ParsedResponse
@@ -39,6 +42,9 @@ class RelaySession:
         self.rework_count = 0
         self.max_reworks = 2
         self.messages: List[str] = []  # UI 표시용 로그 메시지
+        
+        # 자동 저장된 출력 디렉토리 경로 (파이프라인 완료 후 채워짐)
+        self.output_dir: Optional[str] = None
 
     def start_round1(self) -> str:
         """Round 1 배치 프롬프트를 생성합니다."""
@@ -187,7 +193,6 @@ class RelaySession:
             )
             # Rework 성공 → 다시 평가(Round 2) 단계로 상태 변경
             self.status = "round2"
-            # start_round2()에서 2로 재조정되지만, 여기서 미리 맞춰둠 (정합성)
             self.current_round = 2
             return {"success": True, "reworked": True}
         
@@ -219,12 +224,87 @@ class RelaySession:
         self.messages.append("🎉 전체 제작 파이프라인 완료!")
         return {"success": True, "reworked": False}
 
+    # ──────────────────────────────────────────────────────────────────────────
+    # ✅ [NEW] 파이프라인 완료 시 outputs/ 폴더에 구조화 저장
+    # ──────────────────────────────────────────────────────────────────────────
+    def save_to_outputs(self, outputs_base: str = "outputs") -> str:
+        """
+        파이프라인 완료 시 구조화된 디렉토리에 모든 결과를 자동 저장합니다.
+
+        생성 구조:
+        outputs/
+        └── ep001_{title}_{YYYYMMDD_HHMMSS}/
+            ├── episode.json           ← 전체 결과 통합본
+            ├── scenario.json          ← 시나리오 분리본
+            ├── marketing.json         ← 마케팅 에셋
+            ├── prompts/
+            │   ├── image_prompts.json ← Phase 4 이미지 생성용
+            │   ├── video_prompts.json ← Phase 4 영상 생성용
+            │   └── audio_guide.json   ← Phase 4 음원 생성용
+            ├── images/                ← Phase 4에서 채워질 폴더
+            ├── videos/                ← Phase 4에서 채워질 폴더
+            └── audio/                 ← Phase 4에서 채워질 폴더
+
+        Returns:
+            str: 생성된 에피소드 출력 디렉토리 경로
+        """
+        os.makedirs(outputs_base, exist_ok=True)
+
+        # 에피소드 번호: 기존 ep* 디렉토리 수 + 1
+        existing_eps = [
+            d for d in os.listdir(outputs_base)
+            if os.path.isdir(os.path.join(outputs_base, d)) and d.startswith("ep")
+        ]
+        ep_num = len(existing_eps) + 1
+
+        # 폴더명 슬러그 생성
+        title = self.topic
+        if self.scenario_json and self.scenario_json.get("title"):
+            title = self.scenario_json["title"]
+        slug = re.sub(r'[^\w가-힣]', '_', title)[:30].strip('_')
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        dir_name = f"ep{ep_num:03d}_{slug}_{timestamp}"
+
+        output_dir = os.path.join(outputs_base, dir_name)
+
+        # ── 디렉토리 구조 생성 ──
+        for sub in ["prompts", "images", "videos", "audio"]:
+            os.makedirs(os.path.join(output_dir, sub), exist_ok=True)
+
+        def _write(rel_path: str, data: dict):
+            abs_path = os.path.join(output_dir, rel_path)
+            with open(abs_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+
+        # ── 파일 저장 ──
+        _write("episode.json", self.get_summary())
+
+        if self.scenario_json:
+            _write("scenario.json", self.scenario_json)
+
+        if self.imaging_json:
+            _write("prompts/image_prompts.json", self.imaging_json)
+
+        if self.video_json:
+            _write("prompts/video_prompts.json", self.video_json)
+
+        if self.audio_json:
+            _write("prompts/audio_guide.json", self.audio_json)
+
+        if self.marketing_json:
+            _write("marketing.json", self.marketing_json)
+
+        self.output_dir = output_dir
+        self.messages.append(f"💾 결과 자동 저장 완료 → outputs/{dir_name}/")
+        return output_dir
+
     def get_summary(self) -> dict:
         """최종 제작 결과 요약을 반환합니다."""
         return {
             "status": self.status,
             "topic": self.topic,
             "events": self.events,
+            "output_dir": self.output_dir,
             "scenario": self.scenario_json,
             "council": self.council_json,
             "style_guide": self.style_guide_json,
@@ -259,7 +339,8 @@ class RelaySession:
         session.current_round = data.get("current_round", 0)
         session.rework_count = data.get("rework_count", 0)
         session.messages = data.get("messages", [])
-        
+        session.output_dir = data.get("output_dir")
+
         session.scenario_json = data.get("scenario")
         session.council_json = data.get("council")
         session.style_guide_json = data.get("style_guide")

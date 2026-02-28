@@ -20,7 +20,7 @@ class MockHelper:
 class GeminiFreeClient:
     """Google Gemini 무료 API (Generative AI SDK) 클라이언트 - 다중 키 및 자동 전환 지원"""
     
-    def __init__(self, api_keys=None, model_name="gemini-1.5-flash"):
+    def __init__(self, api_keys=None, model_name="gemini-2.5-flash"):
         # api_keys는 리스트이거나 쉼표로 구분된 문자열일 수 있음
         raw_keys = api_keys or os.getenv("GOOGLE_API_KEYS") or os.getenv("GOOGLE_API_KEY")
         if isinstance(raw_keys, str):
