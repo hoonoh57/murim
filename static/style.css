@@ -13,7 +13,11 @@
     --text-bright: #fff;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
@@ -31,11 +35,13 @@ body {
     align-items: center;
     justify-content: space-between;
 }
+
 .header h1 {
     font-size: 1.6em;
     color: var(--gold);
     letter-spacing: 2px;
 }
+
 .header .subtitle {
     color: var(--text-dim);
     font-size: 0.85em;
@@ -54,6 +60,7 @@ body {
     gap: 4px;
     margin-bottom: 30px;
 }
+
 .step {
     flex: 1;
     padding: 12px 16px;
@@ -64,21 +71,24 @@ body {
     font-size: 0.85em;
     transition: all 0.3s;
 }
+
 .step.active {
     background: linear-gradient(135deg, #2a1a0a, #1a1a2a);
     border-color: var(--gold);
     color: var(--gold);
     font-weight: bold;
 }
+
 .step.done {
     background: #0a1a0a;
     border-color: var(--green);
     color: var(--green);
 }
-.step .num { 
-    font-size: 1.2em; 
-    display: block; 
-    margin-bottom: 4px; 
+
+.step .num {
+    font-size: 1.2em;
+    display: block;
+    margin-bottom: 4px;
 }
 
 /* Cards */
@@ -89,6 +99,7 @@ body {
     padding: 24px;
     margin-bottom: 20px;
 }
+
 .card h2 {
     color: var(--gold);
     font-size: 1.1em;
@@ -102,13 +113,16 @@ body {
 .form-group {
     margin-bottom: 16px;
 }
+
 .form-group label {
     display: block;
     font-size: 0.9em;
     color: var(--text-dim);
     margin-bottom: 6px;
 }
-.form-group input, .form-group textarea {
+
+.form-group input,
+.form-group textarea {
     width: 100%;
     padding: 12px 16px;
     background: var(--bg-input);
@@ -119,10 +133,13 @@ body {
     font-family: inherit;
     transition: border-color 0.2s;
 }
-.form-group input:focus, .form-group textarea:focus {
+
+.form-group input:focus,
+.form-group textarea:focus {
     outline: none;
     border-color: var(--gold);
 }
+
 .form-group textarea {
     min-height: 120px;
     resize: vertical;
@@ -141,27 +158,49 @@ body {
     align-items: center;
     gap: 8px;
 }
+
 .btn-primary {
     background: linear-gradient(135deg, var(--gold), #b8860b);
     color: #000;
 }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(212,165,32,0.3); }
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(212, 165, 32, 0.3);
+}
+
 .btn-copy {
     background: var(--blue);
     color: #fff;
 }
-.btn-copy:hover { background: #2980b9; }
+
+.btn-copy:hover {
+    background: #2980b9;
+}
+
 .btn-submit {
     background: var(--green);
     color: #fff;
 }
-.btn-submit:hover { background: #219a52; }
+
+.btn-submit:hover {
+    background: #219a52;
+}
+
 .btn-danger {
     background: var(--red);
     color: #fff;
 }
-.btn-sm { padding: 8px 16px; font-size: 0.85em; }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 0.85em;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
 .btn-group {
     display: flex;
@@ -184,6 +223,7 @@ body {
     overflow-y: auto;
     position: relative;
 }
+
 .prompt-box .copy-overlay {
     position: sticky;
     top: 0;
@@ -206,11 +246,13 @@ body {
     resize: vertical;
     transition: border-color 0.3s;
 }
+
 .response-area:focus {
     outline: none;
     border-color: var(--green);
     border-style: solid;
 }
+
 .response-area::placeholder {
     color: var(--text-dim);
 }
@@ -226,6 +268,7 @@ body {
     font-size: 0.85em;
     line-height: 1.8;
 }
+
 .log-panel .log-entry {
     padding: 2px 0;
     border-bottom: 1px solid #1a1a25;
@@ -237,17 +280,20 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 16px;
 }
+
 .result-item {
     background: var(--bg-input);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 16px;
 }
+
 .result-item h3 {
     color: var(--gold);
     font-size: 0.95em;
     margin-bottom: 8px;
 }
+
 .result-item pre {
     font-size: 0.8em;
     line-height: 1.5;
@@ -265,32 +311,96 @@ body {
     font-weight: bold;
     font-size: 0.9em;
 }
-.score-high { background: #0a2a0a; color: var(--green); border: 1px solid var(--green); }
-.score-mid { background: #2a2a0a; color: var(--gold); border: 1px solid var(--gold); }
-.score-low { background: #2a0a0a; color: var(--red); border: 1px solid var(--red); }
+
+.score-high {
+    background: #0a2a0a;
+    color: var(--green);
+    border: 1px solid var(--green);
+}
+
+.score-mid {
+    background: #2a2a0a;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+}
+
+.score-low {
+    background: #2a0a0a;
+    color: var(--red);
+    border: 1px solid var(--red);
+}
 
 /* Animations */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.fade-in { animation: fadeIn 0.4s ease-out; }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
 
 /* Spinner */
 .spinner {
     display: inline-block;
-    width: 16px; height: 16px;
+    width: 16px;
+    height: 16px;
     border: 2px solid var(--text-dim);
     border-top-color: var(--gold);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 /* Hidden */
-.hidden { display: none !important; }
+.hidden {
+    display: none !important;
+}
+
+/* Result Summary Header */
+.result-item[style*="grid-column"] {
+    border-color: var(--gold);
+    border-width: 1px;
+}
+
+/* Filled vs Empty result cards */
+.result-item pre {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+/* Download section */
+.result-item .btn-group {
+    flex-wrap: wrap;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
-    .steps { flex-direction: column; }
-    .result-grid { grid-template-columns: 1fr; }
-    .header { padding: 16px 20px; }
-    .container { padding: 16px 12px; }
+    .steps {
+        flex-direction: column;
+    }
+
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        padding: 16px 20px;
+    }
+
+    .container {
+        padding: 16px 12px;
+    }
 }

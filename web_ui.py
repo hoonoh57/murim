@@ -157,6 +157,31 @@ def get_summary():
     return jsonify(relay.get_summary())
 
 
+@app.route("/api/download", methods=["GET"])
+def download_result():
+    """제작 결과 JSON 파일 다운로드"""
+    from flask import Response
+    from datetime import datetime
+    
+    relay = get_session()
+    if not relay:
+        return jsonify({"error": "세션이 없습니다."}), 400
+    
+    summary = relay.get_summary()
+    filename = f"murim_episode_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    
+    json_str = json.dumps(summary, ensure_ascii=False, indent=2)
+    
+    return Response(
+        json_str,
+        mimetype="application/json",
+        headers={
+            "Content-Disposition": f"attachment; filename={filename}",
+            "Content-Type": "application/json; charset=utf-8"
+        }
+    )
+
+
 if __name__ == "__main__":
     os.makedirs("templates", exist_ok=True)
     print("\n" + "=" * 50)

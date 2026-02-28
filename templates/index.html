@@ -242,28 +242,114 @@
             const grid = document.getElementById("result-dashboard");
             grid.innerHTML = "";
 
+            // ── 1. 요약 헤더 카드 (전체 너비) ──
+            const headerEl = document.createElement("div");
+            headerEl.className = "result-item fade-in";
+            headerEl.style.gridColumn = "1 / -1";
+
+            const score = summary.council?.average_score;
+            const verdict = summary.council?.verdict || "N/A";
+            const scoreBadgeClass = score >= 8 ? "score-high" : score >= 7 ? "score-mid" : "score-low";
+            const reworkText = summary.rework_count > 0
+                ? `  |  재작업 ${summary.rework_count}회` : "";
+
+            headerEl.innerHTML = `
+                <h3>📊 제작 요약</h3>
+                <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+                    <div>주제: <strong>${summary.topic || "N/A"}</strong></div>
+                    <div>사건: <strong>${summary.events || "N/A"}</strong></div>
+                    ${score ? `<div>평가: <span class="score-badge ${scoreBadgeClass}">${score}점 → ${verdict}</span></div>` : ""}
+                    <div>상태: <span style="color: var(--green); font-weight: bold;">${summary.status === "completed" ? "제작 완료" : summary.status}</span>${reworkText}</div>
+                </div>
+            `;
+            grid.appendChild(headerEl);
+
+            // ── 2. 에이전트별 결과 카드 ──
             const items = [
-                { title: "📝 시나리오", data: summary.scenario, key: "title" },
-                { title: "⚖️ 평가 결과", data: summary.council, key: "average_score" },
-                { title: "🎨 아트 스타일", data: summary.style_guide, key: "style" },
-                { title: "🎬 카메라 계획", data: summary.camera_plans, key: "camera_plans" },
-                { title: "🖼️ 이미지 프롬프트", data: summary.imaging, key: "enhanced_prompts" },
-                { title: "🎥 비디오 모션", data: summary.video, key: "motion_plans" },
-                { title: "🔊 사운드스케이프", data: summary.audio, key: "bgm" },
-                { title: "📢 마케팅", data: summary.marketing, key: "youtube_title" }
+                {
+                    title: "📝 시나리오", data: summary.scenario, highlight: "title",
+                    detail: s => s ? `${s.title || ""} — 장면 ${(s.scenes || []).length}개` : null
+                },
+                {
+                    title: "⚖️ 평가 결과", data: summary.council, highlight: "average_score",
+                    detail: s => s ? `평균 ${s.average_score}점 | 판정: ${s.verdict} | 비평 ${(s.critiques || []).length}건` : null
+                },
+                {
+                    title: "🎨 아트 스타일", data: summary.style_guide, highlight: "style",
+                    detail: s => s ? `${s.style || ""} — ${s.mood || ""}` : null
+                },
+                {
+                    title: "🎬 카메라 계획", data: summary.camera_plans, highlight: "camera_plans",
+                    detail: s => s ? `장면 ${(s.camera_plans || []).length}개 계획` : null
+                },
+                {
+                    title: "🖼️ 이미지 프롬프트", data: summary.imaging, highlight: "enhanced_prompts",
+                    detail: s => s ? `프롬프트 ${(s.enhanced_prompts || []).length}개` : null
+                },
+                {
+                    title: "🎥 비디오 모션", data: summary.video, highlight: "motion_plans",
+                    detail: s => s ? `모션 플랜 ${(s.motion_plans || []).length}개` : null
+                },
+                {
+                    title: "🔊 사운드스케이프", data: summary.audio, highlight: "bgm",
+                    detail: s => s ? `BGM: ${s.bgm?.mood || "N/A"} | SFX: ${(s.sfx || []).length}개` : null
+                },
+                {
+                    title: "📢 마케팅", data: summary.marketing, highlight: "youtube_title",
+                    detail: s => s ? `"${s.youtube_title || ""}"` : null
+                }
             ];
 
+            let filledCount = 0;
             items.forEach(item => {
+                const el = document.createElement("div");
+                el.className = "result-item fade-in";
+
                 if (item.data) {
-                    const el = document.createElement("div");
-                    el.className = "result-item fade-in";
+                    filledCount++;
+                    const detailText = item.detail(item.data) || "";
                     el.innerHTML = `
-                    <h3>${item.title}</h3>
-                    <pre>${JSON.stringify(item.data, null, 2)}</pre>
-                `;
-                    grid.appendChild(el);
+                        <h3>${item.title} <span style="color:var(--green); font-size:0.75em;">✔</span></h3>
+                        ${detailText ? `<div style="color:var(--text); margin-bottom:8px; font-size:0.9em;">${detailText}</div>` : ""}
+                        <pre>${JSON.stringify(item.data, null, 2)}</pre>
+                    `;
+                } else {
+                    el.innerHTML = `
+                        <h3>${item.title} <span style="color:var(--text-dim); font-size:0.75em;">—</span></h3>
+                        <div style="color:var(--text-dim); font-size:0.85em;">데이터 없음 (파싱 실패 또는 미수신)</div>
+                    `;
+                    el.style.opacity = "0.5";
                 }
+                grid.appendChild(el);
             });
+
+            // ── 3. 다운로드 + 새 에피소드 버튼 (전체 너비) ──
+            const actionsEl = document.createElement("div");
+            actionsEl.className = "result-item fade-in";
+            actionsEl.style.gridColumn = "1 / -1";
+            actionsEl.style.textAlign = "center";
+            actionsEl.innerHTML = `
+                <h3>📦 결과 내보내기</h3>
+                <div style="margin-top:8px; color:var(--text-dim); font-size:0.85em; margin-bottom:12px;">
+                    에이전트 결과 수신: ${filledCount} / ${items.length}개
+                    ${filledCount < items.length ? ' — 일부 에이전트 응답이 파싱되지 않았습니다.' : ' — 전체 수신 완료!'}
+                </div>
+                <div class="btn-group" style="justify-content:center;">
+                    <button class="btn btn-primary" onclick="downloadJSON()">
+                        💾 전체 JSON 다운로드
+                    </button>
+                    <button class="btn btn-copy" onclick="copyFullJSON()">
+                        📋 JSON 클립보드 복사
+                    </button>
+                    <button class="btn btn-submit" onclick="location.reload()">
+                        🔄 새 에피소드 시작
+                    </button>
+                </div>
+            `;
+            grid.appendChild(actionsEl);
+
+            // summary를 전역에 저장 (다운로드/복사용)
+            window._lastSummary = summary;
         }
 
         function updateSteps(round) {
@@ -333,6 +419,28 @@
             } catch (e) {
                 addLog("⚠️ 클립보드 접근 권한이 필요합니다. 수동으로 붙여넣어 주세요.");
             }
+        }
+
+        function downloadJSON() {
+            window.location.href = "/api/download";
+        }
+
+        function copyFullJSON() {
+            const summary = window._lastSummary;
+            if (!summary) { alert("결과가 없습니다."); return; }
+            const text = JSON.stringify(summary, null, 2);
+            navigator.clipboard.writeText(text).then(() => {
+                addLog("📋 전체 결과 JSON이 클립보드에 복사되었습니다.");
+                alert("복사 완료! (" + text.length + " 글자)");
+            }).catch(() => {
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                document.body.removeChild(ta);
+                alert("복사 완료!");
+            });
         }
     </script>
 
