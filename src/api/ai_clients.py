@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import re
 from anthropic import Anthropic
 from dotenv import load_dotenv
 
@@ -16,7 +17,32 @@ class MockHelper:
                 f.write(f"Mock {category} content for {filename}")
         return path
 
+class GeminiFreeClient:
+    """Google Gemini 무료 API (Generative AI SDK) 클라이언트"""
+    
+    def __init__(self, api_key=None, model_name="gemini-1.5-flash"):
+        self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
+        if not self.api_key:
+            print("[WARNING] GOOGLE_API_KEY가 없습니다. Mock 모드로 동작하거나 오류가 발생할 수 있습니다.")
+        
+        import google.generativeai as genai
+        genai.configure(api_key=self.api_key)
+        self.model = genai.GenerativeModel(model_name)
+
+    def generate_response(self, prompt: str) -> str:
+        """배치 프롬프트에 대한 응답을 생성합니다."""
+        if not self.api_key:
+            return "---[RES-001 | WriterAgent]---\n{\"title\": \"Mock\", \"script\": \"Key missing\"}\n---[END RES-001]---"
+
+        try:
+            response = self.model.generate_content(prompt)
+            return response.text
+        except Exception as e:
+            print(f"[Gemini ERROR] {e}")
+            return f"Error: {e}"
+
 class ScenarioEngine:
+# ... (rest of the existing file)
     def __init__(self, api_key=None, is_mock=True):
         self.is_mock = is_mock
         self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")

@@ -53,9 +53,14 @@
                 <input type="text" id="input-events" placeholder="주요 사건을 입력하세요"
                     value="1화: 하산 중 강도단과 조우, 전생 기억이 발동하며 첫 실전">
             </div>
-            <button class="btn btn-primary" id="btn-start" onclick="startEpisode()">
-                ⚔️ 제작 시작
-            </button>
+            <div class="btn-group">
+                <button class="btn btn-primary" id="btn-start" onclick="startEpisode()">
+                    ⚔️ 제작 시작 (Human Relay)
+                </button>
+                <button class="btn btn-submit" id="btn-auto" onclick="autoRun()">
+                    🤖 자동 제작 (Gemini)
+                </button>
+            </div>
         </div>
 
         <!-- Phase: Batch Relay (재사용 영역) -->
@@ -141,6 +146,42 @@
                 showRelayPhase(data.round, data.batch_prompt);
                 updateSteps(data.round);
             } catch (e) {
+                alert("서버 연결 실패: " + e.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function autoRun() {
+            const topic = document.getElementById("input-topic").value.trim();
+            const events = document.getElementById("input-events").value.trim();
+            if (!topic) { alert("주제를 입력해 주세요."); return; }
+            if (!confirm("Gemini API를 사용하여 전체 과정을 자동으로 진행하시겠습니까? (수분 소요)")) return;
+
+            setLoading(true);
+            addLog("🤖 [자동 모드] Gemini API를 통한 자동 제작을 시작합니다...");
+            updateSteps(1);
+
+            try {
+                const res = await fetch("/api/auto_run", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ topic, events })
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    addLog("❌ 자동화 오류: " + data.error);
+                    alert(data.error);
+                    return;
+                }
+
+                updateLog(data.messages);
+                showComplete(data.summary);
+                updateSteps(99);
+                addLog("🎉 자동 제작이 성공적으로 완료되었습니다!");
+            } catch (e) {
+                addLog("❌ 서버 연결 실패: " + e.message);
                 alert("서버 연결 실패: " + e.message);
             } finally {
                 setLoading(false);

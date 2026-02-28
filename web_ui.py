@@ -4,6 +4,8 @@ import uuid
 from flask import Flask, render_template, request, jsonify, session
 from dotenv import load_dotenv
 from src.relay.relay_client import RelaySession
+from src.relay.relay_automator import RelayAutomator
+from src.api.ai_clients import GeminiFreeClient
 
 # Load environment variables
 load_dotenv()
@@ -210,6 +212,41 @@ def force_go():
         "batch_prompt": batch_text,
         "messages": relay.messages
     })
+
+
+@app.route("/api/auto_run", methods=["POST"])
+def auto_run():
+    """Gemini API를 사용하여 전체 제작 과정 자동 수행"""
+    topic = request.json.get("topic", "").strip()
+    events = request.json.get("events", "").strip()
+    
+    if not topic:
+        return jsonify({"error": "주제를 입력해 주세요."}), 400
+        
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        return jsonify({"error": "GOOGLE_API_KEY가 서버에 설정되어 있지 않습니다."}), 500
+        
+    # 세션 생성
+    sid = str(uuid.uuid4())
+    session["sid"] = sid
+    relay = RelaySession(topic=topic, events=events or "자동 생성")
+    sessions_store[sid] = relay
+    
+    # 자동화 실행
+    client = GeminiFreeClient(api_key=api_key)
+    automator = RelayAutomator(relay, client)
+    
+    try:
+        summary = automator.run_all()
+        save_session_to_file(sid, relay)
+        return jsonify({
+            "status": "completed",
+            "messages": relay.messages,
+            "summary": summary
+        })
+    except Exception as e:
+        return jsonify({"error": f"자동화 중 오류 발생: {str(e)}"}), 500
 
 
 @app.route("/api/summary", methods=["GET"])
