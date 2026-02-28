@@ -173,23 +173,25 @@
         renderVideoPrompts();
     }
 
-    function renderVideoPrompts() {
+      function renderVideoPrompts() {
         const el = document.getElementById('video-prompts');
         if (!prompts || !prompts.scenes) { el.innerHTML = ''; return; }
         el.innerHTML = prompts.scenes.map(scene => {
             const formatted = formatForTool(scene, currentTool);
+            const safeFormatted = formatted.replace(/'/g, "&#39;").replace(/"/g, "&quot;");
             return '<div class="video-prompt-card">' +
                 '<h4>' + scene.scene_id + ' — ' + (prompts.tools[currentTool] || {}).name + '</h4>' +
-                '<div class="prompt-box" onclick="copyText(this.querySelector(\\'span\\').innerText)" style="max-height:none;">' +
+                '<div class="prompt-box" onclick="copyText(this.querySelector(\'span\').innerText)" style="max-height:none;">' +
                 '<span>' + formatted + '</span>' +
                 '<span class="copy-hint">클릭=복사</span></div>' +
                 '<div style="margin-top:8px;display:flex;gap:8px;align-items:center;">' +
-                '<button class="btn-copy" onclick="copyText(\'' + formatted.replace(/'/g, "\\'") + '\')">📋 복사</button>' +
+                '<button class="btn-copy" onclick="copyText(this.closest(\'.video-prompt-card\').querySelector(\'span\').innerText)">📋 복사</button>' +
                 '<a href="' + ((prompts.tools[currentTool] || {}).url || '#') + '" target="_blank" style="color:#4CAF50;font-size:12px;">도구 열기 ↗</a>' +
                 '<span style="color:#666;font-size:11px;">⏱ ' + (scene.duration_sec || '?') + '초</span>' +
                 '</div></div>';
         }).join('');
     }
+
 
     function formatForTool(scene, toolKey) {
         const t = prompts.tools[toolKey];

@@ -10,6 +10,24 @@ from typing import Dict, List, Optional
 
 # 무료/저비용 도구별 프롬프트 포맷 템플릿
 TOOL_TEMPLATES = {
+    'comfyui_wan22': {
+        'name': 'ComfyUI WAN 2.2 5B (Local)',
+        'url': 'http://127.0.0.1:8188',
+        'free_tier': True,
+        'max_duration': 5,
+        'format': 'image_to_video',
+        'prompt_template': '{motion_prompt}. Cinematic wuxia, {style_note}.',
+        'notes': '로컬 GPU. 무료. 고품질 모션. VRAM 8GB: 512x320/41f 권장.'
+    },
+    'comfyui_ltx2': {
+        'name': 'ComfyUI LTX-2 Distilled (Local)',
+        'url': 'http://127.0.0.1:8188',
+        'free_tier': True,
+        'max_duration': 20,
+        'format': 'image_to_video_audio',
+        'prompt_template': '{motion_prompt}. {style_note}. Cinematic martial arts scene.',
+        'notes': '로컬 GPU. 무료. 오디오 동시 생성. 빠른 속도. VRAM 8GB: FP8 Distilled 사용.'
+    },
     'kling': {
         'name': 'Kling AI',
         'url': 'https://klingai.com',

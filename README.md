@@ -90,3 +90,22 @@ python main.py
 - **Phase 1**: 핵심 에이전트 및 자가 진화 루프 구현 (완료)
 - **Phase 2**: 4-GATE 통합 프로덕션 파이프라인 및 Web UI (완료)
 - **Phase 3**: 다국어 채널 업로드 및 리얼 API 연동 고도화 (진행 중)
+
+# ComfyUI API 워크플로우 파일
+
+이 폴더에는 ComfyUI API 형식의 워크플로우 JSON 파일을 저장합니다.
+
+## 파일 생성 방법
+
+1. ComfyUI 웹 UI 접속 (http://127.0.0.1:8188)
+2. 원하는 워크플로우를 로드/구성
+3. Settings → **Enable Dev Mode Options** 켜기
+4. 메뉴 → **Save (API Format)** 클릭
+5. 이 폴더에 아래 이름으로 저장
+
+## 필요한 파일
+
+| 파일명 | 설명 |
+|--------|------|
+| `wan22_5b_api.json` | WAN 2.2 TI2V 5B I2V 워크플로우 |
+| `ltx2_i2v_api.json` | LTX-2 Distilled FP8 I2V 워크플로우 |
