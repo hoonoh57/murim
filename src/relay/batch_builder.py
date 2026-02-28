@@ -265,9 +265,14 @@ class BatchBuilder:
         lines.append(f"===== MURIM AI FACTORY — BATCH REQUEST (Round {round_num}) =====")
         lines.append(f"총 요청 수: {len(requests)}개")
         lines.append(f"")
-        lines.append(f"아래 모든 요청에 대해 각각 답변해 주세요.")
-        lines.append(f"각 답변은 반드시 ---[RES-XXX | OwnerName]--- 형식으로 시작하고")
-        lines.append(f"---[END RES-XXX]--- 형식으로 끝내주세요.")
+        lines.append(f"### [중요 지시: 반드시 준수할 것] ###")
+        lines.append(f"1. 아래 모든 요청에 대해 순서대로 각각 답변해 주세요.")
+        lines.append(f"2. 각 답변의 시작과 끝에 지정된 구분자를 '토씨 하나 틀리지 않고' 정확히 사용하세요.")
+        lines.append(f"3. 구분자 예시 (REQ-001에 대한 답변일 경우):")
+        lines.append(f"   ---[RES-001 | WriterAgent]---")
+        lines.append(f"   {{ ... JSON 데이터 ... }}")
+        lines.append(f"   ---[END RES-001]---")
+        lines.append(f"4. 위 구분자가 없으면 시스템이 답변을 인식하지 못합니다.")
         lines.append(f"")
 
         for req in requests:
@@ -281,14 +286,13 @@ class BatchBuilder:
 
         lines.append(f"===== END BATCH REQUEST =====")
         lines.append(f"")
-        lines.append(f"[응답 형식 안내]")
-        lines.append(f"각 요청에 대해 아래 형식으로 답변해 주세요:")
+        lines.append(f"[응답 형식 가이드]")
+        lines.append(f"아래 형식들을 답변에 그대로 포함시켜 주세요:")
         for req in requests:
-            lines.append(f"---[RES-{req.req_id.split('-')[1]} | {req.owner}]---")
-            if req.response_format == "json":
-                lines.append(f"(JSON 응답)")
-            else:
-                lines.append(f"(텍스트 응답)")
-            lines.append(f"---[END RES-{req.req_id.split('-')[1]}]---")
+            res_id = req.req_id.split('-')[1]
+            lines.append(f"---[RES-{res_id} | {req.owner}]---")
+            lines.append(f"(이곳에 {req.response_format.upper()} 응답 작성)")
+            lines.append(f"---[END RES-{res_id}]---")
+            lines.append(f"")
 
         return "\n".join(lines)

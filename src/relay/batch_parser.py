@@ -97,7 +97,7 @@ class BatchParser:
         
         # 느슨한 패턴: RES-숫자와 owner를 찾고, 다음 RES나 END까지를 내용으로 간주
         loose_pattern = re.compile(
-            r'(?:---\s*\[?\s*)?RES-(\d+)\s*[\|\:]?\s*([^\]\-\n]+?)(?:\s*\]?\s*---)?'
+            r'(?:---\s*\[?\s*)?RES-(\d+)\s*[\|\:]?\s*([^\]\-\n]+)(?:\s*\]?\s*---)?'
             r'\s*(.*?)(?=(?:---\s*\[?\s*)?RES-\d+|$)',
             re.DOTALL | re.IGNORECASE
         )

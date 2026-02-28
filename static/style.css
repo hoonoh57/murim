@@ -301,6 +301,8 @@ body {
     color: var(--text-dim);
     max-height: 200px;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
 }
 
 /* Score Badge */
@@ -373,12 +375,6 @@ body {
 .result-item[style*="grid-column"] {
     border-color: var(--gold);
     border-width: 1px;
-}
-
-/* Filled vs Empty result cards */
-.result-item pre {
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
 }
 
 /* Download section */
