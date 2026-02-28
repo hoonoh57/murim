@@ -20,3 +20,6 @@ sessions/
 # IDEs
 .vscode/
 .idea/
+
+# Keep outputs directory structure in git
+!outputs/.gitkeep
