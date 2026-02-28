@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>에셋 관리 — 무림 AI 팩토리</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
+        .scene-card { background: #1a1a2e; border: 1px solid #333; border-radius: 8px; padding: 12px; }
+        .scene-card img { width: 100%; border-radius: 4px; cursor: pointer; }
+        .scene-card h4 { color: #f0c040; margin: 8px 0 4px; }
+        .prompt-box { background: #0d0d1a; border: 1px solid #444; border-radius: 4px; padding: 8px; font-size: 11px; color: #aaa; max-height: 80px; overflow-y: auto; cursor: pointer; position: relative; }
+        .prompt-box:hover { border-color: #f0c040; }
+        .prompt-box .copy-hint { display: none; position: absolute; top: 2px; right: 4px; background: #f0c040; color: #000; font-size: 10px; padding: 1px 6px; border-radius: 3px; }
+        .prompt-box:hover .copy-hint { display: block; }
+        .tool-tabs { display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
+        .tool-tab { padding: 6px 14px; background: #222; border: 1px solid #444; border-radius: 20px; color: #ccc; cursor: pointer; font-size: 13px; }
+        .tool-tab.active { background: #f0c040; color: #000; border-color: #f0c040; }
+        .tool-tab:hover { border-color: #f0c040; }
+        .video-prompt-card { background: #0f1a0f; border: 1px solid #2a5a2a; border-radius: 8px; padding: 16px; margin: 12px 0; }
+        .video-prompt-card h4 { color: #4CAF50; }
+        .btn-copy { background: #f0c040; color: #000; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .btn-copy:hover { background: #ffd700; }
+        .btn-upload { background: #4CAF50; color: #fff; border: none; padding: 6px 16px; border-radius: 4px; cursor: pointer; }
+        .quality-input { width: 50px; background: #222; border: 1px solid #555; color: #fff; padding: 3px; border-radius: 3px; text-align: center; }
+        .audio-section { background: #1a0f1a; border: 1px solid #5a2a5a; border-radius: 8px; padding: 16px; margin: 16px 0; }
+        .audio-section h3 { color: #ce93d8; }
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
+        .status-ready { background: #1b5e20; color: #a5d6a7; }
+        .status-missing { background: #b71c1c; color: #ef9a9a; }
+        .status-testing { background: #e65100; color: #ffcc80; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 24px 0 12px; }
+        .back-link { color: #f0c040; text-decoration: none; }
+        .test-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        .test-table th { background: #222; color: #f0c040; padding: 8px; text-align: left; border-bottom: 2px solid #444; }
+        .test-table td { padding: 8px; border-bottom: 1px solid #333; color: #ccc; }
+        .test-table tr:hover { background: #1a1a2e; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>武林 AI FACTORY</h1>
+            <p><a href="/" class="back-link">← 메인으로 돌아가기</a> | 에셋 프로덕션 대시보드</p>
+        </header>
+
+        <!-- 에피소드 선택 -->
+        <div id="ep-selector" style="margin:16px 0;">
+            <label style="color:#f0c040;">에피소드 선택:</label>
+            <select id="ep-select" onchange="loadEpisode()" style="background:#222;color:#fff;border:1px solid #555;padding:6px 12px;border-radius:4px;">
+                <option value="">로딩중...</option>
+            </select>
+            <span id="ep-status" class="status-badge" style="margin-left:8px;"></span>
+        </div>
+
+        <!-- 1. 이미지 갤러리 -->
+        <div class="section-header">
+            <h2 style="color:#f0c040;">🖼️ 이미지 갤러리</h2>
+            <div>
+                <span id="img-coverage" style="color:#aaa;"></span>
+                <button class="btn-upload" onclick="document.getElementById('file-upload').click()" style="margin-left:8px;">📤 이미지 업로드</button>
+                <input type="file" id="file-upload" multiple accept="image/*" style="display:none" onchange="uploadImages(this.files)">
+            </div>
+        </div>
+        <div id="image-gallery" class="asset-grid"></div>
+
+        <!-- 2. 비디오 프롬프트 -->
+        <div class="section-header">
+            <h2 style="color:#4CAF50;">🎬 비디오 프롬프트</h2>
+        </div>
+        <div class="tool-tabs" id="tool-tabs"></div>
+        <div id="video-prompts"></div>
+
+        <!-- 3. 오디오 가이드 -->
+        <div class="section-header">
+            <h2 style="color:#ce93d8;">🔊 오디오 가이드</h2>
+        </div>
+        <div id="audio-guide" class="audio-section"></div>
+
+        <!-- 4. 테스트 결과 기록 -->
+        <div class="section-header">
+            <h2 style="color:#ff9800;">📊 도구 테스트 비교표</h2>
+            <button class="btn-copy" onclick="exportTestSheet()" style="background:#ff9800;">📋 테스트시트 내보내기</button>
+        </div>
+        <div id="test-results"></div>
+    </div>
+
+    <script>
+    let currentEp = '';
+    let currentTool = 'kling';
+    let manifest = null;
+    let prompts = null;
+
+    async function init() {
+        const res = await fetch('/api/asset/episodes');
+        const data = await res.json();
+        const sel = document.getElementById('ep-select');
+        sel.innerHTML = '';
+        if (data.episodes && data.episodes.length > 0) {
+            data.episodes.forEach(ep => {
+                const opt = document.createElement('option');
+                opt.value = ep.dir;
+                opt.textContent = ep.dir;
+                sel.appendChild(opt);
+            });
+            currentEp = data.episodes[0].dir;
+            loadEpisode();
+        } else {
+            sel.innerHTML = '<option>에피소드 없음</option>';
+        }
+    }
+
+    async function loadEpisode() {
+        currentEp = document.getElementById('ep-select').value;
+        if (!currentEp) return;
+
+        // 이미지 매니페스트 로드
+        const mRes = await fetch('/api/asset/manifest?ep=' + encodeURIComponent(currentEp));
+        manifest = await mRes.json();
+        renderGallery();
+
+        // 프롬프트 로드
+        const pRes = await fetch('/api/asset/prompts?ep=' + encodeURIComponent(currentEp));
+        prompts = await pRes.json();
+        renderToolTabs();
+        renderVideoPrompts();
+        renderAudioGuide();
+        renderTestTable();
+
+        // 커버리지
+        const cRes = await fetch('/api/asset/coverage?ep=' + encodeURIComponent(currentEp));
+        const coverage = await cRes.json();
+        document.getElementById('img-coverage').textContent =
+            coverage.coverage_pct + '% (' + coverage.images_selected + '/' + coverage.total_scenes + ' 장면)';
+        document.getElementById('ep-status').textContent = coverage.ready_for_video ? '비디오 준비 완료' : '이미지 필요';
+        document.getElementById('ep-status').className = 'status-badge ' + (coverage.ready_for_video ? 'status-ready' : 'status-missing');
+    }
+
+    function renderGallery() {
+        const el = document.getElementById('image-gallery');
+        if (!manifest || !manifest.scenes) { el.innerHTML = '<p style="color:#888">이미지 없음</p>'; return; }
+        el.innerHTML = manifest.scenes.map(scene => {
+            const hasImg = scene.selected;
+            const imgSrc = hasImg ? '/api/asset/image?ep=' + encodeURIComponent(currentEp) + '&file=' + encodeURIComponent(scene.selected) : '';
+            const candidates = (scene.candidates || []).map(c =>
+                '<div style="font-size:11px;color:#888;margin:2px 0;">' + c.source +
+                (c.quality_score ? ' ⭐' + c.quality_score : '') +
+                (scene.selected === c.file ? ' ✅' : ' <a href="#" onclick="selectImg(\'' + scene.scene_id + '\',\'' + c.file + '\');return false;" style="color:#f0c040;font-size:10px;">선택</a>') +
+                '</div>'
+            ).join('');
+            return '<div class="scene-card">' +
+                '<h4>' + scene.scene_id + '</h4>' +
+                (hasImg ? '<img src="' + imgSrc + '" alt="' + scene.scene_id + '" onclick="window.open(this.src)">' : '<div style="height:160px;background:#111;display:flex;align-items:center;justify-content:center;color:#555;border-radius:4px;">이미지 없음</div>') +
+                '<div style="margin-top:6px;">' + candidates + '</div>' +
+                '<div style="margin-top:6px;"><label style="color:#888;font-size:11px;">품질점수: </label><input class="quality-input" type="number" min="1" max="10" step="0.5" value="' + ((scene.candidates[0] || {}).quality_score || '') + '" onchange="setScore(\'' + scene.scene_id + '\',\'' + (scene.selected || '') + '\',this.value)"></div>' +
+                (scene.prompt ? '<div class="prompt-box" onclick="copyText(this.innerText)">' + scene.prompt.substring(0, 120) + '...<span class="copy-hint">클릭=복사</span></div>' : '') +
+                '</div>';
+        }).join('');
+    }
+
+    function renderToolTabs() {
+        const tools = prompts && prompts.tools ? prompts.tools : {};
+        const el = document.getElementById('tool-tabs');
+        el.innerHTML = Object.keys(tools).map(k =>
+            '<div class="tool-tab' + (k === currentTool ? ' active' : '') + '" onclick="switchTool(\'' + k + '\')">' +
+            tools[k].name + (tools[k].free ? ' 🆓' : '') + '</div>'
+        ).join('');
+    }
+
+    function switchTool(toolKey) {
+        currentTool = toolKey;
+        renderToolTabs();
+        renderVideoPrompts();
+    }
+
+    function renderVideoPrompts() {
+        const el = document.getElementById('video-prompts');
+        if (!prompts || !prompts.scenes) { el.innerHTML = ''; return; }
+        el.innerHTML = prompts.scenes.map(scene => {
+            const formatted = formatForTool(scene, currentTool);
+            return '<div class="video-prompt-card">' +
+                '<h4>' + scene.scene_id + ' — ' + (prompts.tools[currentTool] || {}).name + '</h4>' +
+                '<div class="prompt-box" onclick="copyText(this.querySelector(\\'span\\').innerText)" style="max-height:none;">' +
+                '<span>' + formatted + '</span>' +
+                '<span class="copy-hint">클릭=복사</span></div>' +
+                '<div style="margin-top:8px;display:flex;gap:8px;align-items:center;">' +
+                '<button class="btn-copy" onclick="copyText(\'' + formatted.replace(/'/g, "\\'") + '\')">📋 복사</button>' +
+                '<a href="' + ((prompts.tools[currentTool] || {}).url || '#') + '" target="_blank" style="color:#4CAF50;font-size:12px;">도구 열기 ↗</a>' +
+                '<span style="color:#666;font-size:11px;">⏱ ' + (scene.duration_sec || '?') + '초</span>' +
+                '</div></div>';
+        }).join('');
+    }
+
+    function formatForTool(scene, toolKey) {
+        const t = prompts.tools[toolKey];
+        if (!t) return scene.motion_prompt || '';
+        let p = scene.motion_prompt || '';
+        if (toolKey === 'veo') p = (scene.image_prompt || '').substring(0, 200) + '. ' + p;
+        return p + '. Cinematic wuxia style, dark atmosphere.';
+    }
+
+    function renderAudioGuide() {
+        const el = document.getElementById('audio-guide');
+        if (!prompts || !prompts.audio) { el.innerHTML = '<p style="color:#888">오디오 가이드 없음</p>'; return; }
+        const a = prompts.audio;
+        let html = '<h3>🎵 BGM</h3>';
+        if (a.bgm) {
+            html += '<p style="color:#ccc;"><strong>분위기:</strong> ' + (a.bgm.mood || '') + '</p>';
+            html += '<p style="color:#ccc;"><strong>템포:</strong> ' + (a.bgm.tempo || '') + '</p>';
+            html += '<p style="color:#ccc;"><strong>악기:</strong> ' + (a.bgm.instruments || []).join(', ') + '</p>';
+        }
+        if (a.sfx && a.sfx.length > 0) {
+            html += '<h3>🔉 SFX (' + a.sfx.length + '개)</h3>';
+            html += '<div style="max-height:150px;overflow-y:auto;">';
+            a.sfx.forEach(s => { html += '<div style="color:#aaa;font-size:12px;margin:2px 0;">⏱ ' + s.timestamp + ' — ' + s.effect + '</div>'; });
+            html += '</div>';
+        }
+        if (a.tts_guide) {
+            html += '<h3>🗣 TTS 가이드</h3>';
+            html += '<div class="prompt-box" onclick="copyText(this.innerText)" style="max-height:none;">' + JSON.stringify(a.tts_guide, null, 2) + '<span class="copy-hint">클릭=복사</span></div>';
+        }
+        el.innerHTML = html;
+    }
+
+    function renderTestTable() {
+        const el = document.getElementById('test-results');
+        if (!prompts || !prompts.scenes || !prompts.tools) return;
+        const tools = Object.keys(prompts.tools);
+        let html = '<table class="test-table"><thead><tr><th>장면</th>';
+        tools.forEach(t => { html += '<th>' + prompts.tools[t].name + '</th>'; });
+        html += '</tr></thead><tbody>';
+        prompts.scenes.forEach(scene => {
+            html += '<tr><td style="color:#f0c040;">' + scene.scene_id + '</td>';
+            tools.forEach(t => {
+                html += '<td><select style="background:#222;color:#ccc;border:1px solid #444;padding:2px;border-radius:3px;font-size:11px;"><option>미테스트</option><option>⭐ 우수</option><option>👍 양호</option><option>👎 부족</option></select></td>';
+            });
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+        el.innerHTML = html;
+    }
+
+    async function selectImg(sceneId, filename) {
+        await fetch('/api/asset/select', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ep: currentEp, scene_id: sceneId, file: filename }) });
+        loadEpisode();
+    }
+
+    async function setScore(sceneId, filename, score) {
+        if (!filename || !score) return;
+        await fetch('/api/asset/score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ep: currentEp, scene_id: sceneId, file: filename, score: parseFloat(score) }) });
+    }
+
+    async function uploadImages(files) {
+        for (const file of files) {
+            const form = new FormData();
+            form.append('file', file);
+            form.append('ep', currentEp);
+            await fetch('/api/asset/upload', { method: 'POST', body: form });
+        }
+        loadEpisode();
+    }
+
+    function copyText(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            const toast = document.createElement('div');
+            toast.textContent = '✅ 복사됨';
+            toast.style.cssText = 'position:fixed;top:20px;right:20px;background:#1b5e20;color:#fff;padding:8px 16px;border-radius:6px;z-index:9999;';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 1500);
+        });
+    }
+
+    function exportTestSheet() {
+        window.open('/api/asset/test_sheet?ep=' + encodeURIComponent(currentEp));
+    }
+
+    init();
+    </script>
+</body>
+</html>

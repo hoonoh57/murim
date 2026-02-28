@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from src.relay.relay_client import RelaySession
 from src.relay.relay_automator import RelayAutomator
 from src.api.ai_clients import GeminiFreeClient
+from src.pipeline.image_manager import ImageManager
+from src.pipeline.prompt_combiner import PromptCombiner
 
 # Load environment variables
 load_dotenv()
@@ -353,6 +355,139 @@ def serve_output_file(ep_dir: str, filepath: str):
         return jsonify({"error": "파일을 찾을 수 없습니다."}), 404
     
     return send_file(full_path, as_attachment=True)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Phase 4: 에셋 관리 API
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@app.route("/assets")
+def assets_page():
+    return render_template("assets.html")
+
+
+def _find_episode_dir(ep_name):
+    """에피소드 디렉토리를 여러 위치에서 탐색"""
+    for base in [OUTPUTS_DIR, os.path.join(OUTPUTS_DIR, "episodes")]:
+        path = os.path.join(base, ep_name)
+        if os.path.isdir(path):
+            return path
+    return None
+
+
+@app.route("/api/asset/episodes")
+def asset_episodes():
+    episodes = []
+    for base in [OUTPUTS_DIR, os.path.join(OUTPUTS_DIR, "episodes")]:
+        if not os.path.isdir(base):
+            continue
+        for d in sorted(os.listdir(base), reverse=True):
+            if d.startswith("ep") and os.path.isdir(os.path.join(base, d)):
+                if d not in [e["dir"] for e in episodes]:
+                    episodes.append({"dir": d, "path": os.path.join(base, d)})
+    return jsonify({"episodes": episodes})
+
+
+@app.route("/api/asset/manifest")
+def asset_manifest():
+    ep = request.args.get("ep", "")
+    ep_dir = _find_episode_dir(ep)
+    if not ep_dir:
+        return jsonify({"error": "에피소드 없음"}), 404
+    mgr = ImageManager(ep_dir)
+    manifest = mgr.scan_images()
+    return jsonify(manifest)
+
+
+@app.route("/api/asset/coverage")
+def asset_coverage():
+    ep = request.args.get("ep", "")
+    ep_dir = _find_episode_dir(ep)
+    if not ep_dir:
+        return jsonify({"error": "에피소드 없음"}), 404
+    mgr = ImageManager(ep_dir)
+    mgr.scan_images()
+    return jsonify(mgr.get_coverage_report())
+
+
+@app.route("/api/asset/image")
+def asset_image():
+    ep = request.args.get("ep", "")
+    filename = request.args.get("file", "")
+    ep_dir = _find_episode_dir(ep)
+    if not ep_dir or not filename:
+        return "Not found", 404
+    filepath = os.path.join(ep_dir, "images", filename)
+    if not os.path.isfile(filepath):
+        return "Not found", 404
+    return send_file(filepath)
+
+
+@app.route("/api/asset/select", methods=["POST"])
+def asset_select():
+    data = request.json
+    ep_dir = _find_episode_dir(data.get("ep", ""))
+    if not ep_dir:
+        return jsonify({"error": "에피소드 없음"}), 404
+    mgr = ImageManager(ep_dir)
+    mgr.scan_images()
+    ok = mgr.select_image(data.get("scene_id", ""), data.get("file", ""))
+    return jsonify({"success": ok})
+
+
+@app.route("/api/asset/score", methods=["POST"])
+def asset_score():
+    data = request.json
+    ep_dir = _find_episode_dir(data.get("ep", ""))
+    if not ep_dir:
+        return jsonify({"error": "에피소드 없음"}), 404
+    mgr = ImageManager(ep_dir)
+    mgr.scan_images()
+    ok = mgr.set_quality_score(data.get("scene_id", ""), data.get("file", ""), data.get("score", 0), data.get("notes", ""))
+    return jsonify({"success": ok})
+
+
+@app.route("/api/asset/upload", methods=["POST"])
+def asset_upload():
+    ep = request.form.get("ep", "")
+    ep_dir = _find_episode_dir(ep)
+    if not ep_dir:
+        return jsonify({"error": "에피소드 없음"}), 404
+    f = request.files.get("file")
+    if not f:
+        return jsonify({"error": "파일 없음"}), 400
+    images_dir = os.path.join(ep_dir, "images")
+    os.makedirs(images_dir, exist_ok=True)
+    filepath = os.path.join(images_dir, f.filename)
+    f.save(filepath)
+    mgr = ImageManager(ep_dir)
+    mgr.scan_images()
+    return jsonify({"success": True, "file": f.filename})
+
+
+@app.route("/api/asset/prompts")
+def asset_prompts():
+    ep = request.args.get("ep", "")
+    ep_dir = _find_episode_dir(ep)
+    if not ep_dir:
+        return jsonify({"error": "에피소드 없음"}), 404
+    combiner = PromptCombiner(ep_dir)
+    return jsonify({
+        "scenes": combiner.get_all_scenes(),
+        "tools": combiner.get_available_tools(),
+        "audio": combiner.audio_guide
+    })
+
+
+@app.route("/api/asset/test_sheet")
+def asset_test_sheet():
+    ep = request.args.get("ep", "")
+    ep_dir = _find_episode_dir(ep)
+    if not ep_dir:
+        return jsonify({"error": "에피소드 없음"}), 404
+    combiner = PromptCombiner(ep_dir)
+    sheet = combiner.generate_test_sheet()
+    return jsonify(sheet)
 
 
 if __name__ == "__main__":
