@@ -95,48 +95,49 @@ class ScenarioEngine:
         from src.core.prompts import SYSTEM_PROMPT
         self.system_prompt = SYSTEM_PROMPT
 
-    def generate_episode(self, topic, events):
+    def generate_episode(self, topic, events, system_prompt_override=None):
+        """system_prompt_override가 있으면 skills 기반 프롬프트 사용"""
+        active_prompt = system_prompt_override or self.system_prompt
+
         if self.is_mock:
             print(f"[MOCK] Generating scenario for: {topic}")
-            time.sleep(1)
+            import time; time.sleep(1)
             return {
                 "title": f"MOCK EPISODE: {topic}",
                 "script": "천마의 기억이 요동친다. (Mock Script)",
                 "scenes": [
                     {
-                        "id": "S01", 
+                        "id": "S01",
                         "time_range": "0:00-0:30",
-                        "description": "Moonlit cliff", 
+                        "description": "Moonlit cliff",
                         "camera": "Wide shot",
                         "emotion": "Brave",
-                        "image_prompt": "cinematic cliff", 
+                        "image_prompt": "cinematic cliff",
                         "video_prompt": "Slow zoom on cliff"
                     }
                 ]
             }
-        
-        # Real API Call
+
         print(f"[API] Calling Anthropic ({self.model}) for: {topic}")
+        print(f"[API] System prompt: {len(active_prompt)} chars")
         message = self.client.messages.create(
             model=self.model,
             max_tokens=4000,
-            system=self.system_prompt,
+            system=active_prompt,
             messages=[
                 {"role": "user", "content": f"주제: {topic}\n주요사건: {events}\n위 내용을 바탕으로 JSON 형식으로 시나리오를 작성해줘."}
             ]
         )
-        
-        # Parse JSON from response
+
         try:
-            # Claude 3 often wraps JSON in quotes or markdown blocks, but we'll try to parse it directly
             content = message.content[0].text
-            # Basic cleanup if it's wrapped in ```json ... ```
             if "```json" in content:
                 content = content.split("```json")[1].split("```")[0].strip()
             return json.loads(content)
         except Exception as e:
             print(f"[ERROR] Failed to parse AI response: {e}")
             return {"error": str(e)}
+
 
 class ImageGenerator:
     def __init__(self, api_key=None, is_mock=True):
