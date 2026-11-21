@@ -19,7 +19,7 @@ $Python = Join-Path $Venv 'Scripts\python.exe'
 $Logs = Join-Path $Root 'logs'
 if (-not (Test-Path -LiteralPath $Logs)) { New-Item -ItemType Directory -Path $Logs | Out-Null }
 $Log = Join-Path $Logs 'install-scail2.log'
-$Utf8 = New-Object System.Text.UTF8Encoding($false)
+$Utf8 = [System.Text.UTF8Encoding]::new($false)
 function Write-Note([string]$message) {
     [IO.File]::AppendAllText($Log, ('[' + (Get-Date -Format 's') + '] ' + $message + "`r`n"), $Utf8)
 }
