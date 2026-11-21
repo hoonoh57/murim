@@ -1,6 +1,7 @@
 import unittest
 from src.agents.camera import CameraAgent
 from src.core.models import Scene
+from src.core.skill_prompt import CAMERA_ANGLES, SHOT_SIZES, LIGHTING_PATTERNS
 
 class TestCameraAgent(unittest.TestCase):
     def setUp(self):
@@ -18,7 +19,15 @@ class TestCameraAgent(unittest.TestCase):
         )]
         plan = self.agent.plan_camera_angles(scenes)
         self.assertEqual(len(plan), 1)
-        self.assertEqual(plan[0]["angle"], "Extreme Wide Shot")
+        # Since skill integration, angle and shot size are separate fields.
+        # Epic -> low angle + EWS, slow zoom, volumetric lighting.
+        self.assertEqual(plan[0], {
+            "scene_id": "S01",
+            "angle": CAMERA_ANGLES["low"],
+            "shot": SHOT_SIZES["EWS"],
+            "movement": "slow_zoom_in",
+            "lighting": LIGHTING_PATTERNS["volumetric"],
+        })
 
     def test_plan_camera_angles_korean(self):
         scenes = [
@@ -26,8 +35,38 @@ class TestCameraAgent(unittest.TestCase):
             Scene(id="S02", time_range="00:05", description="desc", emotion="전투", camera="ca", image_prompt="p", video_prompt="p")
         ]
         plan = self.agent.plan_camera_angles(scenes)
-        self.assertEqual(plan[0]["angle"], "Extreme Wide Shot")
-        self.assertEqual(plan[1]["movement"], "Handheld Shake")
+        self.assertEqual(plan, [
+            {
+                "scene_id": "S01",
+                "angle": CAMERA_ANGLES["low"],
+                "shot": SHOT_SIZES["EWS"],
+                "movement": "slow_zoom_in",
+                "lighting": LIGHTING_PATTERNS["volumetric"],
+            },
+            {
+                "scene_id": "S02",
+                "angle": CAMERA_ANGLES["dutch"],
+                "shot": SHOT_SIZES["MS"],
+                "movement": "zoom_in",
+                "lighting": LIGHTING_PATTERNS["rim"],
+            },
+        ])
+
+    def test_plan_camera_angles_unknown_emotion(self):
+        scenes = [
+            Scene(id="S03", time_range="00:10", description="desc",
+                  emotion="unknown", camera="ca",
+                  image_prompt="p", video_prompt="p")
+        ]
+        self.assertEqual(self.agent.plan_camera_angles(scenes), [
+            {
+                "scene_id": "S03",
+                "angle": CAMERA_ANGLES["eye"],
+                "shot": SHOT_SIZES["MS"],
+                "movement": "static",
+                "lighting": LIGHTING_PATTERNS["volumetric"],
+            }
+        ])
 
     def test_self_practice(self):
         initial_xp = self.agent.log.total_xp

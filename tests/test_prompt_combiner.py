@@ -54,10 +54,17 @@ class TestPromptCombiner:
     def test_available_tools(self):
         """지원 도구 확인"""
         tools = PromptCombiner.get_available_tools()
-        assert len(tools) == 5, f"5개 도구 기대, 실제: {len(tools)}"
-        
-        expected = {'kling', 'runway', 'pika', 'veo', 'haiper'}
+        # Five hosted services + two local ComfyUI backends.
+        expected = {
+            'comfyui_wan22', 'comfyui_ltx2',
+            'kling', 'runway', 'pika', 'veo', 'haiper'
+        }
+        assert len(tools) == 7, f"7개 도구 기대, 실제: {len(tools)}"
         assert set(tools.keys()) == expected, f"도구 이름 불일치"
+        assert tools['comfyui_wan22']['url'] == 'http://127.0.0.1:8188'
+        assert tools['comfyui_ltx2']['url'] == 'http://127.0.0.1:8188'
+        assert tools['comfyui_wan22']['max_sec'] == 5
+        assert tools['comfyui_ltx2']['max_sec'] == 20
         
         # 각 도구의 필수 필드 확인
         for tool_key, tool_info in tools.items():
@@ -65,6 +72,50 @@ class TestPromptCombiner:
             assert 'url' in tool_info, f"{tool_key}: url 필드 없음"
             assert 'free' in tool_info, f"{tool_key}: free 필드 없음"
             assert 'max_sec' in tool_info, f"{tool_key}: max_sec 필드 없음"
+
+    def test_all_seven_tools_without_episode_files(self, tmp_path):
+        """Verify 2 scenes x 7 tools without optional outputs/ fixtures."""
+        ep_dir = tmp_path / "episode"
+        prompts_dir = ep_dir / "prompts"
+        prompts_dir.mkdir(parents=True)
+        (prompts_dir / "image_prompts.json").write_text(
+            json.dumps({"enhanced_prompts": [
+                {"scene_id": "S01", "prompt": "A warrior on a mountain"},
+                {"scene_id": "S02", "prompt": "Two martial artists duel"},
+            ]}, ensure_ascii=False), encoding="utf-8")
+        (prompts_dir / "video_prompts.json").write_text(
+            json.dumps({"motion_plans": [
+                {"scene_id": "S01", "motion_prompt": "Slowly raises a sword", "duration_sec": 30},
+                {"scene_id": "S02", "motion_prompt": "Dashes across the courtyard", "duration_sec": 30},
+            ]}, ensure_ascii=False), encoding="utf-8")
+        combiner = PromptCombiner(str(ep_dir))
+        sheet = combiner.generate_test_sheet()
+
+        expected_tools = set(TOOL_TEMPLATES)
+        assert expected_tools == {
+            'comfyui_wan22', 'comfyui_ltx2', 'kling',
+            'runway', 'pika', 'veo', 'haiper'
+        }
+        assert sheet['scene_count'] == 2
+        assert sheet['tool_count'] == 7
+        assert len(sheet['tests']) == 14
+        for scene_id in ('S01', 'S02'):
+            rows = [row for row in sheet['tests'] if row['scene_id'] == scene_id]
+            assert len(rows) == 7
+            assert {row['tool'] for row in rows} == expected_tools
+            for row in rows:
+                meta = TOOL_TEMPLATES[row['tool']]
+                assert row['tool_name'] == meta['name']
+                assert row['duration'] == meta['max_duration']
+                assert row['prompt'].strip()
+                assert row['result'] is None
+
+        wan = combiner.format_for_tool('S01', 'comfyui_wan22')
+        ltx = combiner.format_for_tool('S01', 'comfyui_ltx2')
+        assert wan['format'] == 'image_to_video'
+        assert ltx['format'] == 'image_to_video_audio'
+        assert wan['duration'] == 5
+        assert ltx['duration'] == 20
 
     def test_format_for_tool_kling(self, combiner):
         """Kling 도구용 프롬프트 포맷"""
@@ -102,8 +153,8 @@ class TestPromptCombiner:
         assert 'tests' in sheet, "tests 필드 없음"
         
         assert sheet['scene_count'] == 6, f"6개 장면 기대, 실제: {sheet['scene_count']}"
-        assert sheet['tool_count'] == 5, f"5개 도구 기대, 실제: {sheet['tool_count']}"
-        assert len(sheet['tests']) == 30, f"30개 테스트(6 scenes x 5 tools) 기대"
+        assert sheet['tool_count'] == 7, f"7개 도구 기대, 실제: {sheet['tool_count']}"
+        assert len(sheet['tests']) == 42, f"42개 테스트(6 scenes x 7 tools) 기대"
         
         # 각 테스트 항목 구조 확인
         for test in sheet['tests']:

@@ -36,3 +36,11 @@
 ## 다음 한 단계
 
 기존 Windows 실행기에서 `E:\gpt\projects\comfyui\murim`이 정확한 `hoonoh57/murim` 클론인지와 local dirty/ignored 충돌을 확인하고, `windows-test.cmd`로 **최초 안전 동기화 + pytest + 선택 ComfyUI 확인**을 수행한다. 그 후 P1 실제 한 장면 API 생성으로 진행한다.
+
+## 2026-11-21 — Windows pytest 최초 전체 실행의 3개 회귀 실패 분석
+
+- **사용자가 제공한 실제 Windows 실행 증거:** `E:\gpt\projects\comfyui\murim`에서 `55 passed / 3 failed / 12 skipped` (Python pytest, 6.01s). Windows 예약 작업은 등록되었고 자동 동기화/테스트는 실제 가동하였으나 **전체 pytest FAIL**.
+- 실패 원인: `tests/test_camera.py`는 이전 단일 `angle="Extreme Wide Shot"` 규격 및 `Handheld Shake`를 기대했으나, 최신 Camera는 `angle`(실제 촬영각)과 `shot`(화면 크기)을 분리한다. `epic/비장함` → low/EWS/slow_zoom_in/volumetric; `전투` → dutch/MS/zoom_in/rim. `tests/test_prompt_combiner.py`는 5개 외부 서비스만 기대했으나 제품은 ComfyUI 로컬 2개를 포함한 **7개 템플릿**을 지원한다.
+- **분류:** `TEST_DEFECT` (기존 구현의 명시적 스킬·도구 계약과 테스트의 예전 기대가 불일치). 테스트 수치만 느슨하게 만들지 않고, 카메라의 각도·샷·움직임·조명 매핑 전체와 7개 템플릿/2장면×7도구 출력, 6장면×7도구(실제 fixture 존재 시)를 구체 검증하도록 강화한다. 제품 소스는 수정하지 않는다.
+- **변경 검증:** 원격 파일 내용·결함 분석 VERIFIED; Windows 재실행/실제 출력 PASS는 **NOT_RUN**. 다음 자동 동기화 테스트에서 결과 확인 후 새 SHA의 검증 상태를 기록한다.
+- **다음 한 단계:** 새 GitHub main HEAD가 Windows 예약 작업으로 fast-forward 반영되어 pytest 완료되는지 확인. 통과 후 ComfyUI `/system_stats` 연결 및 한 장면 실제 생성 P1 검증.

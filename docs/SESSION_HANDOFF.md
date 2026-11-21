@@ -25,3 +25,10 @@
 ## 다음 한 단계
 
 실제 Windows runner와 `E:\gpt\projects\comfyui\murim` 클론 연결을 확인하고 안전 동기화/pytest를 **한 번** 실행하여 출처가 명확한 결과를 얻는다. 그 다음 실제 ComfyUI P1 장면 생성 API 테스트를 설계·구현한다.
+
+## 2026-11-21 — Murim pytest 회귀 테스트 정합성 복구
+
+- 사용자 Windows 로그: `3 failed, 55 passed, 12 skipped`. 실패 3건은 카메라 angle/shot 분리와 신규 ComfyUI 2개 백엔드 추가에 따른 구 규격 assertion 불일치.
+- **TEST_DEFECT 판정**; `src/agents/camera.py`, `src/pipeline/prompt_combiner.py`는 그대로 두고 `tests/test_camera.py`, `tests/test_prompt_combiner.py`에서 스킬 기반 angle/shot/movement/lighting 및 7개 도구 규격으로 **명시적 확인 강화**.
+- `outputs/` 에피소드가 없으면 기존 12개 fixture 의존 검사는 skip. 새로운 임시 2장면×7도구 테스트는 외부 데이터 없이 실행하여 이 부분을 지속 점검.
+- GitHub 파일 검사와 원격 커밋을 Windows pytest PASS로 혼동하지 말 것. 다음 단계는 자동 예정 Windows 테스트 재실행의 최종 결과 확인이며 실패 시 실패 분류 후 원본 수정.
