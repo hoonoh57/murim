@@ -24,12 +24,22 @@ try {
 
 function Git-Run {
     param([string[]]$ArgsList)
-    $lines = & git -C $Workspace @ArgsList 2>&1
-    $code = $LASTEXITCODE
-    if ($code -ne 0) {
-        throw ("[GIT_FAIL] git " + ($ArgsList -join " ") + " (exit " + $code + "): " + ($lines -join " "))
+    # Windows PowerShell 5.1 converts native stderr (including harmless
+    # "From https://..." fetch progress) into error records. Do not treat
+    # those records as a failure: inspect the native exit code instead.
+    $previousPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = 'Continue'
+        $lines = @(& git -C $Workspace @ArgsList 2>&1)
+        $code = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $previousPreference
     }
-    return (($lines -join "`n").Trim())
+    $output = (($lines | ForEach-Object { [string]$_ }) -join "`n").Trim()
+    if ($code -ne 0) {
+        throw ("[GIT_FAIL] git " + ($ArgsList -join " ") + " (exit " + $code + "): " + $output)
+    }
+    return $output
 }
 
 if (-not (Test-Path -LiteralPath $Workspace -PathType Container)) {
@@ -54,7 +64,7 @@ if (-not [string]::IsNullOrWhiteSpace($dirty)) {
     throw "[LOCAL_CHANGES_PRESENT] Local staged/unstaged/untracked files found; no overwrite performed."
 }
 $before = Git-Run -ArgsList @("rev-parse", "HEAD")
-[void](Git-Run -ArgsList @("fetch", "--no-tags", "origin", "main"))
+[void](Git-Run -ArgsList @("fetch", "--quiet", "--no-tags", "origin", "main"))
 $target = Git-Run -ArgsList @("rev-parse", "refs/remotes/origin/main")
 $base = Git-Run -ArgsList @("merge-base", "HEAD", "refs/remotes/origin/main")
 if ($base -ne $before) {
@@ -62,15 +72,15 @@ if ($base -ne $before) {
 }
 # Git may overwrite an ignored file when a new tracked path has the same name.
 # Protect exact incoming paths even if local git status looks clean.
-$incoming = & git -C $Workspace -c core.quotePath=false diff --name-only --diff-filter=ACMRT HEAD refs/remotes/origin/main 2>&1
-if ($LASTEXITCODE -ne 0) { throw "[GIT_DIFF_FAIL] Cannot inspect incoming paths safely." }
-foreach ($relative in @($incoming)) {
-    $pathPart = [string]$relative
-    if ([string]::IsNullOrWhiteSpace($pathPart)) { continue }
-    $currentPath = Join-Path $Workspace $pathPart
-    $isTracked = & git -C $Workspace ls-files --cached --error-unmatch -- $pathPart 2>$null
-    if ($LASTEXITCODE -ne 0 -and (Test-Path -LiteralPath $currentPath)) {
-        throw "[IGNORED_FILE_CONFLICT] Incoming tracked path conflicts with an existing local file: $pathPart"
+$incomingText = Git-Run -ArgsList @("-c", "core.quotePath=false", "diff", "--name-only", "--diff-filter=ACMRT", "HEAD", "refs/remotes/origin/main")
+if (-not [string]::IsNullOrWhiteSpace($incomingText)) {
+    foreach ($pathPart in ($incomingText -split "`r?`n")) {
+        if ([string]::IsNullOrWhiteSpace($pathPart)) { continue }
+        $currentPath = Join-Path $Workspace $pathPart
+        $tracked = Git-Run -ArgsList @("ls-files", "--cached", "--", $pathPart)
+        if ([string]::IsNullOrWhiteSpace($tracked) -and (Test-Path -LiteralPath $currentPath)) {
+            throw "[IGNORED_FILE_CONFLICT] Incoming tracked path conflicts with an existing local file: $pathPart"
+        }
     }
 }
 [void](Git-Run -ArgsList @("merge", "--ff-only", "refs/remotes/origin/main"))
@@ -95,8 +105,16 @@ if ($OnlyOnChange -and (Test-Path -LiteralPath $verifiedFile -PathType Leaf)) {
 
 Push-Location -LiteralPath $Workspace
 try {
-    $testOutput = & $PythonExe -m pytest -q tests 2>&1
-    $testCode = $LASTEXITCODE
+    # Likewise, Python/pytest may emit useful diagnostics on stderr.
+    # Capture them and fail only when the process returns a nonzero code.
+    $previousPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = 'Continue'
+        $testOutput = @(& $PythonExe -m pytest -q tests 2>&1)
+        $testCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $previousPreference
+    }
     if ($testCode -ne 0) {
         throw ("[PYTEST_FAIL] Exit " + $testCode + ": " + ($testOutput -join "`n"))
     }
