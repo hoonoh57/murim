@@ -42,6 +42,9 @@ function Git-Run {
     return $output
 }
 
+if ($null -eq (Get-Command git -ErrorAction SilentlyContinue)) {
+    throw "[GIT_MISSING] Git for Windows is not on PATH in the scheduled task account."
+}
 if (-not (Test-Path -LiteralPath $Workspace -PathType Container)) {
     throw "[WORKSPACE_MISSING] Windows clone path does not exist: $Workspace"
 }
@@ -74,7 +77,7 @@ if ($base -ne $before) {
 # Protect exact incoming paths even if local git status looks clean.
 $incomingText = Git-Run -ArgsList @("-c", "core.quotePath=false", "diff", "--name-only", "--diff-filter=ACMRT", "HEAD", "refs/remotes/origin/main")
 if (-not [string]::IsNullOrWhiteSpace($incomingText)) {
-    foreach ($pathPart in ($incomingText -split "`r?`n")) {
+    foreach ($pathPart in ($incomingText -split '\r?\n')) {
         if ([string]::IsNullOrWhiteSpace($pathPart)) { continue }
         $currentPath = Join-Path $Workspace $pathPart
         $tracked = Git-Run -ArgsList @("ls-files", "--cached", "--", $pathPart)
@@ -103,6 +106,9 @@ if ($OnlyOnChange -and (Test-Path -LiteralPath $verifiedFile -PathType Leaf)) {
     }
 }
 
+if ($null -eq (Get-Command -Name $PythonExe -ErrorAction SilentlyContinue)) {
+    throw "[PYTHON_MISSING] Python executable is not on PATH in the scheduled task account: $PythonExe"
+}
 Push-Location -LiteralPath $Workspace
 try {
     # Likewise, Python/pytest may emit useful diagnostics on stderr.
