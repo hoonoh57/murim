@@ -152,7 +152,7 @@ legacy_models:
         $requirements = Join-Path (Join-Path (Join-Path $Comfy 'custom_nodes') $pack[0]) 'requirements.txt'
         if (Test-Path -LiteralPath $requirements) { Invoke-Native $Python @('-m','pip','install','--disable-pip-version-check','-r',$requirements) }
     }
-    Invoke-Native $Python @('-c','import torch; assert torch.cuda.is_available(), "CUDA NOT AVAILABLE"; print("GPU",torch.cuda.get_device_name(0),"CUDA",torch.version.cuda)')
+    Invoke-Native $Python @('-c','import torch; assert torch.cuda.is_available(), ''CUDA NOT AVAILABLE''; print(''GPU'',torch.cuda.get_device_name(0),''CUDA'',torch.version.cuda)')
 
     # Reuse two legacy models by model-path configuration. Download only missing SCAIL-specific weights.
     Download-Safe 'SCAIL-2-Q3_K_M.gguf' 'unet' 'https://huggingface.co/realrebelai/SCAIL-2_GGUF/resolve/main/SCAIL-2-Q3_K_M.gguf' 7000000000
@@ -183,7 +183,7 @@ legacy_models:
     $demoPngTarget = Join-Path $Comfy 'input\your_reference_image.png'
     if (-not (Test-Path -LiteralPath $demoPngTarget)) {
         # PNG must be genuine PNG (never a .jpg renamed to .png).
-        Invoke-Native $Python @('-c','from PIL import Image; import sys; Image.open(sys.argv[1]).convert("RGB").save(sys.argv[2], format="PNG")',$demoImage,$demoPngTarget)
+        Invoke-Native $Python @('-c','from PIL import Image; import sys; Image.open(sys.argv[1]).convert(''RGB'').save(sys.argv[2], format=''PNG'')',$demoImage,$demoPngTarget)
     }
     # Keep user's local Murim character reference available as a separate, non-default asset.
     $murimRef = Join-Path $Old 'input\content_creator_identity_reference_portrait.png'
