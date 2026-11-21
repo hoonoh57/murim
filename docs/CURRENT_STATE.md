@@ -1,3 +1,10 @@
+## 2026-11-21 — SCAIL-2 검술 입력 준비 Windows 실행 PASS; CMD 즉시 닫힘은 정상 종료
+
+- 사용자 보고: `E:\comfyui-scail\PREPARE-SCAIL2-SWORD.cmd` 더블클릭 후 CMD 창 즉시 닫힘. 실제 결과 확인 전 실패 단정 금지. 기존 CMD 정상 성공 분기는 `[PASS]` 출력 후 `pause` 없이 종료하도록 구현되어 있음.
+- 기존 범용 Windows 파일 에이전트 읽기 전용 요청 `scail2-sword-prep-diagnose-20261121-a`, 응답 `res-scail2-sword-prep-diagnose-20261121-a.json` (Google Drive id `1qiW9pJsoAru_qPx_IRWLPVLF-DE5Ir7H`) status PASS. `comfyui-scail/logs/prepare-scail2-sword.log` size 312 bytes, 내용: `2026-11-21T20:15:02 START` → `20:15:04 PASS: input verified and staged for SCAIL-2; GPU render NOT_RUN.`, `20:15:51 START` → `PASS: existing source and 2s video verified against receipt.` → 초기 생성과 반복 실행의 idempotent 검증이 모두 PASS.
+- Windows 파일 목록: `E:\comfyui-scail\ComfyUI\input\murim_sword_driving_2s.mp4` 실제 존재, `E:\comfyui-scail\sword-trial-input-report.json` 실제 존재, `samples\sword-pexels-4734306` 폴더 존재. 기존 `your_driving_video.mp4`와 `murim_character_reference.png` 그대로 존재. 모델/기존 ComfyUI 변경 없음.
+- 판정: **INPUT_PREPARE_PASS / REPEAT_IDEMPOTENCE_PASS / GPU_RENDER_NOT_RUN**. 다음 한 단계: ComfyUI `http://127.0.0.1:8189`에서 `SCAIL-2-MURIM-SWORD-2S.json` 워크플로 로드 후 `실행` 1회, 생성 `SCAIL2_MURIM_SWORD_*.mp4`의 검·손 추종과 동작을 실제 육안 검증. CMD 재실행이나 신규 패치 불필요.
+
 ## 2026-11-21 — SCAIL-2 2초 무협 캐릭터/검술 동작 실험: Windows 파일 배포 PASS, 실행 대기
 
 - 기준 확인: 사용자 검증 공식 `SCAIL2_FULL_00001.mp4` 2초 SCAIL Q3 동작 전이 재생 PASS. Windows 범용 파일 에이전트 read-only 응답 `res-scail2-sword-assets-readonly-20261121-a.json`: `E:\comfyui-scail\ComfyUI\input\murim_character_reference.png` 및 손상 없이 유지 중인 `your_driving_video.mp4`, 백업 파일 확인; 원본 ComfyUI 출력 `SCAIL2_FULL_00001.mp4`, PNG, audio.mp4 등 확인. `ComfyUI_New\ComfyUI\input` 307개 목록에서 sword_draw PNG 두 개 확인, 검술 motion MP4는 확인되지 않음. Windows 원본 `E:\ComfyUI_New` 보호.
