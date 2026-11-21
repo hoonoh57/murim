@@ -1,3 +1,10 @@
+## 2026-11-22 — 경쟁 조사 기반 회화형 서사 제작전략 v1 (제안)
+
+- 사용자 지향: 고품격 심층 연구 → 공부 과제 아닌 명화로 이루어진 영화 → 선택·몰입·만족·시청자의 인연. 기존 v0.2 원고 후반 이해 곤란 실제 독서 의견 유지, 전체 작품 합격 아님.
+- 공개 경쟁 자료 조사에서 **KBS 다큐 인사이트 세한(2021)과 우리 176년 소장 여정/일제강점기 진입이 직접 중복** 확인. Great Art Explained, Fall of Civilizations, 국립중앙박물관 세한의 시간, 예술의 이유/널 위한 문화예술/지식 브런치 비교. 경쟁작 전편 실제 감상·장면별 평가/비공개 지표 접근은 NOT_RUN. 독창성·시장우위 미입증.
+- `docs/CONTENT_COMPETITIVE_PRODUCTION_STRATEGY_V1.md`에 연구 근거 URL, 시청자/YouTube Appeal·Engagement·Satisfaction 공식 근거, AI 정책, 시각·음향 원칙, 제목/썸네일, RTX4070 파일럿/블라인드 시청 실험 및 7/28일 분석 방법을 정리. 기존 4-GATE/역사 진실성 유지. 제작전략 제안이며 코드·원고·Windows 변경 또는 영상 생산/게시 승인 아님.
+- **다음 한 단계:** 경쟁작 전편 실제 비교 및 원전·상반 해석 확보 → v0.3 차별화 관점 및 파일럿 샷리스트/무음악 낭독·시각 비교 설계. 기존 `SEHANDO_FULL_MANUSCRIPT_V0_2.md` 그대로 보존. `PUBLIC_DESK_RESEARCH_COMPLETE / COMPETITOR_FULL_REVIEW_NOT_RUN / AUDIENCE_TEST_NOT_RUN / MARKET_ADVANTAGE_NOT_VERIFIED / RENDER_NOT_RUN / PUBLICATION_NOT_APPROVED`.
+
 ## 2026-11-21 — 《세한도》 장편 2~5막 연속 집필 및 전체 통독본 v0.2
 
 - 사용자 요청: 프롤로그와 1막의 호흡이 좋으므로 **중단 없이 다음 막 전체 집필→연속 통독 후 검수·수정**. 1막 사용자 긍정 피드백을 보존하되 작품 전체 합격 아님.
