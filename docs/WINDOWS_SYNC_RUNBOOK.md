@@ -66,3 +66,19 @@ GitHub main 커밋 → 최대 10분 이내 다음 Windows Task Scheduler 실행
 **다음 한 단계:** Windows의 해당 경로·원격 및 사용자 변경을 안전하게 확인하고 위 예약 작업을 최초 1회 등록해 실제 동기화·pytest 증거를 얻는다. 그 뒤 WAN 입력과 모델을 확인한 **실제 ComfyUI 영상 한 컷 생성**으로 진행한다.
 
 참조: [Microsoft ScheduledTasks](https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/register-scheduledtask), [ComfyUI 서버 API](https://github.com/Comfy-Org/docs/blob/main/development/comfyui-server/comms_routes.mdx).
+
+
+## 6. 기존 폴더가 Git 저장소가 아닐 때 (최초 부트스트랩)
+
+Windows PowerShell에서 `git -C E:\gpt\projects\comfyui\murim pull`이 `not a git repository`를 반환하면 **pull할 대상이 아직 없는 상태**다. 이어서 `scripts/install-windows-task.ps1`을 실행하면 로컬에 체크아웃되지 않았으므로 파일이 없다는 오류가 발생한다.
+
+`scripts/bootstrap-windows-murim.ps1`이 이 문제를 한 번에 처리한다.
+
+- 목적 경로는 `E:\gpt\projects\comfyui\murim`으로 고정하며, junction/symlink 및 다른 경로를 거부한다.
+- **폴더가 없거나 비어 있으면:** GitHub `hoonoh57/murim`를 최초 clone → 예약 작업 등록.
+- **같은 Git 클론이 이미 있으면:** 사용자 변경이 없는지 확인 → 안전한 기존 sync 스크립트 실행 → 예약 작업 확인.
+- **기존 파일이 있고 `.git`이 없으면:** 어떤 파일도 삭제·이동·덮어쓰지 않고 `[NONEMPTY_NOT_GIT]`으로 중지한다. 로컬 파일 실사 후 병합/보존 방법을 별도로 확정한다.
+- 성공 뒤에는 10분 단위 Windows Task Scheduler가 변경을 감지하며 **매 커밋마다 GitHub Actions를 호출하지 않는다**.
+- `-ProbeComfy`는 선택 옵션으로 로컬 `/system_stats` **연결만** 검사한다. 진짜 이미지/영상 생성 검증은 별도 단계다.
+
+부트스트랩은 `README.md`와 기존 제품 소스를 덮어쓰지 않는다. 검증된 `main` commit에 고정된 스크립트를 사용할 것을 권장한다.
