@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mvml version="0.1" work="SEHANDO_INTRO" fps="24" width="1280" height="720">
+  <registry>
+    <asset id="IMG:street@1" file="assets/street.jpg" sha256="e4bed6727e4dc96b1b27cdca2e98eca848121d8ced57a1f43eaab949c3ffec72" kind="concept" origin="ChatGPT image generation; generated storyboard panel; not historical evidence" display_label="창작 회화 · 실제 기록 아님" />
+    <asset id="IMG:traveler@1" file="assets/traveler.jpg" sha256="84730fac0c9747c8ffc002afcd267f6c08aeb0b1eafb1a271f376fd7f1f3a897" kind="concept" origin="ChatGPT image generation; generated storyboard panel; not historical evidence" display_label="창작 회화 · 실제 기록 아님" />
+    <asset id="IMG:meeting@1" file="assets/meeting.jpg" sha256="51c896d1c60bc1eea0db323166d6ea8028d1aa91f98df27664ab061eff0a458c" kind="concept" origin="ChatGPT image generation; generated storyboard panel; not historical evidence" display_label="창작 회화 · 실제 기록 아님" />
+    <asset id="IMG:scroll@1" file="assets/scroll.jpg" sha256="603f0420b098a1a86fa100dede7d2dbd05f539620818c4b5bd9c53a224f2340d" kind="concept" origin="ChatGPT image generation; generated storyboard panel; not historical evidence" display_label="창작 회화 · 실제 기록 아님" />
+    <asset id="IMG:ink@1" file="assets/ink.jpg" sha256="232439c97314d37d3545107226ec3ce95d669a76f34f13bf05d20be6252c0039" kind="concept" origin="ChatGPT image generation; generated storyboard panel; not historical evidence" display_label="세한도 모티브 창작 회화 · 원본 아님" />
+    <asset id="IMG:jeju@1" file="assets/jeju.jpg" sha256="b7ae033f81118c9d3bd3c2be3a6f101a67bc22999aad6f70fe397f0e7abefa29" kind="concept" origin="ChatGPT image generation; generated storyboard panel; not historical evidence" display_label="창작 회화 · 실제 기록 아님" />
+    <camera id="CAM:push@1" zoom="1.10" anchor="center" />
+    <camera id="CAM:still@1" zoom="1.00" anchor="center" />
+    <camera id="CAM:detail@1" zoom="1.18" anchor="right" />
+    <style id="STYLE:ink_oil@1" description="절제된 회화적 재현; 생성 이미지 실제 기록 아님" />
+    <theme id="THEME:journey@1" description="그림 한 장을 움직인 인간의 선택" />
+    <character id="CHAR:traveler@1" image="IMG:traveler@1" description="손재형을 모티브로 한 익명 뒷모습; 실제 초상 아님" />
+    <character id="CHAR:scholar@1" image="IMG:jeju@1" description="추사를 모티브로 한 익명 뒷모습; 실제 초상 아님" />
+  </registry>
+  <sequence style="STYLE:ink_oil@1" theme="THEME:journey@1">
+    <shot id="S01" seconds="7" image="IMG:street@1" camera="CAM:push@1" title="1944년 말, 일본" truth="staging" character="CHAR:traveler@1">
+      <caption>조선에서 건너온 한 남자가 오래된 그림 한 폭을 돌려받으려 하고 있었습니다.</caption>
+    </shot>
+    <shot id="S02" seconds="8" image="IMG:traveler@1" camera="CAM:push@1" title="손재형" truth="staging" character="CHAR:traveler@1">
+      <caption>글씨를 쓰고 옛 서화를 연구하던 서예가였습니다.</caption>
+    </shot>
+    <shot id="S03" seconds="8" image="IMG:meeting@1" camera="CAM:still@1" title="후지쓰카 지카시" truth="staging">
+      <caption>그가 찾아간 일본인 학자는 그 그림의 소장자였습니다.</caption>
+    </shot>
+    <shot id="S04" seconds="9" image="IMG:scroll@1" camera="CAM:push@1" title="전쟁은 끝나지 않았습니다" truth="staging">
+      <caption>손재형은 그림을 가져가고 싶었습니다. 그러나 그림은 후지쓰카가 가지고 있었습니다.</caption>
+    </shot>
+    <shot id="S05" seconds="8" image="IMG:ink@1" camera="CAM:still@1" title="그림 한 장" truth="staging">
+      <caption>낮은 집 한 채. 드문드문 서 있는 나무 네 그루.</caption>
+    </shot>
+    <shot id="S06" seconds="8" image="IMG:ink@1" camera="CAM:push@1" title="세한도 · 歲寒圖" truth="staging">
+      <caption>추사 김정희의 세한도. 처음 그 그림을 받은 사람은 누구였을까요?</caption>
+    </shot>
+    <shot id="S07" seconds="7" image="IMG:jeju@1" camera="CAM:push@1" title="1844년, 제주" truth="staging" character="CHAR:scholar@1">
+      <caption>백 년 전, 김정희는 이곳을 마음대로 떠날 수 없는 사람이었습니다.</caption>
+    </shot>
+    <shot id="S08" seconds="5" image="IMG:jeju@1" camera="CAM:still@1" title="백 년 전으로" truth="staging" character="CHAR:scholar@1">
+      <caption>그리고 바다 건너에서, 그에게 책이 도착하고 있었습니다.</caption>
+    </shot>
+  </sequence>
+</mvml>

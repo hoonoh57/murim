@@ -1,3 +1,11 @@
+## 2026-11-22 — M-VML 60초 회화형 인트로 실증 0.1
+
+- 사용자 요청: 시험용 UI에서 60초 작품 인트로 실물 제작, 품질 목표에 대한 근접도를 실증하여 방향 결정. 기존 원고·ComfyUI 설치·제품 소스 보존.
+- `experiments/mvml_intro_lab/`에 독립 Python/HTML/UI/시험/Windows CMD/XML 원본 6개 소스 파일을 추가. 격리 컨테이너에서 실행한 파일과 Git blob SHA 일치 확인. 기존 production pipeline과는 미통합. 실제 생성된 회화 6개와 MP4는 평가용 파일/ZIP(대화 제공)에 보존, Git에 미디어 바이너리 미전송. 소스 기준 GitHub, Windows는 소비·검증.
+- 실제 M-VML typed ID/asset SHA256/경로/카메라/전체 지속시간 컴파일→FFmpeg CPU render, 8컷 / 60.000초 / 1280x720 / 24fps / 1440 frames / H.264 + AAC. 최종 영상 SHA256 b57dac77cb94959aa43fa03e78d91c8c4334b21cb4295cff13be7ee09d7a1e2b, source XML SHA256 191b3e292e207f401b8eb0dc39b68171ae0dbd987171763a05576d29ef64b208. HTTP compile/render 실제 응답, 400/403 guard, 이미지/비디오 조회, unittest 8 PASS, JS syntax PASS. 컨테이너 렌더 8.58초(GPU 및 실제 로컬 시간 아님). 각 컷 접촉시트 육안 확인 후 한자 글꼴/자막 대비/창작 회화 표시 보완.
+- 한계: ChatGPT 생성 시안 6장 분리 및 디지털 줌/정지, 원작 세한도 도판 미확보, 임시 절차적 배경음만 있고 한국어 내레이션 없음. CHAR/STYLE/THEME은 registry 참조 검증만 수행하고 생성 조건화에는 미작동; 동일 인물 재생성·시간/복식/동작 연속성 검증 미완료. Chromium 자동 GUI는 ERR_BLOCKED_BY_ADMINISTRATOR로 차단; HTTP/JS 검증≠실제 브라우저 WYSIWYG. Windows GPU/ComfyUI/local GUI/시청자/경쟁 평가 NOT_RUN. 최초 비교 기준 애니매틱이며 목표 작품성 PASS/외부 게시 승인 아님.
+- 다음 한 단계: 사용자 실제 평가본 시청 및 Windows UI 설치 없이 ZIP/기존 런타임으로 실행 검증(필요 의존성 확인) → 승인된 1개 인물 레퍼런스와 한국어 원고 음성을 실제 M-VML에 연결하여 3컷 조건화/구성 비교 → 동일 60초 품질 재검증. 공통 자산 등록, 실제 명화 도판, 자연스러운 낭독과 움직임을 실증하고 지표/실제 평가로 방향 결정. 동일 시나리오 보존.
+
 ## 2026-11-22 — Murim VML / local-first authoring design proposal
 
 - 사용자 제안: Video Markup Language로 인물·장면·세계관·주제·연출·기법을 ID화, 한번 등록한 이미지와 기술 재사용, 한정된 로컬 자원에서 시작하여 외부 LLM/툴은 선택적으로 교체 가능. 문법은 프롬프트 자체가 아닌 provider-neutral 제작 명세로 설계.
