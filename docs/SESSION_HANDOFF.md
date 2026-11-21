@@ -1,3 +1,10 @@
+## 2026-11-22 — Murim VML / local-first authoring design proposal
+
+- 사용자 제안: Video Markup Language로 인물·장면·세계관·주제·연출·기법을 ID화, 한번 등록한 이미지와 기술 재사용, 한정된 로컬 자원에서 시작하여 외부 LLM/툴은 선택적으로 교체 가능. 문법은 프롬프트 자체가 아닌 provider-neutral 제작 명세로 설계.
+- `docs/MURIM_VML_STUDIO_ARCHITECTURE_V0_1.md`: OpenUSD/OTIO/ComfyUI API/Runway 참조 기능 근거, 기존 Scene/PromptCombiner/ImageManager/ComfyUIClient/ai_clients/skill tracker 실제 소스 검토, XML 저작 문법 후보와 generated JSON IR, typed ID/revision/rights/state, compiler+capability adapters, Studio UI, 역할·Skill Registry, 3-shot 정량/시각 테스트 계획. VML 약어의 기존 W3C 의미는 Murim VML로 구분.
+- ID는 실제 참조 조건을 컴파일하기 위한 키이며 일관성을 보장하는 모델 기능 자체가 아님. 미지원 조건·누락/불일치·권리·예산 위반 fail-closed. 장면 저작 텍스트 감소와 provider token 감소는 구별. 외부 API/자산 업로드/비용은 명시적 사용자 승인 및 자원검증 후만 수행. 기존 4-GATE, 원고, 소스, 로컬 파일 유지.
+- **DESIGN_PROPOSED / VML_NOT_IMPLEMENTED / REAL_RENDER_NOT_RUN / CHARACTER_CONSISTENCY_NOT_VERIFIED**. 다음 단계: 최소 문법·데이터 계약 확정 → fixture 기반 compile-only 검증기 → 실제 로컬 3컷 비교 실증. 세한도 v0.3 사료/경쟁작 연구 및 작품성 심사와 별도로 관리.
+
 ## 2026-11-22 — 경쟁 조사 기반 회화형 서사 제작전략 v1 (제안)
 
 - 사용자 지향: 고품격 심층 연구 → 공부 과제 아닌 명화로 이루어진 영화 → 선택·몰입·만족·시청자의 인연. 기존 v0.2 원고 후반 이해 곤란 실제 독서 의견 유지, 전체 작품 합격 아님.
