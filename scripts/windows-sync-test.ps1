@@ -16,6 +16,12 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+
+# The scheduled task does not retain PowerShell stdout/stderr by default.
+# Record the last failure outside the source checkout without weakening
+# fail-closed Git checks or storing credentials in the repository.
+try {
+
 function Git-Run {
     param([string[]]$ArgsList)
     $lines = & git -C $Workspace @ArgsList 2>&1
@@ -115,3 +121,26 @@ if ($OnlyOnChange) {
     Move-Item -LiteralPath $tmpFile -Destination $verifiedFile -Force
 }
 Write-Output ("[PASS] murim Windows sync+pytest HEAD=" + $after.Substring(0, 12) + $(if ($RequireComfy) { "+ComfyUI" } else { "" }))
+
+} catch {
+    $failure = $_
+    $detail = "[FAIL] " + [string]$failure.Exception.Message
+    $stack = [string]$failure.ScriptStackTrace
+    $userLogRoot = $env:LOCALAPPDATA
+    if ([string]::IsNullOrWhiteSpace($userLogRoot)) { $userLogRoot = $env:TEMP }
+    try {
+        if ([string]::IsNullOrWhiteSpace($userLogRoot)) { throw "No user log directory." }
+        $diagnosticDir = Join-Path $userLogRoot "Murim"
+        if (-not (Test-Path -LiteralPath $diagnosticDir -PathType Container)) {
+            [void](New-Item -ItemType Directory -Path $diagnosticDir -Force)
+        }
+        $report = ([DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ") + [Environment]::NewLine +
+                   $detail + [Environment]::NewLine + $stack + [Environment]::NewLine)
+        $diagnosticFile = Join-Path $diagnosticDir "last-task-failure.txt"
+        [IO.File]::WriteAllText($diagnosticFile, $report, [Text.UTF8Encoding]::new($false))
+    } catch {
+        # Preserve the original product failure even when diagnostics cannot be saved.
+    }
+    [Console]::Error.WriteLine($detail)
+    exit 1
+}
