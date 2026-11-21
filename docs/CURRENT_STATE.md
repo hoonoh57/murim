@@ -1,3 +1,9 @@
+## 2026-11-21 — SCAIL2 one-click installer 최종 로컬 소스 CAS PASS, 설치 실행 대기
+
+- 실제 Windows 파일 에이전트 최종 응답: Google Drive `res-scail2-install-final-20261121-a.json` (ID `1ZrQS50iPpQDuRKluE7IhtmZ6Oy3Itp1V`) `status=PASS`, `workspace_apply=PASS`, `side_effects_possible=true`; `E:\comfyui-scail\INSTALL-SCAIL2.cmd` SHA256 `676f6bdb46f3f5e819c2f2077d366b95993eb873ef1eb2c3d2e0e516918e384d`, `install-scail2.ps1` SHA256 `84d30859cea8fe9de5ca709e44b989d359a04ea46119f066f774394df1b47510`. 구 README 파일 `README-SCAIL2.txt`도 원본 sha 확인 완료.
+- 이 최종본은 GitHub `scripts/scail2/`의 최신 코드와 같다. 사용자의 기존 파일을 전혀 삭제하지 않고 CAS 안전 수정·독립 preimage snapshot까지 수행. 현재 허용된 Windows agent에는 명령 실행 기능이 없어 **실제 Windows 설치 프로그램은 NOT_RUN**. 별도 ComfyUI GPU/서버/노드/모션 렌더도 NOT_VERIFIED.
+- 사용자 PC에서 필요 작업 하나: `E:\comfyui-scail\INSTALL-SCAIL2.cmd` 더블클릭. 로컬 코드가 Python3.12 / ComfyUI0.33.1 / PyTorch2.8 CUDA12.6 / pinned SCAIL GGUF·모델·커스텀노드, 모델 공유 및 8189 서버 검증과 공식 animation_001 데모 준비를 단일 호출로 실행. 기존 E:\ComfyUI_New 원본 보존. 실행 완료 리포트 `E:\comfyui-scail\setup-report.json`, 문제 발생 시 `logs\install-scail2.log`. 실제 사용량/성공 여부는 리포트 수신 후 판단.
+
 ## 2026-11-21 — SCAIL-2 설치 실행기 실제 Windows 로컬 파일 배포 PASS
 
 - Windows E:\ workspace Google Drive 에이전트의 `workspace_apply` 실응답 `res-scail2-install-deploy-20261121-a.json`: E:\comfyui-scail 폴더에 `INSTALL-SCAIL2.cmd`, `install-scail2.ps1`, `README-SCAIL2.txt` 3개 CREATE PASS, original before=null, after SHA256 대조 완료. 해당 폴더는 사전에 빈 폴더로 확인됨.
