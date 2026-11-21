@@ -85,10 +85,11 @@ try {
             Move-Item -LiteralPath $partial -Destination $source -ErrorAction Stop
         }
         $duration = Probe $ffprobe $source
-        if (Test-Path -LiteralPath $preview) { throw ('[PREVIEW_CONFLICT] ' + $preview) }
-        # One thumbnail per second, tiled in chronological order, first 16 seconds maximum.
-        $filter = 'fps=1,scale=240:240:force_original_aspect_ratio=decrease,pad=240:240:(ow-iw)/2:(oh-ih)/2:color=black,tile=4x4:nb_frames=16:padding=6:margin=6'
-        Native $ffmpeg @('-hide_banner','-loglevel','warning','-nostdin','-n','-i',$source,'-t','16','-an','-vf',$filter,'-frames:v','1',$preview)
+        if (-not (Test-Path -LiteralPath $preview)) {
+            # One thumbnail per second, tiled in chronological order, first 16 seconds maximum.
+            $filter = 'fps=1,scale=240:240:force_original_aspect_ratio=decrease,pad=240:240:(ow-iw)/2:(oh-ih)/2:color=black,tile=4x4:nb_frames=16:padding=6:margin=6'
+            Native $ffmpeg @('-hide_banner','-loglevel','warning','-nostdin','-n','-i',$source,'-t','16','-an','-vf',$filter,'-frames:v','1',$preview)
+        } else { Note ('Existing contact sheet preserved and validated: ' + $candidate.id) }
         if (-not (Test-Path -LiteralPath $preview) -or (Get-Item -LiteralPath $preview).Length -lt 10000) {
             throw ('[PREVIEW_MISSING_OR_INVALID] ' + $candidate.id)
         }
