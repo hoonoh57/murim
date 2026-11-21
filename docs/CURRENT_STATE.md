@@ -1,3 +1,12 @@
+## 2026-11-21 — 《세한도》 장편 2~5막 연속 집필 및 전체 통독본 v0.2
+
+- 사용자 요청: 프롤로그와 1막의 호흡이 좋으므로 **중단 없이 다음 막 전체 집필→연속 통독 후 검수·수정**. 1막 사용자 긍정 피드백을 보존하되 작품 전체 합격 아님.
+- 새 원고 `docs/stories/SEHANDO_ACT2_WINTER_TREES_V0_1.md`, `SEHANDO_ACT3_BEIJING_V0_1.md`, `SEHANDO_ACT4_RETURN_V0_1.md`, `SEHANDO_ACT5_EMPTY_SCROLL_V0_1.md`. 기존 승인 검토 대상 프롤로그/1막을 변경하지 않고 새 4막 작성.
+- **전체 연속 통독본** `docs/stories/SEHANDO_FULL_MANUSCRIPT_V0_2.md`에 프롤로그→1~5막 연결. 역사적 사실/창작/열린 문제/자가 비평: `docs/stories/SEHANDO_ACTS_2_TO_5_EDITORIAL_NOTES_V0_1.md`.
+- 핵심 사실: 국립중앙박물관 1845 중국 문인 16명, 1914 김준학·1949 정인보/이시영/오세창, 1,469.5cm와 약 5m 빈 공간; 우리역사넷 120권·1845 모임; 박물관 1932 후지쓰카·1944 환수·공습 손실; 코리아나 1971 손재형의 소장품 이전과 손세기·손창근; 2020 기증. 두 달/석 달 이상·중국 모임 주최·1843/1844 제작 연대 차이 문서화; 현장 대화/개인 심리 날조 금지.
+- **FULL_FIRST_PASS_DRAFT_WRITTEN / SOURCE_CROSSCHECK_PARTIAL / USER_WHOLE_READ_NOT_RUN / EXTERNAL_LLM_NOT_RUN / PROFESSIONAL_FACT_REVIEW_NOT_RUN / TTS_RUNTIME_NOT_MEASURED / VIDEO_NOT_RUN**. 외부 출판/게시 승인 없음.
+- 다음 한 단계는 **완본의 연속 독서**에서 인위적 문장·중복·시대 전환 혼란·3막 지루함·4막 재진술·5막 설교성·오류를 구체적 위치로 지적하여 한 번의 통합 편집으로 개선. 개별 막의 기술적 저장을 작품성 PASS로 취급 금지.
+
 ## 2026-11-21 — 《세한도》 장편 1막 실제 독서용 원고 v0.1
 
 - 사용자 '다음'에 따라 1944년 프롤로그(사용자 독서 긍정)를 잇는 **1844년 제주 중심 1막** `docs/stories/SEHANDO_ACT1_JEJU_V0_1.md` 신규 집필. 1809 청나라 유학 지향과 옹방강·완원 교류, 1840 윤상도 옥사와 제주 위리안치, 1842 예안 이씨 사망 및 아내의 죽음을 모른 채 건강을 걱정하는 편지를 보낸 일, 초의·허련·동생 등 남은 관계, 역관 이상적의 책 선물을 잇는 흐름.
