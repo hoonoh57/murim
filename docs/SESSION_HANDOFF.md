@@ -32,3 +32,10 @@
 - **TEST_DEFECT 판정**; `src/agents/camera.py`, `src/pipeline/prompt_combiner.py`는 그대로 두고 `tests/test_camera.py`, `tests/test_prompt_combiner.py`에서 스킬 기반 angle/shot/movement/lighting 및 7개 도구 규격으로 **명시적 확인 강화**.
 - `outputs/` 에피소드가 없으면 기존 12개 fixture 의존 검사는 skip. 새로운 임시 2장면×7도구 테스트는 외부 데이터 없이 실행하여 이 부분을 지속 점검.
 - GitHub 파일 검사와 원격 커밋을 Windows pytest PASS로 혼동하지 말 것. 다음 단계는 자동 예정 Windows 테스트 재실행의 최종 결과 확인이며 실패 시 실패 분류 후 원본 수정.
+
+## 2026-11-21 — pytest 성공 후 예약 자동 반복 실행 실패
+
+- Windows 최신 HEAD `3e697b3e13a8`, `last-verified-pytest.txt`는 `3e697b3e13a850b8a80eb8ad872311011cd614d8` (11:16:52 KST). 해당 커밋 pytest 성공 증거.
+- 그 후 예약 작업 11:18:34 KST 실행 결과 1, 실패 로그 11:18:38 KST `[LOCAL_CHANGES_PRESENT]`; 사용자의 후속 `git status --short --untracked-files=all`는 clean. 실패 발생 순간 status 항목이 무엇이었는지는 **UNKNOWN**.
+- 원본 보호를 약화하거나 reset/clean 하지 말 것. 진단용으로 GitHub 스크립트에서 실패 당시 porcelain 출력의 최대 20개 항목을 로컬 오류 로그에 기록하도록 강화.
+- 최종 판정: Python 테스트는 특정 커밋에서 VERIFIED_ONCE, 정기 예약의 안정성 NOT_VERIFIED, ComfyUI 렌더 NOT_RUN. 다음 예약 실행의 상태와 새 진단 내용으로 원인을 판정할 것.

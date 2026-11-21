@@ -64,7 +64,14 @@ if ($branch -ne "main") {
 }
 $dirty = Git-Run -ArgsList @("status", "--porcelain=v1", "--untracked-files=all")
 if (-not [string]::IsNullOrWhiteSpace($dirty)) {
-    throw "[LOCAL_CHANGES_PRESENT] Local staged/unstaged/untracked files found; no overwrite performed."
+    # Preserve the exact fail-closed guard. A later clean checkout cannot
+    # explain transient changes or native stderr captured by PowerShell 5.1.
+    # Log only a bounded pathname/status preview, never file contents.
+    $dirtyEntries = @($dirty -split '\r?\n' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    $dirtyPreview = (($dirtyEntries | Select-Object -First 20) -join " | ")
+    throw ("[LOCAL_CHANGES_PRESENT] Git porcelain output at check time (" +
+           $dirtyEntries.Count + " line(s); first 20): " + $dirtyPreview +
+           ". No overwrite performed.")
 }
 $before = Git-Run -ArgsList @("rev-parse", "HEAD")
 [void](Git-Run -ArgsList @("fetch", "--quiet", "--no-tags", "origin", "main"))

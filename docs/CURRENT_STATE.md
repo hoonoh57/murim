@@ -44,3 +44,11 @@
 - **분류:** `TEST_DEFECT` (기존 구현의 명시적 스킬·도구 계약과 테스트의 예전 기대가 불일치). 테스트 수치만 느슨하게 만들지 않고, 카메라의 각도·샷·움직임·조명 매핑 전체와 7개 템플릿/2장면×7도구 출력, 6장면×7도구(실제 fixture 존재 시)를 구체 검증하도록 강화한다. 제품 소스는 수정하지 않는다.
 - **변경 검증:** 원격 파일 내용·결함 분석 VERIFIED; Windows 재실행/실제 출력 PASS는 **NOT_RUN**. 다음 자동 동기화 테스트에서 결과 확인 후 새 SHA의 검증 상태를 기록한다.
 - **다음 한 단계:** 새 GitHub main HEAD가 Windows 예약 작업으로 fast-forward 반영되어 pytest 완료되는지 확인. 통과 후 ComfyUI `/system_stats` 연결 및 한 장면 실제 생성 P1 검증.
+
+## 2026-11-21 — Windows 최신 테스트 성공 및 후속 예약 실패 구분
+
+- 사용자 제공 실행 증거: `E:\gpt\projects\comfyui\murim` Windows HEAD = `3e697b3e13a8`. `%LOCALAPPDATA%\Murim\last-verified-pytest.txt`에 정확한 SHA `3e697b3e13a850b8a80eb8ad872311011cd614d8` 기록, 기록 시각 **11:16:52 KST**. 기존 스크립트는 pytest 종료 코드 0 이후에만 이 마커를 저장하므로 **그 시점 해당 HEAD의 pytest 성공 증거**로 인정한다.
+- 별도 예약 실행 **11:18:34 KST**, 종료 코드 **1**. 실패 진단 **11:18:38 KST**: `[LOCAL_CHANGES_PRESENT]`. 이후 사용자가 직접 확인한 `git status --short --untracked-files=all`은 비어 있었다. **일시적 로컬 변경인지, PowerShell이 합친 Git stderr인지 UNKNOWN**. 재현 당시 status 기록 없이 환경 문제로 확정하지 않는다.
+- 대응: `windows-sync-test.ps1`의 fail-closed local changes 검사를 유지하면서, 실패 순간 `git status --porcelain` 출력의 처음 20개 상태/경로를 **로컬 `last-task-failure.txt`에만** 함께 남기도록 변경. 파일 내용 수집이나 소스 덮어쓰기/무조건 허용/allowlist는 하지 않는다.
+- 판정: 해당 HEAD pytest **VERIFIED_ONCE**, 자동 예약 작업 지속 정상 동작 **NOT_VERIFIED**, ComfyUI/GPU 실영상 **NOT_RUN**.
+- 다음 한 단계: 기존 예약 작업의 다음 실행 결과, 실행 시 HEAD, 실패 시의 새로운 `last-task-failure.txt`를 확인해 정확한 transient 원인을 분류한다.
