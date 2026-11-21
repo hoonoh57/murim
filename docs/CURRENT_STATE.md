@@ -1,3 +1,12 @@
+## 2026-11-21 — SCAIL-2 첫 실제 Queue 실패: 공식 예제 무음 비디오의 VHS 오디오 추출 오류; 복구기 배포 PASS
+
+- 사용자 2026-11-21 19:49 KST 실제 `SCAIL-2-Q3-8GB-FIRST-TEST` 실행 오류 리포트: `VHS_LoadVideo` Node 33에서 `VHS failed to extract audio from E:\comfyui-scail\ComfyUI\input\your_driving_video.mp4`; FFmpeg가 2048×1080 H264 16fps 4.06초 영상 스트림만 식별하고 `Output file does not contain any stream` 반환. `ComfyUI 0.33.1`, `PyTorch 2.8.0+cu126`, CUDA RTX 4070 Laptop GPU 8188MB 실제 구동 확인. 이전 rgthree 누락 UI 오류는 해소됐음. 분류 PRODUCT_DEFECT (공식 audio-free 샘플과 VHS 오디오 경로 불일치). 영상 생성/render NOT_RUN/FAIL, GPU OOM의 증거 없음.
+- 공식 pinned `ComfyUI-VideoHelperSuite` `videohelpersuite/utils.py` `LazyAudioMap.__iter__`/`get_audio` 로직 검토: FFmpeg 무조건 `-f f32le -`로 오디오 디코딩하여 음성 없는 영상에서 예외 발생. VAE/모델 수정 또는 테스트 assertion 약화 금지.
+- GitHub `hoonoh57/murim` 커밋 `ebc6314a7164cc6c5a84d7fd6bb0ffb692b8c61b`: `scripts/scail2/REPAIR-SCAIL-AUDIO.cmd`, `repair-scail-audio.ps1`, 오프라인 계약검사 `tests/test_scail2_audio_repair.py` 신규. 별도 임시 2초 H264 영상으로 FFmpeg `-c:v copy`+무음 AAC remux 시험 PASS (원본/출력 32개 영상 프레임 유지, 오디오 1개 신설), 단 사용자 PC Windows 구문/제품 실사용은 미검증.
+- 현재 Windows 로컬 승인 작업공간 `E:\comfyui-scail`에 기존 파일 없는 복구 CMD/PS1 각각 **CREATE PASS**. 결과 `res-scail2-silent-audio-repair-deploy-20261121-a.json` (Google Drive ID `1f6-r2ACtssrTVY3aczxwnfXNVdnk-uxY`) `workspace_apply PASS`, SHA256 CMD `819113e711ac1bd757a1df09ceb53af03f7a0008af967ab2467cb4c444c2158d`; PS1 `f8feedcaa14a52562a461ffa59cefa95a6edaf28cde48ba6f085d789b11db18f`. preimage snapshot 기록. 승인되지 않은 로컬 폴더, 구 ComfyUI/대용량 가중치 불변.
+- 단일 다음 작업: **8189 새 SCAIL 전용 서버 CMD 창만 정상 종료**한 뒤 `E:\comfyui-scail\REPAIR-SCAIL-AUDIO.cmd` 더블클릭. 스크립트가 official `samples\official-animation-001\driving.mp4`와 `input\your_driving_video.mp4` SHA 동일성을 검증하고, 백업 `input\your_driving_video.before_silent_audio.mp4`로 보존하면서 FFmpeg copy-video+silent-AAC, ffprobe로 1 video/1 AAC audio 검증, 8189 서버 재기동과 3개 노드 API 등록 확인. 성공 영수증 `scail-audio-repair-report.json`, 실패 로그 `logs\repair-scail-audio.log`. 그 뒤 브라우저 Ctrl+F5와 워크플로 1회 Queue. 실제 오디오/영상 GPU 렌더 PASS와 시각 검증은 별도로 판정. 정상 완료 후 첫 설치기에도 동일 샘플 audio-safe 준비 반영 필요.
+- 별도 경고: `SCAIL2EasyConfig object_indices='True'`는 사용자 로그에서 empty/all-people로 자동 보정됨. 이번 에러 직접 원인은 아니며 추후 입력 의미를 감사할 것.
+
 ## 2026-11-21 — SCAIL-2 workflow rgthree Display Int 누락: 원격 복구 파일 Windows CAS 배포 PASS, 실행 미검증
 
 - 사용자 ComfyUI 8189 화면에서 `SCAIL-2-Q3-8GB-FIRST-TEST.json` 그래프 로딩 확인. 단, `Display Int (rgthree)` 노드 한 종류 누락 경고. `GPU 영상/품질 PASS`로 표현하지 않음.
