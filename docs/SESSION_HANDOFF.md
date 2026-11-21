@@ -53,3 +53,12 @@
 - 실행 계약: 기존 예약 작업은 사용자 PowerShell에서 1회 비활성화(원본/예약 작업 삭제 불필요). `run-comfyui-proof.cmd`로 단위 검사 후 WAN 2.2 P1 실 생성 검증. 모델/노드 미비 시 사전 실패, 실제 파일 다운로드 성공까지 한 번에 증거 수집.
 - 템플릿 `workflows/wan22_5b_api.json` 사용, `workflows/ltx2_i2v_api.json`은 빈 파일이므로 제외. 본 프로젝트 유효성 증명은 영상 한 컷 P1, 전체 콘텐츠 자동화는 후속.
 - GitHub 코드/단위 검증/Windows ComfyUI 연결/실제 GPU 영상 생성 결과를 구분 보고. Windows 실행 결과 확보 전 `NOT_RUN`.
+
+## 2026-11-21 — 실영상 1컷 생성 성공, 화질 실패 원인과 재검증 설정
+
+- **사용자 실제 Windows 증거:** ComfyUI에서 `WAN22` 로드, 샘플링 8/8, `Prompt executed in 64.24 seconds`. `run-comfyui-proof.cmd` 단위 검사 8개 PASS, 실제 MP4 `outputs/p1_comfyui/p1_c291b6686975_proof_95ba2d2b9c9a_00001_.mp4` 70,807 bytes 저장. 사용자 영상 프리뷰는 비현실적 왜곡과 색면으로 **시각적 품질 FAIL**. `GPU/API/MP4 PASS != CONTENT_QUALITY PASS`.
+- **PRODUCT_DEFECT (평가 설정):** 기본 smoke 검증은 자체 생성한 가짜 산·하늘 PNG에 무협 인물을 요구하면서 512×320, 17프레임, 8스텝을 강제했다. 실 제작의 품질 검증에 이 설정을 사용하는 것은 부적절. 이 테스트는 연결 증명용으로만 유지하고 `[SMOKE_ONLY]` 표시.
+- Windows 에이전트의 실제 파일 읽기: `E:\\ComfyUI_New\\ComfyUI\\input\\content_creator_identity_reference_portrait.png`는 896×1152 진짜 PNG, 1,340,385 bytes. `male_hero.png` 파일은 이름과 달리 JPEG 바이트. ComfyUI 시작 로그에는 RTX 4070 Laptop GPU, VRAM 8,188 MB / LOW_VRAM 표시.
+- **변경:** `--quality --image <실제 PNG>`는 입력 파일의 PNG 형식·화면 방향을 검증하고 인물/복장/스타일 유지 프롬프트, 24샘플링 단계, 33프레임(24 FPS), 8GB 환경에 맞춘 576×768 세로/832×480 가로 설정을 적용. 기존 워크플로 템플릿/기본 smoke/영상 원본은 덮어쓰지 않고 `murim_p1/quality_...`로 신규 출력.
+- **검증 범위:** GitHub 소스 구현과 단위 검사 추가; 품질 설정으로 Windows GPU 렌더와 영상 육안 판정은 **NOT_RUN / REVIEW_REQUIRED**. 높은 해상도와 단계 수는 시간이 더 걸리며 예술적 품질을 자동 보증하지 않는다. 우선 실제 참조 이미지로 비교한 후 필요 시 14B/LTX 기반 제작 품질 평가.
+- **다음 한 단계:** Windows에서 1회 `git pull --ff-only origin main` 후 `run-comfyui-proof.cmd --quality --image "E:\\ComfyUI_New\\ComfyUI\\input\\content_creator_identity_reference_portrait.png"` 실행. 기존 에이전트/ComfyUI 상태 유지. 새 MP4 확인 후 영상 품질 별도 평가.

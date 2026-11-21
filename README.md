@@ -178,3 +178,13 @@ python main.py
 - 이 문서 작업에서는 **Windows의 실제 ComfyUI 연결, 영상 생성, 웹 UI, Git 동기화 및 예약 실행을 수행하지 않았다.**
 - **다음 한 단계:** Windows 실행기가 위 작업공간을 읽을 수 있는지와 기존 Git 원격/변경 상태를 안전하게 확인한 다음, **실제 P1 ComfyUI 한 장면 API 작업**을 통과시킨다.
 - 영속 상태/세션 인계: [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md), [`docs/SESSION_HANDOFF.md`](docs/SESSION_HANDOFF.md), 원격 개발 헌법: [`AGENTS.md`](AGENTS.md).
+
+### 영상 품질을 평가할 때 (실제 참조 PNG 필수)
+
+기본 `run-comfyui-proof.cmd`는 인위적인 산·하늘 PNG를 넣는 **GPU/API 연결용 smoke test**다. 결과 영상의 품질을 평가하지 않는다. 실제 인물 이미지로 다시 비교하려면 기존 ComfyUI 서버를 켠 상태에서 다음을 한 번 실행한다.
+
+```powershell
+& "E:\\gpt\\projects\\comfyui\\murim\\run-comfyui-proof.cmd" --quality --image "E:\\ComfyUI_New\\ComfyUI\\input\\content_creator_identity_reference_portrait.png"
+```
+
+`--quality`는 **실제 PNG 원본만** 받는다(확장자가 .png인데 JPEG인 파일은 거부). 사진 방향에 따라 세로 576×768 또는 가로 832×480, 33프레임/24 FPS, 24 스텝을 적용해 캐릭터·복장·원본 스타일 보존을 우선한다. 현재 Windows GPU는 VRAM 약 8GB로 확인돼 무조건 720p부터 시작하지 않는다. 출력은 별도 `quality_...` MP4로 보존하며, 시각적 성공은 실제 영상 리뷰로 판정한다. 원본 워크플로·모델·기존 출력은 변경하지 않는다.

@@ -28,6 +28,43 @@ class TestComfyUIProof(unittest.TestCase):
         self.assertEqual(result["6"]["inputs"]["text"], proof.PROMPT)
         self.assertTrue(result["58"]["inputs"]["filename_prefix"].startswith("murim_p1/"))
 
+    def test_quality_preset_preserves_source_and_uses_real_reference_settings(self):
+        original = proof.load_workflow()
+        before = copy.deepcopy(original)
+        result = proof.build_workflow(
+            original, "real.png", steps=24, frames=33, width=576, height=768,
+            prompt=proof.QUALITY_PROMPT, label="quality")
+        self.assertEqual(original, before)
+        self.assertEqual(result["55"]["inputs"]["width"], 576)
+        self.assertEqual(result["55"]["inputs"]["height"], 768)
+        self.assertEqual(result["55"]["inputs"]["length"], 33)
+        self.assertEqual(result["3"]["inputs"]["steps"], 24)
+        self.assertIn("reference image", result["6"]["inputs"]["text"])
+        self.assertTrue(result["58"]["inputs"]["filename_prefix"].startswith("murim_p1/quality_"))
+
+    def test_quality_png_is_real_and_orientation_sensitive(self):
+        import struct
+        with tempfile.TemporaryDirectory() as tmp:
+            photo = Path(tmp) / "ref.png"
+            # Header-only fixture: metadata inspection never decodes or rewrites pixels.
+            photo.write_bytes(b"\x89PNG\r\n\x1a\n" + struct.pack(">I", 13)
+                              + b"IHDR" + struct.pack(">II", 896, 1152))
+            self.assertEqual(proof.quality_resolution(photo), (576, 768))
+            photo.write_bytes(b"\x89PNG\r\n\x1a\n" + struct.pack(">I", 13)
+                              + b"IHDR" + struct.pack(">II", 1536, 864))
+            self.assertEqual(proof.quality_resolution(photo), (832, 480))
+            photo.write_bytes(b"\xff\xd8\xff\xe0" + b"JPEG-content")
+            with self.assertRaisesRegex(proof.ProofError, "genuine PNG"):
+                proof.quality_resolution(photo)
+
+    def test_quality_requires_reference_and_resolution_validation(self):
+        with patch.object(proof, "LocalAPI", side_effect=AssertionError("No network expected")):
+            with self.assertRaisesRegex(proof.ProofError, "QUALITY_REFERENCE_REQUIRED"):
+                proof.main(["--quality"])
+        with self.assertRaisesRegex(proof.ProofError, "RESOLUTION"):
+            proof.build_workflow(proof.load_workflow(), "real.png",
+                                 width=513, height=768)
+
     def test_invalid_frames_are_rejected(self):
         template = proof.load_workflow()
         with self.assertRaises(proof.ProofError):

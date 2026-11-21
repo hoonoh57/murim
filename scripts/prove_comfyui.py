@@ -26,6 +26,16 @@ PROMPT = (
 )
 
 
+QUALITY_PROMPT = (
+    "One continuous cinematic shot of the exact same wuxia character shown in "
+    "the reference image. Preserve the character's face, clothing, colors, "
+    "composition, and original visual style. The character blinks naturally, "
+    "breathes softly, and gently turns their head while a faint breeze moves "
+    "the hair and fabric. Subtle believable movement, stable camera, clear "
+    "facial structure, detailed textures; no cuts, no morphing or new people."
+)
+
+
 class ProofError(Exception):
     pass
 
@@ -126,6 +136,27 @@ def make_test_png(path):
         output.write(png)
 
 
+def quality_resolution(image_path):
+    """Choose a portrait/landscape resolution for an 8-GB-class GPU.
+
+    Quality mode requires a genuine PNG so an incorrectly named JPEG is not
+    silently uploaded with PNG MIME type and the aspect ratio is reliable.
+    No image conversion, overwriting, or Pillow dependency is needed.
+    """
+    image_path = Path(image_path)
+    if image_path.suffix.lower() != ".png":
+        raise ProofError("[QUALITY_IMAGE] Provide a genuine PNG reference image")
+    with image_path.open("rb") as stream:
+        header = stream.read(24)
+    if (len(header) != 24 or not header.startswith(b"\x89PNG\r\n\x1a\n")
+            or header[12:16] != b"IHDR"):
+        raise ProofError("[QUALITY_IMAGE] File is not a genuine PNG (possibly JPEG with .png extension)")
+    width, height = struct.unpack(">II", header[16:24])
+    if not (64 <= width <= 16384 and 64 <= height <= 16384):
+        raise ProofError("[QUALITY_IMAGE] Invalid PNG dimensions")
+    return (576, 768) if height > width else (832, 480)
+
+
 def load_workflow():
     try:
         workflow = json.loads(WORKFLOW_PATH.read_text(encoding="utf-8"))
@@ -175,20 +206,27 @@ def preflight(api, workflow):
     return stats
 
 
-def build_workflow(template, image_name, steps=8, frames=17):
+def build_workflow(template, image_name, steps=8, frames=17,
+                   width=512, height=320, prompt=PROMPT, label="proof"):
     if frames < 5 or frames > 41 or (frames - 1) % 4:
         raise ProofError("[FRAMES] Use 5..41 frames in increments of 4")
-    if not 1 <= steps <= 20:
-        raise ProofError("[STEPS] Use 1..20 sampling steps")
+    if not 1 <= steps <= 30:
+        raise ProofError("[STEPS] Use 1..30 sampling steps")
+    if (width % 32 or height % 32 or not 256 <= width <= 1024
+            or not 256 <= height <= 1024):
+        raise ProofError("[RESOLUTION] Dimensions must be multiples of 32 within 256..1024")
+    if label not in ("proof", "quality"):
+        raise ProofError("[OUTPUT_LABEL] Invalid output label")
     workflow = copy.deepcopy(template)
     workflow["56"]["inputs"]["image"] = image_name
-    workflow["6"]["inputs"]["text"] = PROMPT
+    workflow["6"]["inputs"]["text"] = prompt
     workflow["3"]["inputs"]["seed"] = 20261121
     workflow["3"]["inputs"]["steps"] = steps
-    workflow["55"]["inputs"]["width"] = 512
-    workflow["55"]["inputs"]["height"] = 320
+    workflow["55"]["inputs"]["width"] = width
+    workflow["55"]["inputs"]["height"] = height
     workflow["55"]["inputs"]["length"] = frames
-    workflow["58"]["inputs"]["filename_prefix"] = "murim_p1/proof_" + uuid.uuid4().hex[:12]
+    workflow["58"]["inputs"]["filename_prefix"] = ("murim_p1/" + label + "_"
+                                                   + uuid.uuid4().hex[:12])
     return workflow
 
 
@@ -285,9 +323,12 @@ def main(argv=None):
     parser.add_argument("--image", help="Optional local PNG/JPG/WebP reference image")
     parser.add_argument("--timeout", type=int, default=900, help="Wait up to N seconds for render")
     parser.add_argument("--probe-only", action="store_true", help="Check models and nodes, do not queue")
+    parser.add_argument("--quality", action="store_true", help="Real PNG reference, 20+ steps and 8-GB-friendly video")
     args = parser.parse_args(argv)
     if not 10 <= args.timeout <= 3600:
         raise ProofError("[TIMEOUT] Use 10..3600 seconds")
+    if args.quality and not args.image:
+        raise ProofError("[QUALITY_REFERENCE_REQUIRED] Use --quality --image PATH_TO_REAL_PNG")
     workflow = load_workflow()
     api = LocalAPI(args.url)
     preflight(api, workflow)
@@ -301,8 +342,16 @@ def main(argv=None):
     else:
         image_path = output_dir / ("source_" + uuid.uuid4().hex[:12] + ".png")
         make_test_png(image_path)
+    dimensions = quality_resolution(image_path) if args.quality else None
     image_name = api.upload(image_path)
-    prompt = build_workflow(workflow, image_name)
+    if args.quality:
+        prompt = build_workflow(
+            workflow, image_name, steps=24, frames=33,
+            width=dimensions[0], height=dimensions[1],
+            prompt=QUALITY_PROMPT, label="quality")
+    else:
+        print("[SMOKE_ONLY] Synthetic landscape proves the pipeline, NOT image quality")
+        prompt = build_workflow(workflow, image_name)
     response = api.json("/prompt", {"prompt": prompt, "client_id": uuid.uuid4().hex})
     prompt_id = response.get("prompt_id", "") if isinstance(response, dict) else ""
     if not isinstance(prompt_id, str) or not prompt_id:
@@ -312,6 +361,8 @@ def main(argv=None):
     video = save_video(api, entry, output_dir)
     print("[PASS] Real ComfyUI video downloaded: {} ({} bytes)".format(
         video, video.stat().st_size))
+    if args.quality:
+        print("[REVIEW_REQUIRED] File creation verified; visual quality needs human review")
     return 0
 
 
