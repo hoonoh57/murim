@@ -1,3 +1,10 @@
+## 2026-11-21 — 검술 테스트 사용자 WYSIWYG 실패: 입력 선정 부적합, 보존 후 자산 재검증 필요
+
+- 사용자 8189 ComfyUI에서 `SCAIL-2-MURIM-SWORD-2S` 로딩/산출 `SCAIL2_MURIM_SWORD_00001-audio`가 Media Assets에 나타난 화면 공유. 노드 그래프의 reference image는 흰색 상의/빨간 허리띠 여성 **상반신 인물 초상**, 분할 마스크는 파란 인물 실루엣. 사용자 평가: "input이 엉터리 사진", "무술동작은 어디에", "댄서같다". 실제 검술 베기/찌르기/방어/검 손 접촉 시연 실패. **SWORD_ASSET_SEMANTIC_VALIDATION_FAIL**, VIDEO_QUALITY_FAIL (사용자 육안), 렌더 자체가 엔진 오류라고 단정하지 않음.
+- 원인 검토: 지난 작업에서 `ComfyUI_New\ComfyUI\input\content_creator_identity_reference_portrait.png`를 `ComfyUI\input\murim_character_reference.png`로 복사 후 그대로 검술 참조로 사용. 이는 전신 검객/검 손잡이 일관성 참조가 아님. Driving `Pexels 4734306` "Silhouette of a Person Holding a Sword"는 공개 카탈로그 설명에 slow motion/grace/balance/poise/wooden-sword training; 검술 속도·연속 공격·검 궤적 검증을 완료하지 않고 제목만으로 선정. **자료 선정 PRODUCT_DEFECT**, 이전 input-prep PASS는 컨테이너/형식 검증일 뿐 검술 적합성 검증이 아님.
+- `Display Int`/기본 SCAIL 환경 및 최초 공식 예제 `SCAIL2_FULL_00001` 2초 동작 전이 PASS는 계속 유효. `SCAIL-2-MURIM-SWORD-2S` WYSIWYG 품질은 FAIL. `SCAIL2_MURIM_SWORD` 계열, 검술 실험 스크립트, 기설치 모델/기존 `E:\ComfyUI_New`는 보존; 기존 영상을 삭제하거나 덮어쓰지 않음.
+- 다음 작업: 1) **실제 구별 가능한 단일 검술 동작(베기/찌르기/방어)을 최소 2초 포함**하고 검/손잡이가 보이는 합법적 원본 footage를 실제 미리보기로 확인한 뒤 2) 얼굴·의상·전신·칼날/손잡이 위치가 분명한 무협 캐릭터 *별도 검객 reference*를 시각 검증하여 3) 새 파일명/새 워크플로로 2초 A/B 시험. SAM3 person-mask는 도구/검 포즈 보존을 보장하지 않으므로 실제 프레임 연속성과 sword retention 별도 평가. 확인 전 임의 비디오/초상을 또 자동 적용하지 말 것. 기준 첫 성공 영상을 유지하며 upscale은 후순위.
+
 ## 2026-11-21 — SCAIL-2 검술 입력 준비 Windows 실행 PASS; CMD 즉시 닫힘은 정상 종료
 
 - 사용자 보고: `E:\comfyui-scail\PREPARE-SCAIL2-SWORD.cmd` 더블클릭 후 CMD 창 즉시 닫힘. 실제 결과 확인 전 실패 단정 금지. 기존 CMD 정상 성공 분기는 `[PASS]` 출력 후 `pause` 없이 종료하도록 구현되어 있음.
