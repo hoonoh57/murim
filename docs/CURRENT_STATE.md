@@ -1,3 +1,11 @@
+## 2026-11-21 — 무협 검·손 일관성 FAIL, best practice 선행 조사
+
+- 사용자 영상 결과: WAN 2.2 GPU MP4 생성 성공, 그러나 검이 손과 분리되고 소품/신체 동작이 무너지는 **콘텐츠 품질 FAIL**. 기존 5B 스텝·프롬프트·해상도만 반복 수정한 접근은 제작용 best practice가 아니었음.
+- 조사 SSOT: `docs/WUXIA_VIDEO_4070_BEST_PRACTICE_2026-11-21.md` (ComfyUI 공식 Wan2.2 Animate, 2026 SCAIL-2/Wan-Animate-2, 저VRAM, Blender prop rig, 공식 강의와 커뮤니티 실패/성공 사례).
+- 실제 PC: RTX4070 Laptop VRAM 8,188MB / RAM32GB, ComfyUI 0.20.1 / Python 3.13, 설치된 5B 및 14B I2V FP8/GGUF, 관련 LoRA/노드, sword pose/canny/identity 파일. **I2V 14B와 Animate 14B 가중치는 다르다.** 신형 SCAIL2 저VRAM 워크플로 요구 ComfyUI 0.33.1+와 불일치.
+- 코딩·설치·GPU 반복 렌더 보류. 다음: 사용권 확인된 1인 1~2초 검술 driving motion 및 시작 포즈·캐릭터 identity·hand/sword rigid control 자산 심사 → 공식 워크플로 호환성/라이선스/8GB 비용 검토 → 독립 환경에서 제한된 1회 품질 검증. 기능 PASS≠품질 PASS.
+- 현재: RESEARCH_BASELINE_DOCUMENTED, WUXIA_VISUAL_QUALITY_FAIL, NEW_PIPELINE_NOT_IMPLEMENTED, NEW_GPU_QUALITY_TEST_NOT_RUN.
+
 # CURRENT_STATE — Murim AI Content Factory
 
 **기준일:** 2026-11-21  
