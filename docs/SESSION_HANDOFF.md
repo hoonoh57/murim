@@ -1,3 +1,11 @@
+## 2026-11-21 — 검술 실영상 후보 사전 WYSIWYG 게이트: Windows 파일 배포 PASS, 프레임 검증 NOT_RUN
+
+- 이전 `murim_sword_driving_2s.mp4` 입력이 저대비 역광 실루엣/검 손잡이 실종/무술 아닌 춤 유사 움직임으로 사용자 WYSIWYG FAIL; 동일 영상 재사용 금지, 기존 `SCAIL2_FULL_00001` 공식 검증 PASS는 보존.
+- 신규 공개 후보는 *채택이 아니라 프레임 검토 대상*: Pexels `6536346` "A Person is Practicing Fencing Alone" (solo training) 및 `5973868` "A Woman Practicing Her Fencing Skill" (movement). 둘 다 펜싱이라 무협 베기와 별개이며 후보가 부적합하면 모두 기각. 라이선스 및 원본 페이지는 `docs/SCAIL_SWORD_CANDIDATE_REVIEW.md` 기록.
+- GitHub `9cfc922612cf26759542db72095dbb3d0050e809` + preview retry patch `cb61d345598b7660c7016dd854ab04508a4941f1`: `PREVIEW-SWORD-CANDIDATES.cmd`, `preview-scail-sword-candidates.ps1`, 오프라인 계약검사, 검증 가이드. 준비기는 `E:\comfyui-scail\samples\sword-candidate-review\` 안에 원본을 직접 다운로드하고 ffprobe로 형식·길이 검사 후 FFmpeg로 1초 간격 최대 16장의 연락표(contact sheet)를 생성하는 **preview-only** 단계. 원본 영상 SHA256, URL, 사용자 판단 `PENDING_VISUAL_REVIEW`, `approved_for_scail=false` 영수증 생성. ComfyUI input/워크플로/모델은 수정하지 않음. FFmpeg filter 구문은 격리된 Linux 로컬 샘플로 990×990 PNG 출력 PASS; Windows PowerShell 5.1 현장 실행 NOT_RUN.
+- Windows agent Drive `res-scail2-sword-candidates-preview-deploy-20261121-a.json` (id `1ZQM7TyYsJ_ST8l22mvUzLbDRHd45C4o8`) `workspace_apply PASS`: 기존 파일 충돌 없는 create 2개, CMD SHA256 `515715953478fbede377a5f52319a77471a87cf7abe7a48d553909f2d529de98`, PS1 SHA256 `3d3a77905fdce23ae6d0c6744a567b957438ad8f49e4fe2e7b0bb80f7bfd5b13`, 사전 스냅샷. 원본 ComfyUI/기존 출력 수정 없음.
+- 다음 딱 1단계: 사용자는 `E:\comfyui-scail\PREVIEW-SWORD-CANDIDATES.cmd` 더블클릭. 정상 시 탐색기에서 `samples\sword-candidate-review\pexels-*-contact-sheet.png`를 보여준다. 사용자 화면에서 검날·손·동작 2초 연속 식별을 재확인하고 **WYSIWYG 판정 후에만** 별도 새 driving/무협 캐릭터 reference/workflow로 최종 시험. 실패 시 `logs\preview-sword-candidates.log`를 점검하며 기존 환경 재설치 금지. 현재 `ASSET_CANDIDATES_FOUND / CONTACT_SHEETS_NOT_RUN / SWORD_CONTENT_FAIL_RETAINS`.
+
 ## 2026-11-21 — 검술 테스트 사용자 WYSIWYG 실패: 입력 선정 부적합, 보존 후 자산 재검증 필요
 
 - 사용자 8189 ComfyUI에서 `SCAIL-2-MURIM-SWORD-2S` 로딩/산출 `SCAIL2_MURIM_SWORD_00001-audio`가 Media Assets에 나타난 화면 공유. 노드 그래프의 reference image는 흰색 상의/빨간 허리띠 여성 **상반신 인물 초상**, 분할 마스크는 파란 인물 실루엣. 사용자 평가: "input이 엉터리 사진", "무술동작은 어디에", "댄서같다". 실제 검술 베기/찌르기/방어/검 손 접촉 시연 실패. **SWORD_ASSET_SEMANTIC_VALIDATION_FAIL**, VIDEO_QUALITY_FAIL (사용자 육안), 렌더 자체가 엔진 오류라고 단정하지 않음.
