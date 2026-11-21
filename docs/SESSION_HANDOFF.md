@@ -1,3 +1,11 @@
+## 2026-11-21 — SCAIL-2 공식 예제 첫 GPU 영상 생성 및 사용자 동작 전이 평가 PASS
+
+- 사용자가 Windows 미디어 플레이어에서 `SCAIL2_FULL_00001` 출력 영상을 재생 중인 스크린샷을 제공. 재생 UI에 전체 길이 00:00:02가 보이고 해안가 인물 이미지가 출력됨. 원본 입력은 `your_driving_video.mp4`. 사용자는 "your_driving_video.mp4 동작을 잘 따라합니다"라고 직접 평가. 이는 실제 8189 ComfyUI 워크플로의 산출물 생성·재생 및 2초 모션 전이의 사용자 관찰 PASS 근거임.
+- 따라서 과거 2026-11-21 19:49 오디오 없는 MP4의 `VHS_LoadVideo` 실패는 **현재 렌더 경로에서 차단 문제가 해소됨**. 다만 `repair-scail-audio.log`/`scail-audio-repair-report.json` 원문 및 실제 출력 MP4 바이트·frame/sample 상세는 전달되지 않았으므로 복구 스크립트 내부 단계별 PASS는 추정하지 않음.
+- 분리 판정: 설치/GUI/노드 그래프/생성 영상 재생 PASS (화면 및 사용자 보고), 2초 공식 동작 전이 사용자 평가 PASS, 정량 동작 유사도·원본과 생성본 전 프레임 비교 NOT_VERIFIED, 손·얼굴·신체·의상 시간적 일관성 NOT_VERIFIED, 무협 검술·검 위치/길이/접촉·무기 일관성 NOT_TESTED, 4축 REA 전체 구조 준수는 이 ComfyUI 실험과 별도.
+- 기존 `E:\comfyui-scail` 모델 및 `E:\ComfyUI_New` 보존. 이미 성공한 SCAIL-2 Q3_K_M 8GB / `SCAIL-2-Q3-8GB-FIRST-TEST` / 2초 16fps 약 480x256/6steps 조건을 첫 검술 전이까지 baseline으로 유지. `SCAIL2EasyConfig.object_indices='True'`가 이전 로그에서 전체 인물로 해석되어 warning 발생한 점은 이후 차분 검증 과제로 유지. 성공한 예제와 별도 사본 워크플로 사용.
+- 다음 한 단계: 사용 권한이 확보된 검술 driving clip과 캐릭터 참조 이미지로 **동일 조건의 2초 1회 검술 전이**를 구성. 변경 축은 driving video/ref image 입력만. 처음부터 모델, 리소스, steps, 해상도, 길이를 여러 개 동시에 변경하지 않음. 결과에 대해 포즈 추종, 좌우 손/검 접촉, 칼날 형상·길이 일관성, 얼굴/몸 일관성, 배경/카메라 안정성을 별도 평가. 실제 검술 입력 자산이 없으면 출력 PASS를 선포하지 않음.
+
 ## 2026-11-21 — SCAIL-2 첫 실제 Queue 실패: 공식 예제 무음 비디오의 VHS 오디오 추출 오류; 복구기 배포 PASS
 
 - 사용자 2026-11-21 19:49 KST 실제 `SCAIL-2-Q3-8GB-FIRST-TEST` 실행 오류 리포트: `VHS_LoadVideo` Node 33에서 `VHS failed to extract audio from E:\comfyui-scail\ComfyUI\input\your_driving_video.mp4`; FFmpeg가 2048×1080 H264 16fps 4.06초 영상 스트림만 식별하고 `Output file does not contain any stream` 반환. `ComfyUI 0.33.1`, `PyTorch 2.8.0+cu126`, CUDA RTX 4070 Laptop GPU 8188MB 실제 구동 확인. 이전 rgthree 누락 UI 오류는 해소됐음. 분류 PRODUCT_DEFECT (공식 audio-free 샘플과 VHS 오디오 경로 불일치). 영상 생성/render NOT_RUN/FAIL, GPU OOM의 증거 없음.
