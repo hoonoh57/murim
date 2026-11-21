@@ -54,6 +54,19 @@ $base = Git-Run -ArgsList @("merge-base", "HEAD", "refs/remotes/origin/main")
 if ($base -ne $before) {
     throw "[DIVERGED_OR_AHEAD] Windows branch is not an ancestor of GitHub main; no forced overwrite."
 }
+# Git may overwrite an ignored file when a new tracked path has the same name.
+# Protect exact incoming paths even if local git status looks clean.
+$incoming = & git -C $Workspace -c core.quotePath=false diff --name-only --diff-filter=ACMRT HEAD refs/remotes/origin/main 2>&1
+if ($LASTEXITCODE -ne 0) { throw "[GIT_DIFF_FAIL] Cannot inspect incoming paths safely." }
+foreach ($relative in @($incoming)) {
+    $pathPart = [string]$relative
+    if ([string]::IsNullOrWhiteSpace($pathPart)) { continue }
+    $currentPath = Join-Path $Workspace $pathPart
+    $isTracked = & git -C $Workspace ls-files --cached --error-unmatch -- $pathPart 2>$null
+    if ($LASTEXITCODE -ne 0 -and (Test-Path -LiteralPath $currentPath)) {
+        throw "[IGNORED_FILE_CONFLICT] Incoming tracked path conflicts with an existing local file: $pathPart"
+    }
+}
 [void](Git-Run -ArgsList @("merge", "--ff-only", "refs/remotes/origin/main"))
 $after = Git-Run -ArgsList @("rev-parse", "HEAD")
 if ($after -ne $target) {
