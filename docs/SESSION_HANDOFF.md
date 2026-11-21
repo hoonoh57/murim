@@ -1,3 +1,11 @@
+## 2026-11-21 — SCAIL-2 workflow rgthree Display Int 누락: 원격 복구 파일 Windows CAS 배포 PASS, 실행 미검증
+
+- 사용자 ComfyUI 8189 화면에서 `SCAIL-2-Q3-8GB-FIRST-TEST.json` 그래프 로딩 확인. 단, `Display Int (rgthree)` 노드 한 종류 누락 경고. `GPU 영상/품질 PASS`로 표현하지 않음.
+- 공식 `rgthree/rgthree-comfy` (고정 커밋 `bc48c6aaeca87bedbc14245d89f9bc6be37a630e`)의 `__init__.py` 노드 등록 및 `py/display_any.py` `RgthreeDisplayInt` 실체 확인; requirements.txt는 비어 있음. 원본 공식 SCAIL 예제 JSON에도 같은 노드 포함.
+- GitHub `hoonoh57/murim` 구현 `06aa58ac895da010d19c02105bed093c70e3cccf`: 최초 설치기 `scripts/scail2/install-scail2.ps1` 패키지 목록에 rgthree 핀 추가, 복구 전용 `REPAIR-RGTHREE.cmd`/`repair-rgthree.ps1` 추가. 복구기는 `E:\comfyui-scail`만 대상으로 기존 8189 서버가 꺼져 있어야 실행하며 원본 충돌/기존 rgthree 파일 변경 시 fail-closed, 노드 API 등록 확인 후 서버 재시작.
+- Windows 현 폴더 에이전트 Google Drive `res-scail2-rgthree-deploy-20261121-a.json` (ID `1mGcatrfNbzRMnS0JpYbtRzz2WxrgZGQ9`): `status=PASS`, 복구 CMD/PS1 2개 CREATE, before=null, SHA256 원본/로컬 영수증 일치. 복구 CMD `e4da87275ebe3ca7cdc0090ef92b74734041f29d258803ed65e73a2489b32021`, PS1 `9e3c4717db1b569315c70690f6f76b91f966367662628f09fb26b3dcf8c4fd24`. 기존 ComfyUI 모델·가중치 미삭제/미재다운로드. 전용 검증 8개 정적 체크 PASS, PowerShell 5.1 현 PC 구문 및 실제 복구 실행은 아직 NOT_RUN.
+- 다음 1단계: 사용자 기존 8189 ComfyUI **서버 CMD 창만 정상 종료** 후 `E:\comfyui-scail\REPAIR-RGTHREE.cmd` 더블클릭. 정상 시 `logs\repair-rgthree.log`, `rgthree-repair-report.json` 생성과 8189 `/object_info`에서 `Display Int (rgthree)` 확인. 이후 워크플로 새로 로딩해 누락 표시 0, 실제 1회 큐 영상 렌더 및 육안 품질은 별도 판정.
+
 ## 2026-11-21 — SCAIL2 one-click installer 최종 로컬 소스 CAS PASS, 설치 실행 대기
 
 - 실제 Windows 파일 에이전트 최종 응답: Google Drive `res-scail2-install-final-20261121-a.json` (ID `1ZrQS50iPpQDuRKluE7IhtmZ6Oy3Itp1V`) `status=PASS`, `workspace_apply=PASS`, `side_effects_possible=true`; `E:\comfyui-scail\INSTALL-SCAIL2.cmd` SHA256 `676f6bdb46f3f5e819c2f2077d366b95993eb873ef1eb2c3d2e0e516918e384d`, `install-scail2.ps1` SHA256 `84d30859cea8fe9de5ca709e44b989d359a04ea46119f066f774394df1b47510`. 구 README 파일 `README-SCAIL2.txt`도 원본 sha 확인 완료.
