@@ -39,3 +39,10 @@
 - 그 후 예약 작업 11:18:34 KST 실행 결과 1, 실패 로그 11:18:38 KST `[LOCAL_CHANGES_PRESENT]`; 사용자의 후속 `git status --short --untracked-files=all`는 clean. 실패 발생 순간 status 항목이 무엇이었는지는 **UNKNOWN**.
 - 원본 보호를 약화하거나 reset/clean 하지 말 것. 진단용으로 GitHub 스크립트에서 실패 당시 porcelain 출력의 최대 20개 항목을 로컬 오류 로그에 기록하도록 강화.
 - 최종 판정: Python 테스트는 특정 커밋에서 VERIFIED_ONCE, 정기 예약의 안정성 NOT_VERIFIED, ComfyUI 렌더 NOT_RUN. 다음 예약 실행의 상태와 새 진단 내용으로 원인을 판정할 것.
+
+## 2026-11-21 — pytest 캐시 경고를 로컬 변경으로 오인한 동기화 실패
+
+- Windows `12:24:44 KST` 상세 로그: Git status의 1줄 `warning: could not open directory '.pytest_cache/': Permission denied`가 `[LOCAL_CHANGES_PRESENT]`로 오분류됨.
+- 분류: PowerShell 5.1 native stderr/stdout 혼합은 PRODUCT_DEFECT; 테스트 캐시 ACL 접근 불가는 ENVIRONMENT_ISSUE (권한 실원인 미해결).
+- GitHub 변경: `Git-Run`에서 `ErrorRecord`를 stderr로 따로 구분, `status --porcelain`의 stderr는 `[GIT_STATUS_INCOMPLETE]`로 명시적 fail-closed. 표준 생성물 `.pytest_cache/` Git ignore 추가. 기존 사용자 파일/캐시 삭제·권한 변경 금지.
+- Windows 최신 동기화는 이 변경 이후 다시 검증 필요. `last-verified-pytest.txt`에는 여전히 이전 `3e697b3e...` 결과가 남음; 이번 HEAD PASS로 오인 금지. 기존 예약 작업 유지.

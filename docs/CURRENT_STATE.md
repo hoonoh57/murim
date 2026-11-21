@@ -52,3 +52,11 @@
 - 대응: `windows-sync-test.ps1`의 fail-closed local changes 검사를 유지하면서, 실패 순간 `git status --porcelain` 출력의 처음 20개 상태/경로를 **로컬 `last-task-failure.txt`에만** 함께 남기도록 변경. 파일 내용 수집이나 소스 덮어쓰기/무조건 허용/allowlist는 하지 않는다.
 - 판정: 해당 HEAD pytest **VERIFIED_ONCE**, 자동 예약 작업 지속 정상 동작 **NOT_VERIFIED**, ComfyUI/GPU 실영상 **NOT_RUN**.
 - 다음 한 단계: 기존 예약 작업의 다음 실행 결과, 실행 시 HEAD, 실패 시의 새로운 `last-task-failure.txt`를 확인해 정확한 transient 원인을 분류한다.
+
+## 2026-11-21 — pytest 캐시 접근 거부와 Git porcelain/stderr 혼입 원인 확정
+
+- 사용자 증거: Windows 예약 실행 `2026-11-21 12:24:40 KST`, `LastTaskResult=1`. `last-task-failure.txt` (`2026-11-21 12:24:44 KST`)에 `[LOCAL_CHANGES_PRESENT]` 1 line: `warning: could not open directory '.pytest_cache/': Permission denied`. 실제 porcelain 변경 경로는 해당 로그에 나타나지 않음. 최신 HEAD `1e186642fc1b` pytest PASS는 확인되지 않았고, 검증 마커는 이전 `3e697b3e...`를 가리킴.
+- **PRODUCT_DEFECT:** PowerShell 5.1 `git 2>&1`의 `ErrorRecord`(stderr)를 일반 stdout과 결합해 `status --porcelain`을 잘못 해석함. **ENVIRONMENT_ISSUE:** 로컬 생성물 `.pytest_cache/` 접근 거부; 디렉터리 ACL/원인 자체는 아직 미해결.
+- 해결: `Git-Run`에서 Git stdout/stderr를 별도 판정하고, status 시 stderr 메시지가 조금이라도 나오면 `[GIT_STATUS_INCOMPLETE]`로 안전 중단(변경 여부를 추측해 통과시키지 않음). 캐시는 표준 pytest 산출물이므로 `.gitignore`에 `.pytest_cache/`만 추가해 Git이 내부로 들어가 상태 스캔할 필요가 없도록 함. 사용자의 `.pytest_cache/`를 삭제·권한 변경하지 않고 다른 untracked/ignored 충돌 보호는 유지.
+- 최신 GitHub commit 반영에는 현지 이전 스크립트의 동기화 차단으로 **안전 상태 확인 후 일회성 `git pull --ff-only`가 필요할 수 있음**. 원격 코드 수정만으로 Windows 예약 작업 실행 성공을 확정하지 않는다.
+- 다음 단계: 최신 스크립트·ignore 동기화 → 기존 예약 작업 최종 한 번 실행 → 실제 `LastTaskResult`와 검증 SHA 일치 확인. 경고가 지속되면 `[GIT_STATUS_INCOMPLETE]`로 명확히 분류하여 캐시 ACL을 별도로 진단. ComfyUI 실제 생성은 NOT_RUN.

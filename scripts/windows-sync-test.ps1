@@ -23,23 +23,40 @@ $ErrorActionPreference = "Stop"
 try {
 
 function Git-Run {
-    param([string[]]$ArgsList)
-    # Windows PowerShell 5.1 converts native stderr (including harmless
-    # "From https://..." fetch progress) into error records. Do not treat
-    # those records as a failure: inspect the native exit code instead.
+    param(
+        [string[]]$ArgsList,
+        [switch]$RequireCleanStderr
+    )
+    # On Windows PowerShell 5.1, redirecting native stderr via 2>&1
+    # yields ErrorRecord objects. Keep them out of machine-readable
+    # Git stdout (especially 'status --porcelain'). Never mistake a
+    # warning for a changed path or disregard an incomplete status scan.
     $previousPreference = $ErrorActionPreference
     try {
         $ErrorActionPreference = 'Continue'
-        $lines = @(& git -C $Workspace @ArgsList 2>&1)
+        $records = @(& git -C $Workspace @ArgsList 2>&1)
         $code = $LASTEXITCODE
     } finally {
         $ErrorActionPreference = $previousPreference
     }
-    $output = (($lines | ForEach-Object { [string]$_ }) -join "`n").Trim()
-    if ($code -ne 0) {
-        throw ("[GIT_FAIL] git " + ($ArgsList -join " ") + " (exit " + $code + "): " + $output)
+    $stdoutLines = New-Object 'System.Collections.Generic.List[string]'
+    $stderrLines = New-Object 'System.Collections.Generic.List[string]'
+    foreach ($record in $records) {
+        if ($record -is [System.Management.Automation.ErrorRecord]) {
+            [void]$stderrLines.Add([string]$record.Exception.Message)
+        } else {
+            [void]$stdoutLines.Add([string]$record)
+        }
     }
-    return $output
+    $stdout = (($stdoutLines.ToArray()) -join "`n").Trim()
+    $stderr = (($stderrLines.ToArray()) -join "`n").Trim()
+    if ($code -ne 0) {
+        throw ("[GIT_FAIL] git " + ($ArgsList -join " ") + " (exit " + $code + "): " + $stdout + " " + $stderr)
+    }
+    if ($RequireCleanStderr -and -not [string]::IsNullOrWhiteSpace($stderr)) {
+        throw ("[GIT_STATUS_INCOMPLETE] Git emitted diagnostics while checking working tree; no synchronization: " + $stderr)
+    }
+    return $stdout
 }
 
 if ($null -eq (Get-Command git -ErrorAction SilentlyContinue)) {
@@ -62,7 +79,7 @@ $branch = Git-Run -ArgsList @("branch", "--show-current")
 if ($branch -ne "main") {
     throw "[BRANCH_MISMATCH] Expected main, actual: $branch"
 }
-$dirty = Git-Run -ArgsList @("status", "--porcelain=v1", "--untracked-files=all")
+$dirty = Git-Run -ArgsList @("status", "--porcelain=v1", "--untracked-files=all") -RequireCleanStderr
 if (-not [string]::IsNullOrWhiteSpace($dirty)) {
     # Preserve the exact fail-closed guard. A later clean checkout cannot
     # explain transient changes or native stderr captured by PowerShell 5.1.
