@@ -1,3 +1,11 @@
+
+## 2026-11-21 — 로컬 LTX 성공 그래프 직접 감사 + 실증된 액션 원본 워크플로 shortlist
+
+- 사용자 지시: 기존 사진+한국어 발화의 매우 좋은 LTX 영상은 **검증된 완성형 workflow의 효과를 보여주는 기준**이며, 무한 연장 루프를 제작하라는 뜻이 아님. 임의 설정 변경/새 워크플로 조립 금지, 최고 품질 무협 액션의 기존 성공 레시피 발굴·원본 재현·결과 단위 조합 우선.
+- 실제 Drive Windows E:\ 로컬 read-only 영수증: `E:\ComfyUI_New\ComfyUI\user\default\workflows\ltx_author_workflow_real.json` 142,498B/60 nodes, `ltx_author_workflow_real2.json` 92,801B/55 nodes, 14-node FLUX DWPose, 10-node AnimateDiff. 원본 LTX GGUF 프리셋·오디오/영상·VHS 후처리 계열 파악. **현재 스크린샷 영상과 이 JSON 중 어느 버전의 완벽한 output pairing인지는 아직 추적 미완료.** 기존 그래프 변경하지 않음.
+- 새로운 출처 검증: 공식 SCAIL-2 fighting/multi-ref/mask/DPO, 공식 Wan2.2 Animate Move/Mix, LTX IC-LoRA, community SCAIL2 Q3 low-VRAM과 The_frizzy1 Wan Animate GGUF 측정자료. 12GB RTX3060 실측 81f/480x864=7m05·peakVRAM11.7GB를 8GB 증거로 왜곡하지 않음. PC ComfyUI 0.20.1과 신형 패키지 요구 버전 불일치, 외부 API/신규 다운로드 무단 실행 금지.
+- 상세 적용 프로토콜은 `docs/WUXIA_VIDEO_4070_BEST_PRACTICE_2026-11-21.md` 6절. 다음 한 단계: 검술 소유/라이선스 확인된 driving clip과 동작 시작 자세·검/손 실제 접촉 구성을 확보/심사하고 A/B 원본 워크플로의 독립 호환성 심사. PRODUCT QUALITY = NOT_VERIFIED; 기존 5B 검/손 FAIL 유지.
+
 ## 2026-11-21 — 무협 검·손 일관성 FAIL, best practice 선행 조사
 
 - 사용자 영상 결과: WAN 2.2 GPU MP4 생성 성공, 그러나 검이 손과 분리되고 소품/신체 동작이 무너지는 **콘텐츠 품질 FAIL**. 기존 5B 스텝·프롬프트·해상도만 반복 수정한 접근은 제작용 best practice가 아니었음.

@@ -105,3 +105,50 @@ Adobe Mixamo 사용권: https://helpx.adobe.com/kr/creative-cloud/faq/mixamo-faq
 **G3 Murim 통합(미시작):** 동작·검·얼굴·영상 연결이 확실히 PASS한 방법만 기존 4-GATE와 실제 콘텐츠 생성으로 이식. 자동화·장편 제작·새 기능 개발은 그 이후.
 
 **현재 전체 판정:** RESEARCH_BASELINE_DOCUMENTED / CURRENT_GPU_RENDER_FUNCTIONAL / WUXIA_VISUAL_QUALITY_FAIL / NEW_CONTROL_PIPELINE_NOT_VERIFIED. 이 문서는 보증된 단일 만능 워크플로의 발표가 아니라 공식 증거와 로컬 제약으로 후보를 선별한 운영 판단이다.
+
+
+## 6. 실제 성공 워크플로를 기준으로 하는 '최고 품질' 제작 방식 (2026-11-21 추가)
+
+**사용자 재확정:** 한 장의 사진·한국어 대사로 높은 완성도의 영상이 나온 기존 LTX 워크플로를 보여준 것은 '마지막 프레임 무한 반복' 자체를 개발하라는 뜻이 아니다. **검증된 최고의 제작법을 발굴·재현·조합하고, 무협 액션의 손/검/신체/인물 일관성을 대형 상용 생성형 서비스 수준에 가깝게 끌어올리라**는 품질 기준이다. 우선 문헌/작동 예제와 실제 8GB 제약을 조사하고, 제품 코드를 새로 쓰지 않는다.
+
+### 6.1 사용자 PC 내 검증 자산 (Drive↔Windows 로컬 에이전트가 read-only로 직접 조회)
+
+| 로컬 원본 | 실제 조사 증거 | 활용/주의 |
+|---|---|---|
+| `E:\ComfyUI_New\ComfyUI\user\default\workflows\ltx_author_workflow_real.json` | 원본 JSON 142,498 bytes, **60 nodes**; `DenoLTX23PresetLoader`는 'GGUF Style' 및 로컬 Q4, Gemma FP4, video/audio VAE를 선택. `DenoLTXPromptGuide`, 다중 이미지, AV latent, VHS 영상 저장·보간·후처리 계열 | **최우선 보존/기준선**. 사용자 제시 스크린샷의 LTX 제작 계열과 연결된 로컬 그래프이지만, 특정 결과물이 정확히 어느 저장 버전에서 나왔는지는 출력 메타데이터 검증 전 확정하지 않는다. 자체 새 그래프로 재구축하지 않는다. |
+| `.../ltx_author_workflow_real2.json` | 원본 JSON 92,801 bytes, **55 nodes**; 동일 프리셋, 단계별 샘플러·latent upscale·tiled decode·VHS AV 출력 구성 | 이미 있는 고품질 변형 워크플로. 품질 비교 시 원본 보존. |
+| `.../flux_dwpose_workflow.json` | 14 nodes: DWPose video preprocessing / FLUX GGUF / ControlNet / image output | **자세 제어 자산**으로 재검토. 3D 검-손 물리 결합이나 동작 전이 전체의 대체물이 아님. |
+| `.../animate_video_workflow.json` | AnimateDiff 구형 10 nodes | 참고 이력이지 최고 품질 무협의 기본 엔진으로 자동 승격하지 않음. |
+
+실제로 성공한 **8초 한국어 동기 발화 LTX 영상은 사용자 스크린샷과 사용자의 관찰**로 유력한 제작 기준선이다. 단, 전체 영상의 객관적 품질·프레임별 손/소품·재현성을 제가 별도로 평가한 결과라고 표현하지 않는다. 저장된 그래프/모델·각 출력의 정확한 대응은 추후 메타데이터로 확인한다.
+
+### 6.2 무협 액션에 적용할 외부 '이미 실증한' 원본 워크플로 소스
+
+| 우선 | 원본/증거 | 결정 |
+|---|---|---|
+| A. **Wan2.2 Animate 공식 Move/Mix** | [ComfyUI 공식 튜토리얼](https://github.com/Comfy-Org/docs/blob/main/ko/tutorials/video/wan/wan2-2-animate.mdx), [공식 workflow](https://comfy.org/hub/workflows/wan2-2-animate-character-animation-and-replacement-c2c4b45b7df5/) | 복잡한 동작은 **source video → pose/video+mask → identity reference** 경로부터 학습/복제. 현재 14B I2V 모델 파일은 Animate 전용 가중치가 아님. |
+| B. **SCAIL-2 공식 (2026년)** | [개발팀 코드/설명](https://github.com/zai-org/SCAIL-2): fighting demo, source driving video, semantic masks, multi-ref, 손 왜곡 완화 DPO LoRA; [8GB용 GGUF 커뮤니티 패키지](https://github.com/dvelm/SCAIL-2-Unlimited-Video-Low-VRAM) | 실전 동작 전이 1순위 **후보**. 커뮤니티는 Q3_K_M 약 8.1GB 파일과 81프레임 오버랩 연장 구조를 설명하지만, 파일이 8GB보다 크며 **시스템 RAM 오프로드와 품질·속도 검증**이 필수. 해당 워크플로 최소 ComfyUI 0.33.1 vs 현재 0.20.1; 원본 설치 inplace 수정 금지. |
+| C. **Wan Animate GGUF 12GB 실측** | [The_frizzy1 실행 문서](https://github.com/Thefrizzy1/The_frizzy1-Workflows/blob/main/workflows/wan2.2/animate-ultimate/README.md), [벤치마크](https://github.com/Thefrizzy1/The_frizzy1-Workflows/blob/main/docs/BENCHMARKS.md) | 480×864, 81프레임 Q5_K_S 결과: **7m05 총 소요, peak VRAM 11.7GB, peak RAM 24.6GB**는 12GB RTX3060 환경 실측. 이 레시피 그대로 8GB로 성공했다고 간주할 수 없다. 작은 GGUF의 별도 검증이 필요. |
+| D. **LTX-2.3 공식 구조 제어 + 현 성공 계열** | [LTX IC-LoRA 모션 제어](https://docs.ltx.io/open-source-model/feature-guides/structural-control/motion-control/), [LTX 영상/음성 공식 워크플로](https://comfy.org/hub/workflows/ltx-2-3-image-audio-to-video-adca306765ce/), [실행 경험 공유](https://github.com/koala-penguin/ltx23-toolkit) | 성공한 인물·발화 품질 유지 + 동작을 구조화하는 후보. 모션 컨트롤 IC-LoRA 가중치/노드가 지금 PC에 설치됐는지는 **미확인**. 12GB 사례를 8GB 검증으로 치환하지 않는다. |
+| E. **최상위 외부 벤치마크** | [ComfyUI Kling 3 Motion Control](https://comfy.org/hub/workflows/kling-3-0-motion-control-f7078f72ad4b/) | 동작/얼굴 일관성의 **품질 비교 표준**으로 연구. Partner Node/API는 외부 서비스이며 업로드·과금·인증 연결은 **별도 승인 전 사용하지 않음**. |
+| F. **손/검 강결합** | [Blender 공식 Bone Parenting](https://docs.blender.org/manual/en/latest/animation/armatures/bones/editing/parenting.html), source 영상 소품 tracking + mask/inpaint | **물리적으로 제어 가능한 계층**에서 손과 검을 결합. diffusion 영상이 보증하지 않는 rigid prop attachment를 별도 rig/holdout/compositing으로 보완하고, 프레임별 WYSIWYG에서 검이 분리되면 FAIL. |
+
+**중요한 반례:** LTX 커뮤니티 사용자는 [검이 잔/다른 물체로 모핑되는 소품 교체 문제](https://github.com/koala-penguin/ltx23-toolkit)를 명시하고, 물체를 내려놓고 새 물체를 잡는 등의 action beats 구분을 권장한다. **대사와 간단한 동작 성공은 검술의 물리적 일관성 성공과 다르다.**
+
+### 6.3 재현할 것은 workflow 내부를 섞은 새 하이브리드가 아니라 '검증된 제작 공정'
+
+1. **LTX 2.3 AV 촬영 엔진:** 사용자가 실제 성공한 그래프와 참조 이미지/대사 입력 형식을 SSOT로 잠근다. 검술 action shot의 바깥 대사·감정·인물 설정 및 샷 간 continuity에 활용. 사소한 sampler/CFG 노드 변경 금지.
+2. **Wan Animate/SCAIL-2 동작 엔진:** 저작권 확인된 실제 검술 driving clip + **첫 동작 프레임과 일치하는 identity reference** + 필요한 mask/pose. 공식/공개 버전 고정 JSON을 별도 환경에서 로드해 **완성된 모션 전이 공정으로** 재현한다.
+3. **검-손 물리 계층:** 칼은 소품 개체로 추적하고 손잡이 기준 좌표·회전·길이를 유지한다. 라이선스 확인된 모션/Blender 본(bone) 결합 또는 소품 holdout/compositing이 후보. 생성 모델이 검을 재구성한다면 도구 연결과 변형을 실제 프레임에서 반드시 평가.
+4. **편집/후처리:** 성공한 숏만 FFmpeg/NLE로 이어 붙이고 검 궤적·타격·와이어 액션을 과도한 한 번의 긴 생성이 아니라 숏별 컷/효과음/움직임으로 표현. 공간/캐릭터/조명 레퍼런스와 마지막 프레임을 상태로 보관하되, **다음 프레임 하나로 무한 루프**를 단독 제작 방식으로 승격하지 않음.
+5. **품질 게이트:** 샷별 '손잡이와 손 연결/검신 길이/인물 얼굴/관절/발 접촉/동작 궤적/시간 일관성/음성 싱크'를 전 프레임/필요 sampling과 직접 영상 재생으로 평가. GPU/API/렌더 PASS와 CONTENT_PASS 분리.
+
+### 6.4 향후 적용 순서: 코드 작성 전에 먼저
+
+- **E0:** 현 LTX 성공 workflow와 비디오 출력의 정확한 대응, 기술 스택/버전/모델/LoRA/원본 input hashes 및 재현 실행 조건을 목록화. 그래프는 고치지 않음.
+- **E1:** 검술 **실제 driving video** (저작/사용권 확인) 1개 확보하고 오른손·손잡이·검신이 프레임마다 보이는지 확인. 1~2초 복합 동작이 아닌 단일 발도 또는 수평 베기부터. 기존 pose/canny PNG는 driving video 대용으로 간주하지 않음.
+- **E2:** A/B 후보의 정확한 원본 JSON, 모델 크기, 필수 설치 버전, 로컬 8GB peak VRAM/RAM 예상 병목, 8GB 동급 실제 실측 **증거를 확보한 뒤** 1개만 분리 환경에서 원본 그대로 재현.
+- **E3:** 실제 결과에서 손-검 FAIL이면 재시도 횟수/스텝을 늘리지 않고 motion source·prop control·mask를 교정. identity FAIL이면 ref·캐릭터 시트를 조정. 물리/시각적 PASS가 확보된 샷만 LTX AV와 **결과 단위**로 연결.
+- **E4:** 통과한 각 제작 공정의 원본 SHA와 재현 레시피, 실패 조건 및 품질 증거를 버전 고정. 장편 생성/자동화는 별도 승인 후.
+
+**작업 상태:** BUILT_FROM_VERIFIED_WORKFLOWS_POLICY / LOCAL_LTX_WORKFLOW_AUDIT_PASS / EXTERNAL_ACTION_WORKFLOW_RESEARCH_PASS / WUXIA_ACTION_RESULT_NOT_VERIFIED / NEW_GPU_RENDER_NOT_RUN. 이번 추가 연구에서 새 모델을 설치하거나 영상·프로그램 코드를 변경하지 않았다.
