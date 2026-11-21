@@ -70,6 +70,22 @@ class TestComfyUIProof(unittest.TestCase):
         with self.assertRaisesRegex(proof.ProofError, "RENDER_FAIL"):
             proof.await_video(MockAPI(), "abc", 10)
 
+    def test_download_never_deletes_existing_file_on_collision(self):
+        class NoNetworkAPI:
+            def request(self, *args, **kwargs):
+                raise AssertionError("Must not fetch when destination already exists")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            from types import SimpleNamespace
+            path = Path(tmp) / "p1_aaaaaaaaaaaa_clip.mp4"
+            path.write_bytes(b"KEEP_ORIGINAL")
+            with patch.object(proof.uuid, "uuid4", return_value=SimpleNamespace(hex="aaaaaaaaaaaa")):
+                with self.assertRaises(FileExistsError):
+                    proof.save_video(NoNetworkAPI(), {
+                        "filename": "clip.mp4", "subfolder": "", "type": "output"
+                    }, tmp)
+            self.assertEqual(path.read_bytes(), b"KEEP_ORIGINAL")
+
     def test_png_is_real_and_only_new_file_created(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "ref.png"

@@ -249,18 +249,21 @@ def save_video(api, entry, output_dir):
         raise ProofError("[OUTPUT_PATH] Only permanent ComfyUI outputs are accepted")
     query = urlencode({"filename": name, "subfolder": subfolder, "type": "output"})
     destination = Path(output_dir) / ("p1_" + uuid.uuid4().hex[:12] + "_" + name)
-    # Exclusive creation; never overwrite pre-existing local files.
+    # Exclusive creation; never overwrite or remove pre-existing local files.
+    created = False
     try:
-        with api.request("/view?" + query, timeout=120) as response, destination.open("xb") as out:
-            total = 0
-            while True:
-                piece = response.read(1024 * 1024)
-                if not piece:
-                    break
-                total += len(piece)
-                if total > 250 * 1024 * 1024:
-                    raise ProofError("[OUTPUT_SIZE] Video exceeds 250 MiB safety limit")
-                out.write(piece)
+        with destination.open("xb") as out:
+            created = True
+            with api.request("/view?" + query, timeout=120) as response:
+                total = 0
+                while True:
+                    piece = response.read(1024 * 1024)
+                    if not piece:
+                        break
+                    total += len(piece)
+                    if total > 250 * 1024 * 1024:
+                        raise ProofError("[OUTPUT_SIZE] Video exceeds 250 MiB safety limit")
+                    out.write(piece)
         with destination.open("rb") as f:
             header = f.read(16)
         valid_mp4 = len(header) >= 12 and header[4:8] == b"ftyp"
@@ -270,8 +273,8 @@ def save_video(api, entry, output_dir):
             raise ProofError("[OUTPUT_INVALID] Downloaded data is not an MP4/MOV/WebM video")
         return destination
     except Exception:
-        # Remove only a file newly created by this invocation.
-        if destination.exists():
+        # Cleanup is limited to this invocation's newly created file.
+        if created and destination.exists():
             destination.unlink()
         raise
 
