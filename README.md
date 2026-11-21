@@ -109,3 +109,53 @@ python main.py
 |--------|------|
 | `wan22_5b_api.json` | WAN 2.2 TI2V 5B I2V 워크플로우 |
 | `ltx2_i2v_api.json` | LTX-2 Distilled FP8 I2V 워크플로우 |
+
+---
+
+## ComfyUI 기반 콘텐츠 자동화 완성 계획 (2026-11-21 기준)
+
+이 섹션은 **기존 Murim AI Content Factory를 대체하지 않고 확장**하는 개발 계약이다. 기존 4-GATE/Director/Writer/Council/Imaging/Video/Audio/Camera/Art Direction/Marketing, Human-Relay Web UI, 에셋 대시보드, `workflows/wan22_5b_api.json`, `workflows/ltx2_i2v_api.json`, 렌더러와 테스트를 유지하며 ComfyUI를 실제 제작 백엔드로 점진적으로 연결한다.
+
+### 원본과 Windows 실행 역할
+
+- **개발 SSOT:** [`hoonoh57/murim`](https://github.com/hoonoh57/murim)의 `main` 브랜치. 모든 소스·문서·워크플로 CRUD, 검토, 수정, 정적/모의 검증 및 오류 복구는 GitHub 원본에서 수행한다.
+- **Windows 소비/검증 작업공간:** `E:\gpt\projects\comfyui\murim`. Windows는 소스 작성자가 아니라 **GitHub fast-forward 동기화 + 실제 ComfyUI/GPU/영상·UI 검증 실행기**다. 이 경로가 실제로 저장소에 연결되었는지, runner에서 접근 가능한지는 Windows에서 별도 확인해야 한다.
+- **반복 인증·Actions 금지:** 각 파일·micro-tranche마다 GitHub Actions 실행, 수동 push/pull·승인을 요구하지 않는다. 관련 변경은 GitHub에서 연속 처리하고 필요한 최종 실제 Windows 테스트만 한 번 요청한다.
+- **동기화 방식:** `windows-test.cmd`가 `scripts/windows-sync-test.ps1`을 호출하여, clean 상태·정확한 원격·`main` 확인 후 `fetch` + `merge --ff-only`로 GitHub 변경을 로컬에 자동 반영하고 테스트한다. 로컬 사용자 변경과 비밀·산출물이 충돌하면 **자동 덮어쓰기 대신 중단**한다. 강제 reset/clean/삭제는 금지한다.
+- **실제 실행 구분:** 저장소 커밋/자동 테스트 통과는 Windows에서 ComfyUI로 영상이 만들어진 사실이나 자동 동기화 스케줄이 실제 등록되었다는 증거가 아니다. 설치·실행 결과는 `docs/CURRENT_STATE.md`에 별도로 기록한다.
+
+### 최종 제작 파이프라인
+
+```text
+시리즈 바이블/주제
+    → GATE 1: Writer + 6인 Council + Director (시나리오 승인)
+    → GATE 2: Art Direction + Camera (캐릭터/장면/샷리스트 확정)
+    → GATE 3: Imaging/ComfyUI → Video/ComfyUI → Audio/TTS/BGM/SFX
+    → 자막 동기화·편집·인코딩·품질 검사
+    → GATE 4: Marketing (썸네일/제목/설명/태그/배포 패키지)
+    → 사람의 최종 검수·게시 승인
+    → 채널 공식 API 업로드(승인 후) → 이력/성과 추적
+```
+
+**필수 보장:** 콘텐츠·캐릭터 일관성, 장면별 워크플로·모델·시드·프롬프트 이력, 재시도 가능한 작업 큐, GPU/시간·비용 제한, 중복 렌더/게시 방지, 영상·자막·내레이션 싱크. 승인 없는 외부 게시는 하지 않는다.
+
+### 단계별 개발 경계와 실제 합격 조건
+
+| 단계 | 범위 | 실제 완료 판정 |
+|---|---|---|
+| **P0. 원본·환경 실사** | 현행 4-GATE/웹 UI/렌더러/테스트 현황, 로컬 원격·HEAD·사용자 변경, ComfyUI 버전·GPU/VRAM·노드/모델 확인 | 현재 상태/제약/안전한 동기화 경로 확인 |
+| **P1. ComfyUI API 단일 컷** | 기존 `workflows/` API JSON을 재사용해 1장면 큐 제출·상태·결과·실패 추적 | 실제 Windows ComfyUI API 호출로 검증된 자산 1건 |
+| **P2. 캐릭터·영상 일관성** | 캐릭터 기준 시트와 스타일/세계관 앵커, 6~10장면 이미지→영상 연결 | 동일 인물·무기·의상 연속성 검수 |
+| **P3. 에피소드 완성본** | 기존 TTS/FFmpeg 렌더러 연결, 길이·자막·음성·음량·해상도 검수 | 실제 재생 가능한 MP4 1편과 제작 메타데이터 |
+| **P4. 전 과정 복구형 자동화** | 4-GATE 작업 큐, 영속 상태, 체크포인트, 중단 후 재개, 휴먼 승인 | 재시도/취소/오류 복구·승인 게이트 검증 |
+| **P5. 반복 생산 최적화** | 10편 연속, 품질·성능·GPU 사용량·비용 실측, 실패 유형 분석 | 10편의 독립적인 영상/검수/로그 증거 |
+| **P6. 배포/성과** | 플랫폼별 출력, 공식 업로드 API, 승인·게시 ID/중복 방지, 성과 기록 | 승인된 1편 게시와 중복 방지 실증 |
+
+숏폼 9:16 및 16:9 장편은 프리셋으로 확장하되, 실제 모델/VRAM 성능 검증 전 속도나 완성 시간을 확정하지 않는다. 기존 문서의 “완료” 표시는 과거 구현 기록이며 **현재 PC 실제 제품 PASS를 의미하지 않는다**.
+
+### 현재 확인된 근거와 다음 작업
+
+- GitHub에 기존 `main.py`, `web_ui.py`, `render_episode.py`, `tests/`, 2개 ComfyUI API 워크플로가 존재한다.
+- 이 문서 작업에서는 **Windows의 실제 ComfyUI 연결, 영상 생성, 웹 UI, Git 동기화 및 예약 실행을 수행하지 않았다.**
+- **다음 한 단계:** Windows 실행기가 위 작업공간을 읽을 수 있는지와 기존 Git 원격/변경 상태를 안전하게 확인한 다음, **실제 P1 ComfyUI 한 장면 API 작업**을 통과시킨다.
+- 영속 상태/세션 인계: [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md), [`docs/SESSION_HANDOFF.md`](docs/SESSION_HANDOFF.md), 원격 개발 헌법: [`AGENTS.md`](AGENTS.md).
