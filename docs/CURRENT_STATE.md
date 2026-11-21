@@ -1,3 +1,10 @@
+## 2026-11-21 — SCAIL-2 설치 실행기 실제 Windows 로컬 파일 배포 PASS
+
+- Windows E:\ workspace Google Drive 에이전트의 `workspace_apply` 실응답 `res-scail2-install-deploy-20261121-a.json`: E:\comfyui-scail 폴더에 `INSTALL-SCAIL2.cmd`, `install-scail2.ps1`, `README-SCAIL2.txt` 3개 CREATE PASS, original before=null, after SHA256 대조 완료. 해당 폴더는 사전에 빈 폴더로 확인됨.
+- `res-scail2-install-ps51-fix-20261121-a.json`: PS5.1 UTF-8 안전 생성자 수정 1개 UPDATE PASS, 원본 CAS와 preimage snapshot 보존, after SHA256 확인. 재배포 이력은 기존 Windows 에이전트와 원본 ComfyUI를 변경하지 않음.
+- 최종 실행기 정리: 성공 console은 정확히 `[PASS]` 한 줄(초기 구조에서 추가 출력 제거), 오류는 로그에 남기고 유지, ComfyUI 8189 정상 기동 시 브라우저 열기. GitHub와 로컬 최신 2파일의 CAS 일치 여부를 별도 영수증으로 확정해야 함.
+- **아직 설치 작업을 Windows에서 실행한 것은 아님**: 현 로컬 agent 기능은 file CRUD만 있고 OS process 실행 명령은 없다. 사용자는 `E:\comfyui-scail\INSTALL-SCAIL2.cmd` 1회 더블클릭하면 설치/모델 재사용/누락 모델 다운로드/Python+PyTorch/노드 등록/8189 서버 검증을 연속 진행한다. 실제 GPU 생성/검술 품질은 사용자 시각 검증까지 NOT_RUN.
+
 ## 2026-11-21 — 별도 SCAIL-2 8GB 실험 설치기 제작 및 로컬 배포 단계
 
 - 사용자 승인: 새로 만든 `E:\comfyui-scail` 폴더에 **최신 호환 SCAIL-2 전용 ComfyUI 별도 설치**, 기존 `E:\ComfyUI_New`는 원본 보존, 대형 기존 모델 경로 재사용, 설치/준비/검증은 Windows PowerShell5.1 **1회 CMD**로 처리.

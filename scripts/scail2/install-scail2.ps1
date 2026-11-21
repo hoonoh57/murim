@@ -247,11 +247,13 @@ legacy_models:
         $report.installation='STARTUP_VERIFIED_NOT_RENDERED'
         [IO.File]::WriteAllText((Join-Path $Root 'setup-report.json'),(($report | ConvertTo-Json -Depth 4) + "`n"),$Utf8)
         Write-Note 'PASS: GPU, shared models, SCAIL2 original workflow, node registry, 8189 HTTP.'
-        Write-Output '[PASS] SCAIL-2 8GB install and startup verification complete (8189).'
+        try { Start-Process 'http://127.0.0.1:8189' | Out-Null }
+        catch { Write-Note 'Browser opening skipped; ComfyUI server is ready on port 8189.' }
+        Write-Output '[PASS]'
     } else {
-        Write-Output '[PASS] SCAIL-2 installed (server startup intentionally skipped).'
+        Write-Output '[PASS]'
     }
-    Write-Output '[DEMO] Original SCAIL animation example staged. Open the Q3 workflow and Queue once; sword study needs a licensed sword-driving clip.'
+    Write-Note 'Official SCAIL demo input staged. To render, open the Q3 workflow and Queue; sword study needs a licensed sword-driving clip.'
 } catch {
     Write-Note ('FAIL: ' + $_.Exception.Message)
     Write-Output ('[FAIL] ' + $_.Exception.Message)
