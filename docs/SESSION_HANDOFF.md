@@ -1,3 +1,11 @@
+## 2026-11-21 — 별도 SCAIL-2 8GB 실험 설치기 제작 및 로컬 배포 단계
+
+- 사용자 승인: 새로 만든 `E:\comfyui-scail` 폴더에 **최신 호환 SCAIL-2 전용 ComfyUI 별도 설치**, 기존 `E:\ComfyUI_New`는 원본 보존, 대형 기존 모델 경로 재사용, 설치/준비/검증은 Windows PowerShell5.1 **1회 CMD**로 처리.
+- 사전 확인: 범용 Windows 에이전트 workspace=`E:\` read-only 영수증으로 `E:\comfyui-scail` 폴더 비어 있음을 확인, 기존 모델 폴더에는 `umt5_xxl_fp8_e4m3fn_scaled.safetensors`와 `wan_2.1_vae.safetensors` 존재. SCAIL 전용 GGUF/SAM3.1/CLIP H/21 LightX2V LoRA는 파일명 기준 미확인. 실제 ComfyUI GitHub v0.33.1에 SCAIL 핵심 노드 소스 존재.
+- `scripts/scail2/install-scail2.ps1`, `INSTALL-SCAIL2.cmd` 및 실행 가이드 추가. ComfyUI v0.33.1 `72865f4`, dvelm SCAIL 저VRAM 원본 `2a0d3c0`, GGUF/VHS/KJNodes 버전 고정, Python 3.12 + PyTorch 2.8 cu126 isolated .venv, 원본 모델 공유는 `extra_model_paths.yaml` (junction 불필요). 미설치 가중치만 원본 출처에서 재개 가능 다운로드. **기존 ComfyUI source/models 절대 수정/삭제하지 않음**.
+- SCAIL 원본 workflow 보존, 로컬 8GB 전용 Q3 파일명·2초 설정만 변경한 파생본 준비. 공식 SCAIL-2 개발팀 `animation_001`의 공개 driving/reference demo를 입력으로 준비(검술이 아닌 설치 기술 검증). 본인 캐릭터 입력은 별도 파일로 보존. 새 서버는 8189에서 실행/필수 노드 확인, 실제 렌더는 사용자 시각 검사 전 자동 큐잉하지 않음.
+- 정적 오프라인 테스트 `tests/test_scail2_bootstrap.py` 4 PASS. **Windows 설치/CUDA/ComfyUI 8189/실제 SCAIL GPU 렌더 = NOT_VERIFIED**. 실행기 원본의 PS5.1 실제 파싱/설치 검증은 사용자 PC에서 1회 `E:\comfyui-scail\INSTALL-SCAIL2.cmd` 실행 및 `setup-report.json`/콘솔 영수증 후에 판정. 로컬 에이전트에는 shell 명령 실행 기능이 없으므로 원격 파일 CRUD로 CMD·PS1을 배치하되 실행을 허위 주장하지 않는다.
+
 
 ## 2026-11-21 — 로컬 LTX 성공 그래프 직접 감사 + 실증된 액션 원본 워크플로 shortlist
 

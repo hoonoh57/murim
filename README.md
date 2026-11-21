@@ -188,3 +188,7 @@ python main.py
 ```
 
 `--quality`는 **실제 PNG 원본만** 받는다(확장자가 .png인데 JPEG인 파일은 거부). 사진 방향에 따라 세로 576×768 또는 가로 832×480, 33프레임/24 FPS, 24 스텝을 적용해 캐릭터·복장·원본 스타일 보존을 우선한다. 현재 Windows GPU는 VRAM 약 8GB로 확인돼 무조건 720p부터 시작하지 않는다. 출력은 별도 `quality_...` MP4로 보존하며, 시각적 성공은 실제 영상 리뷰로 판정한다. 원본 워크플로·모델·기존 출력은 변경하지 않는다.
+
+### SCAIL-2 isolated low-VRAM motion-transfer installation
+
+For the RTX 4070 Laptop 8GB feasibility test, `scripts/scail2/INSTALL-SCAIL2.cmd` and `install-scail2.ps1` are deployed to `E:\comfyui-scail` via the approved Windows file agent. Double-click **`E:\comfyui-scail\INSTALL-SCAIL2.cmd` once**. It installs a separate ComfyUI v0.33.1, pins the community SCAIL original workflow, shares existing weights using `extra_model_paths.yaml`, and starts the new server at `http://127.0.0.1:8189` after checking CUDA and node registration. The preserved existing `E:\ComfyUI_New` and its LTX success workflow are not modified. See `scripts/scail2/README-SCAIL2.txt`; installing/serving/running motion transfer and visual PASS are separate checks.
