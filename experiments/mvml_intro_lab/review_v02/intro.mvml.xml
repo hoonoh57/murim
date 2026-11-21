@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mvml version="0.2-review" work="SEHANDO_INTRO" duration="60" status="REVIEW_ONLY">
+  <registry>
+    <asset id="ART:DETAIL@1" url="https://upload.wikimedia.org/wikipedia/commons/7/7a/Sehando_-_detail.jpg" label="김정희 필 세한도 · 그림 부분" source="https://commons.wikimedia.org/wiki/File:Sehando_-_detail.jpg" rights="PD-Art 표기; 게시 전 관할권 확인" expected-width="6533" expected-height="2652" status="REMOTE_REFERENCE"/>
+    <asset id="ART:OBJECT@1" url="https://www.museum.go.kr/relic_image/PS01001001/jng010/2020/0929142445174/jng010000-000-00001.jpg" label="세한도 실물 사진 · 국립중앙박물관 증10000" source="https://www.museum.go.kr/MUSEUM/contents/M0502000000.do?relicId=36516218&amp;schM=view&amp;searchId=search" rights="공공누리 1유형 출처표시" status="REMOTE_REFERENCE"/>
+    <asset id="ART:LETTER@1" url="https://www.museum.go.kr/relic_image/PS01001001/koo005/2016/1114125941596/koo005235-00-00.jpg" label="1842년 10월 3일 한글간찰 · 국립중앙박물관 구5235" source="https://www.museum.go.kr/MUSEUM/contents/M0502000000.do?relicId=87704&amp;schM=view&amp;searchId=search" rights="공공누리 1유형 출처표시" status="REMOTE_REFERENCE"/>
+    <style id="STYLE:PAPER_GALLERY@1" description="밝은 종이색, 원본 비례, 색상 변경 없음, 시각적 여백"/>
+    <theme id="THEME:CHOICE@1" description="사람들이 그림 한 장을 위해 내린 선택"/>
+  </registry>
+  <opening-options>
+    <option id="A" asset="ART:DETAIL@1" framing="whole" name="필묵과 여백"/>
+    <option id="B" asset="ART:OBJECT@1" framing="whole" name="실물 두루마리"/>
+    <option id="C" asset="ART:DETAIL@1" framing="right" name="그림 속 글씨"/>
+  </opening-options>
+  <sequence style="STYLE:PAPER_GALLERY@1" theme="THEME:CHOICE@1">
+    <shot id="S01" seconds="6" asset="ART:DETAIL@1" framing="whole" heading="" cue="그림 자체를 먼저 만난다">집 한 채와 나무 네 그루.</shot>
+    <shot id="S02" seconds="9" asset="ART:OBJECT@1" framing="whole" heading="1944년 · 일본" cue="실물 사진은 당시 촬영 자료가 아님">1944년 말, 전쟁 중인 일본에서 조선의 한 서예가가 이 그림을 찾고 있었습니다.</shot>
+    <shot id="S03" seconds="10" asset="ART:DETAIL@1" framing="whole" heading="손재형 / 후지쓰카 지카시" cue="인물 재현 없이 문서 확보 전 보류">서예가 손재형. 그림 주인은 김정희를 연구한 일본인 학자 후지쓰카였습니다.</shot>
+    <shot id="S04" seconds="9" asset="ART:OBJECT@1" framing="whole" heading="1944년 · 반환" cue="반환 사실; 대화 창작 금지">병중인 학자를 거듭 찾아간 끝에, 손재형은 그림을 돌려받았습니다.</shot>
+    <shot id="S05" seconds="8" asset="ART:DETAIL@1" framing="right" heading="우선(藕船)" cue="그림의 실제 제화와 연결">이 그림을 처음 받은 사람의 호는 오른편에 남아 있습니다.</shot>
+    <shot id="S06" seconds="8" asset="ART:DETAIL@1" framing="whole" heading="1844년 · 세한도" cue="제자의 정체 공개">우선. 추사의 제자이자 중국어 통역관이었던 이상적의 호입니다.</shot>
+    <shot id="S07" seconds="10" asset="ART:LETTER@1" framing="whole" heading="1844년 · 제주" cue="1842년 간찰은 유배 생활의 증거; 책이나 1844년 현장 아님">백 년 전, 제주. 유배 중인 김정희에게 바다 건너에서 귀한 책이 도착했습니다.</shot>
+  </sequence>
+</mvml>

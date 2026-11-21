@@ -1,3 +1,11 @@
+## 2026-11-22 — 시청 가치 평가 기준 v1 및 세한도 v0.2 원작 중심 재제작 시안
+
+- 사용자: v0.1 부정 평가는 출력 기능 위주의 시험에 따른 정상적인 결과. 이제 “왜 이 주제에 시간을 써야 하지?”에 답하는 평가 기준과 책임별 개선 루프를 구조화하고 재제작 요청.
+- `docs/VIEWER_VALUE_GATE_V1.md`, `docs/VIEWER_VALUE_GATE_V1.json`: 10축/100점, 95점 및 축별 9점 내부 목표 유지, hard defect FAIL, 미평가 HOLD, 자체·관객·실행 별도, 기존 4-GATE에 적용, 책임/타임코드/증거/개선·재심사. v0.1 작품성 FAIL 그대로 보존.
+- `experiments/mvml_intro_lab/review_v02/intro.mvml.xml` 및 `review.html`: 실제 원작 출처 참조, 첫 화면 3안, 밝은 갤러리 스타일, 7컷/60초/248자 원고, 선택적 로컬 한국어 음성 미리듣기, 평가표 및 JSON 내보내기. 대화 제공 HTML과 저장소 blob SHA 일치. XML/JS static PASS; 브라우저 WYSIWYG 및 실제 원본 로드 NOT_VERIFIED. 원고 기존 장편 변경 없음.
+- **ENVIRONMENT_ISSUE**: 컨테이너에서 museum/Wikimedia 다운로드 차단. 원본 바이트/사용권/유효 해상도 미검증, 한국어 실제 음성/MP4 미생성. `SOURCE_FIRST_REVIEW_PREVIEW / ASSET_BYTES_BLOCKED / AUDIO_NOT_RUN / MP4_NOT_RENDERED / QUALITY_HOLD`. 공통 outputs 연동 및 Windows 실제 실행 미확인 유지.
+- 다음 한 단계: 승인된 로컬 작업공간에서 진본 자산과 실제 낭독 확보→첫 화면/10~15초 실제 비교 심사→60초 최종 출력 및 실제 관객 평가. 실패의 원인을 책임 에이전트에 돌리고 검증된 기법만 재사용.
+
 ## 2026-11-22 — 60초 인트로 v0.1 실제 사용자 시청: 작품성 FAIL
 
 - 사용자 실제 시청 평가: 흔한 AI 이미지/어두운 화풍, 세한도 진본 부재, 화면·대사·화질의 획일성 때문에 첫 3초에 즉시 이탈할 소지가 충분하다는 명시적 지적. **INTRO_V0_1_USER_VIEWING_FAIL / ART_DIRECTION_REJECTED / EARLY_EXIT_RISK_USER_REPORTED**. 실제 대규모 시청자 유지율 측정 결과는 아님.

@@ -1,0 +1,148 @@
+{
+  "version": "1.0",
+  "type": "viewer_value_gate",
+  "scope": "기존 4-GATE의 공통 심사 기준; 특히 G2/G3와 G4 게시 전",
+  "scale": {
+    "0": "기능/가치 부재",
+    "3": "심각한 결함",
+    "5": "평범하며 선택 이유 부족",
+    "7": "양호하지만 뚜렷한 경쟁우위 없음",
+    "9": "독립 심사에서 차별화되고 매력적인 결과",
+    "10": "비교작 대비 매우 뛰어나고 증거 충분"
+  },
+  "target": {
+    "weighted_total_min": 95,
+    "each_axis_min": 9,
+    "missing": "HOLD",
+    "hard_defects": "FAIL",
+    "market_threshold_claim": false
+  },
+  "hard_defects": [
+    "source_or_claim_error",
+    "misrepresented_original",
+    "rights_not_cleared",
+    "required_narration_missing",
+    "severe_visual_or_audio_defect",
+    "critical_continuity_failure"
+  ],
+  "axes": [
+    {
+      "id": "V01",
+      "name": "소재의 매력",
+      "weight": 10,
+      "criterion": "처음 접한 시청자가 선택할 만한 구체적인 보상과 이야기 질문을 이해",
+      "evidence": "제목/썸네일 무설명 선택, 경쟁 영상과 선택 이유",
+      "owner": "Research + Marketing",
+      "rework": "소재의 중심 질문과 시청자 보상을 재설계"
+    },
+    {
+      "id": "V02",
+      "name": "첫인상과 선택",
+      "weight": 15,
+      "criterion": "첫 3초가 흔한 AI 영상과 구별되고 15~30초에 실제 사건의 약속 충족",
+      "evidence": "3초 첫인상, 15초 자발 계속 재생, 이탈 이유",
+      "owner": "Art Direction + Camera",
+      "rework": "첫 화면 3안, 구도·빛·진본 중심 교체"
+    },
+    {
+      "id": "V03",
+      "name": "시각적 독창성",
+      "weight": 15,
+      "criterion": "화풍과 작품 정체성이 고유하며 정지 화면도 감상 가치",
+      "evidence": "고해상도 소스 원본과 동일 화면 비교, 블라인드 미술 심사",
+      "owner": "Art Direction + Imaging",
+      "rework": "원전·고해상도 시각 자료 및 작품별 미술 설계 재수립"
+    },
+    {
+      "id": "V04",
+      "name": "서사의 몰입",
+      "weight": 15,
+      "criterion": "새로운 사건이 변화를 만들고 배경지식 없이 다음이 궁금",
+      "evidence": "자발 중단시간 기록, 핵심 사건 자유 재진술",
+      "owner": "Writer + Director",
+      "rework": "정보 나열·중복·억지 질문 제거, 사건과 결과 중심"
+    },
+    {
+      "id": "V05",
+      "name": "청각적 이해도",
+      "weight": 10,
+      "criterion": "화면 없이도 누구의 어떤 일이었는지 이해",
+      "evidence": "실제 녹음 무화면 청취, 오류와 발음·호흡 기록",
+      "owner": "Writer + Audio",
+      "rework": "낭독 문장·정보밀도·발음 수정 후 재녹음"
+    },
+    {
+      "id": "V06",
+      "name": "역사적 진실성",
+      "weight": 10,
+      "criterion": "핵심 주장과 영상 증거가 일치, 원작과 재현 구분",
+      "evidence": "claim/source ID와 도판/권리/해시 검증 및 전문 감수",
+      "owner": "Research + Council",
+      "rework": "부정확한 사실 삭제/정정, 실제 원전 확보"
+    },
+    {
+      "id": "V07",
+      "name": "지적 발견",
+      "weight": 10,
+      "criterion": "이미 알려진 교훈·설명보다 새로운 구체적인 것을 발견",
+      "evidence": "시청 후 기억에 남은 사실과 발견을 자유 답변",
+      "owner": "Research + Writer",
+      "rework": "1차 사료와 상반된 해석으로 관점 심화"
+    },
+    {
+      "id": "V08",
+      "name": "영상·음향 조화",
+      "weight": 5,
+      "criterion": "화면·목소리·음향이 각각 보완하고 강요하지 않음",
+      "evidence": "동일 원고로 무음악/음악 비교, 음성·자막 싱크",
+      "owner": "Audio + Camera",
+      "rework": "음성 우선 재편집, 침묵과 음향 절제"
+    },
+    {
+      "id": "V09",
+      "name": "기술적 완성도",
+      "weight": 5,
+      "criterion": "TV에서 유효 해상도, 자막, 색감, 모션, 소리가 감상에 적합",
+      "evidence": "원본/크롭 픽셀, ffprobe, 실제 TV/모바일 감상, 결함 타임코드",
+      "owner": "Imaging + Video + Audio",
+      "rework": "원본 해상도 확보, 인코딩·자막·모션·믹싱 개선"
+    },
+    {
+      "id": "V10",
+      "name": "여운과 재방문",
+      "weight": 5,
+      "criterion": "다시 찾아올 구체적인 이유가 남음",
+      "evidence": "실제 다음 영상 선택, 다음날 기억·만족, 공개 이후 재방문",
+      "owner": "Viewer Research + Marketing",
+      "rework": "작품 고유 가치와 다음 에피소드 연결 개선"
+    }
+  ],
+  "baseline": {
+    "version": "intro_v0.1",
+    "source": "2026-11-22 사용자 실물 시청 및 기술 감사",
+    "states": {
+      "V01": "NOT_EVALUATED",
+      "V02": "FAIL_USER_REPORTED",
+      "V03": "FAIL_USER_REPORTED",
+      "V04": "NOT_EVALUATED",
+      "V05": "REQUIREMENT_MISSING",
+      "V06": "REQUIREMENT_MISSING_ORIGINAL_ASSET",
+      "V07": "NOT_EVALUATED",
+      "V08": "REQUIREMENT_MISSING_NARRATION",
+      "V09": "FAIL_SOURCE_RESOLUTION",
+      "V10": "NOT_EVALUATED"
+    },
+    "weighted_total": null,
+    "verdict": "FAIL"
+  },
+  "current": {
+    "version": "intro_v0.2-review",
+    "verdict": "HOLD",
+    "weighted_total": null,
+    "all_viewer_scores": null,
+    "asset_bytes": "BLOCKED_NETWORK",
+    "audio": "NOT_RUN",
+    "render": "NOT_RUN",
+    "browser_gui": "NOT_VERIFIED"
+  }
+}
