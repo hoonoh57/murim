@@ -120,7 +120,8 @@ try {
     $packs = @(
         @('ComfyUI-GGUF','https://github.com/city96/ComfyUI-GGUF.git','6ea2651e7df66d7585f6ffee804b20e92fb38b8a'),
         @('ComfyUI-VideoHelperSuite','https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git','4d907bee61e92c2e65af3bd6383a4e4d356126d1'),
-        @('ComfyUI-KJNodes','https://github.com/kijai/ComfyUI-KJNodes.git','aa2b5ea5e7f61b51f5d26d726f23c1d74e951016')
+        @('ComfyUI-KJNodes','https://github.com/kijai/ComfyUI-KJNodes.git','aa2b5ea5e7f61b51f5d26d726f23c1d74e951016'),
+        @('rgthree-comfy','https://github.com/rgthree/rgthree-comfy.git','bc48c6aaeca87bedbc14245d89f9bc6be37a630e')
     )
     foreach($pack in $packs) { Clone-Pinned (Join-Path (Join-Path $Comfy 'custom_nodes') $pack[0]) $pack[1] $pack[2] }
     $sourceNode = Join-Path $Recipe 'custom_nodes\scail2-easy-config'
