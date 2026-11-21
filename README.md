@@ -1,5 +1,24 @@
 # Murim AI Content Factory 🏯
 
+## 현재 우선순위: ComfyUI 실제 한 컷 생성 검증 (2026-11-21)
+
+주기적 GitHub 자동 동기화·예약 작업은 **보류**한다. 먼저 WAN 2.2 워크플로로 **실제 비디오 한 컷**이 생성되는지 확인한다. GitHub 소스는 에이전트가 수정하고, Windows는 필요할 때 한 번 Pull하고 검증한다.
+
+Windows PowerShell (처음 한 번 기존 예약 작업 사용 중지):
+
+```powershell
+Disable-ScheduledTask -TaskName 'Murim-GitHub-Sync-Test'
+git -C 'E:\gpt\projects\comfyui\murim' pull --ff-only origin main
+& 'E:\gpt\projects\comfyui\murim\run-comfyui-proof.cmd'
+```
+
+run-comfyui-proof.cmd는 **예약/반복 없이** 의존성 없는 Python 단위 검증을 수행한 다음, 로컬 ComfyUI http://127.0.0.1:8188에 접속해 WAN 2.2 모델·노드를 확인한다. 준비되었을 때만 임시 테스트 이미지를 업로드하고 **한 컷 생성 → 결과 확인 → 출력 파일 다운로드**까지 실행한다. 로컬 파일은 outputs/p1_comfyui/에 보존한다. 경로를 지정하면 run-comfyui-proof.cmd --image "C:\path\image.png"으로 입력 이미지를 교체할 수 있다. 준비 상태만 보려면 --probe-only를 사용한다.
+
+필수 모델: wan2.2_ti2v_5B_fp16.safetensors, umt5_xxl_fp8_e4m3fn_scaled.safetensors, wan2.2_vae.safetensors; 워크플로의 Wan22ImageToVideoLatent, CreateVideo, SaveVideo 노드 필요. 없으면 명확히 실패하고 생성 요청을 보내지 않는다. 빈 workflows/ltx2_i2v_api.json은 시험 대상이 아니다.
+
+이 검증은 17프레임/512×320/8 스텝의 **기능 가능성 확인**이지 영상 품질이나 전체 콘텐츠 제작 성공을 의미하지 않는다.
+
+
 AI 기술을 활용한 정통무협 유튜브 콘텐츠의 완전 자동화 제작 시스템입니다.
 
 ## 🚀 개요

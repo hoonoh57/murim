@@ -60,3 +60,11 @@
 - 해결: `Git-Run`에서 Git stdout/stderr를 별도 판정하고, status 시 stderr 메시지가 조금이라도 나오면 `[GIT_STATUS_INCOMPLETE]`로 안전 중단(변경 여부를 추측해 통과시키지 않음). 캐시는 표준 pytest 산출물이므로 `.gitignore`에 `.pytest_cache/`만 추가해 Git이 내부로 들어가 상태 스캔할 필요가 없도록 함. 사용자의 `.pytest_cache/`를 삭제·권한 변경하지 않고 다른 untracked/ignored 충돌 보호는 유지.
 - 최신 GitHub commit 반영에는 현지 이전 스크립트의 동기화 차단으로 **안전 상태 확인 후 일회성 `git pull --ff-only`가 필요할 수 있음**. 원격 코드 수정만으로 Windows 예약 작업 실행 성공을 확정하지 않는다.
 - 다음 단계: 최신 스크립트·ignore 동기화 → 기존 예약 작업 최종 한 번 실행 → 실제 `LastTaskResult`와 검증 SHA 일치 확인. 경고가 지속되면 `[GIT_STATUS_INCOMPLETE]`로 명확히 분류하여 캐시 ACL을 별도로 진단. ComfyUI 실제 생성은 NOT_RUN.
+
+## 2026-11-21 — 예약 자동화 보류, 실제 ComfyUI 한 컷 P1 우선
+
+- 사용자 결정: 10분 예약 자동화는 보류. GitHub 원본 직접 수정 → Windows 사용자가 한 번 fast-forward Pull → 해당 변경의 **일회성 자동 단위 검증 + 로컬 ComfyUI 실제 생성**으로 가능성을 먼저 확인한다.
+- GitHub 새 진입점: `run-comfyui-proof.cmd` → `python -m unittest -q tests.test_comfyui_proof` → `scripts/prove_comfyui.py`. WAN 2.2 API JSON 원본은 보존한 채 샘플 이미지/저스텝·17프레임·512×320 인스턴스를 생성해 로컬 ComfyUI 노드/모델 확인, 큐 제출, history 결과 확인, /view 실영상 다운로드까지 시도. 출력은 ignored `outputs/p1_comfyui/`에 저장하고 원본 자산은 덮어쓰지 않는다.
+- `workflows/ltx2_i2v_api.json`은 내용이 없으므로 이번 범위에서 제외. ComfyUI 미설치/노드/모델 없음 등은 명시적 FAIL; 실제 GPU 출력·동작은 Windows 검증 전에는 **NOT_RUN**.
+- 기존 예약 작업은 Windows에서 `Disable-ScheduledTask -TaskName 'Murim-GitHub-Sync-Test'`로 한 번 비활성화하며, 스크립트는 자동으로 예약 작업을 설치·변경하지 않는다.
+- 다음 한 단계: Windows에서 Pull 후 `run-comfyui-proof.cmd` 한 번 실행한 결과로 ComfyUI P1 실행 가능성 판단. 영상 생성 PASS는 실제 파일 증거가 있을 때만 선언.

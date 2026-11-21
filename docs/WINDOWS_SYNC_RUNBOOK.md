@@ -4,6 +4,8 @@
 > **Windows 실행 클론:** `E:\gpt\projects\comfyui\murim`  
 > **상태:** GitHub 코드 준비 완료. **Windows 작업 등록/실행은 아직 검증되지 않음.**
 
+> **2026-11-21 우선순위 변경:** 이 문서의 10분 예약 자동 동기화 절차는 현재 **보류**다. 사용자 결정에 따라 예약 작업을 비활성화하고, GitHub에서 수정한 뒤 Windows에서 한 번 Pull해 `run-comfyui-proof.cmd`를 실행하는 **실제 ComfyUI WAN 한 컷 검증**을 먼저 진행한다. 성공 후에만 예약 자동화를 재검토한다.
+
 ## 1. 기존 runner와 자동 동기화의 역할 구분
 
 - 기존 `hoonoh57/agent`의 GitHub Actions self-hosted runner는 *해당 저장소에서 승인된 고정 연산*에 연결되어 있다. 다른 저장소의 모든 명령이 자동으로 실행되는 범용 PC 에이전트는 아니다.

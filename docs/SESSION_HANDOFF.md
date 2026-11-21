@@ -46,3 +46,10 @@
 - 분류: PowerShell 5.1 native stderr/stdout 혼합은 PRODUCT_DEFECT; 테스트 캐시 ACL 접근 불가는 ENVIRONMENT_ISSUE (권한 실원인 미해결).
 - GitHub 변경: `Git-Run`에서 `ErrorRecord`를 stderr로 따로 구분, `status --porcelain`의 stderr는 `[GIT_STATUS_INCOMPLETE]`로 명시적 fail-closed. 표준 생성물 `.pytest_cache/` Git ignore 추가. 기존 사용자 파일/캐시 삭제·권한 변경 금지.
 - Windows 최신 동기화는 이 변경 이후 다시 검증 필요. `last-verified-pytest.txt`에는 여전히 이전 `3e697b3e...` 결과가 남음; 이번 HEAD PASS로 오인 금지. 기존 예약 작업 유지.
+
+## 2026-11-21 — 프로젝트 방향 재확정: 스케줄러보다 WAN 실영상 한 컷
+
+- 사용자 요청: 반복 예약 자동화 중단/보류. GitHub에서만 코드 수정, 로컬은 한 번 Pull 뒤 일회성 검증. 성공 가능성을 확인한 뒤 자동화 구축 여부 결정.
+- 실행 계약: 기존 예약 작업은 사용자 PowerShell에서 1회 비활성화(원본/예약 작업 삭제 불필요). `run-comfyui-proof.cmd`로 단위 검사 후 WAN 2.2 P1 실 생성 검증. 모델/노드 미비 시 사전 실패, 실제 파일 다운로드 성공까지 한 번에 증거 수집.
+- 템플릿 `workflows/wan22_5b_api.json` 사용, `workflows/ltx2_i2v_api.json`은 빈 파일이므로 제외. 본 프로젝트 유효성 증명은 영상 한 컷 P1, 전체 콘텐츠 자동화는 후속.
+- GitHub 코드/단위 검증/Windows ComfyUI 연결/실제 GPU 영상 생성 결과를 구분 보고. Windows 실행 결과 확보 전 `NOT_RUN`.
