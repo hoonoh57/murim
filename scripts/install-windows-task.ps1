@@ -43,7 +43,7 @@ $arguments = '-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "' + $run
 $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument $arguments -WorkingDirectory $workspace
 $repeat = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes $IntervalMinutes) -RepetitionDuration (New-TimeSpan -Days 3650)
 $logon = New-ScheduledTaskTrigger -AtLogOn -User $identity
-$principal = New-ScheduledTaskPrincipal -UserId $identity -LogonType Interactive -RunLevel LeastPrivilege
+$principal = New-ScheduledTaskPrincipal -UserId $identity -LogonType Interactive -RunLevel Limited
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 30)
 $null = Register-ScheduledTask -TaskName $TaskName -Description "Murim GitHub ff-only sync and changed-HEAD pytest; Windows interactive user context" -Action $action -Trigger @($logon, $repeat) -Principal $principal -Settings $settings -ErrorAction Stop
 Write-Output ("[PASS] Registered " + $TaskName + " for " + $identity)
