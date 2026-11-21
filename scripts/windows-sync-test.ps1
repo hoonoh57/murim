@@ -10,6 +10,7 @@ param(
     [string]$Workspace = (Split-Path -Parent $PSScriptRoot),
     [string]$PythonExe = "python",
     [switch]$RequireComfy,
+    [switch]$OnlyOnChange,
     [string]$ComfyUrl = "http://127.0.0.1:8188"
 )
 
@@ -59,6 +60,20 @@ if ($after -ne $target) {
     throw "[SYNC_MISMATCH] Windows HEAD is not origin/main."
 }
 
+
+# A successful-HEAD marker lives outside the repository so a polling task can
+# leave generated local assets and git status untouched. Never record failures.
+$verifiedRoot = Join-Path $env:LOCALAPPDATA "Murim"
+$mode = $(if ($RequireComfy) { "pytest-comfy" } else { "pytest" })
+$verifiedFile = Join-Path $verifiedRoot ("last-verified-" + $mode + ".txt")
+if ($OnlyOnChange -and (Test-Path -LiteralPath $verifiedFile -PathType Leaf)) {
+    $verified = [IO.File]::ReadAllText($verifiedFile).Trim()
+    if ($verified -eq $after) {
+        Write-Output ("[PASS] murim unchanged; previously verified HEAD=" + $after.Substring(0, 12))
+        return
+    }
+}
+
 Push-Location -LiteralPath $Workspace
 try {
     $testOutput = & $PythonExe -m pytest -q tests 2>&1
@@ -77,5 +92,13 @@ try {
     }
 } finally {
     Pop-Location
+}
+if ($OnlyOnChange) {
+    if (-not (Test-Path -LiteralPath $verifiedRoot -PathType Container)) {
+        [void](New-Item -ItemType Directory -Path $verifiedRoot -Force)
+    }
+    $tmpFile = $verifiedFile + ".tmp"
+    [IO.File]::WriteAllText($tmpFile, $after + "`n", [Text.Encoding]::ASCII)
+    Move-Item -LiteralPath $tmpFile -Destination $verifiedFile -Force
 }
 Write-Output ("[PASS] murim Windows sync+pytest HEAD=" + $after.Substring(0, 12) + $(if ($RequireComfy) { "+ComfyUI" } else { "" }))
