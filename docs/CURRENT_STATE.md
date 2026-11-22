@@ -1,3 +1,10 @@
+## 2026-11-22 — 외부 심사 운영: Gemini 인간 매개 방식 확정
+
+- 사용자 지시: 당분간 외부 LLM 심사는 Gemini 웹의 실제 MP4 첨부 및 사용자 복사·붙여넣기 방식. API/SDK/유료 자동심사 연동 개발 보류. 4-GATE와 기존 Council/Viewer Value Gate 95/100 및 축별 9/10, hard defect FAIL/미평가 HOLD 유지.
+- 첫 요청 `docs/reviews/SEHANDO_A01_REVIEW_REQUEST.md` (Prompt A). A01은 기존 실제 v0.1 실패 기준점의 동일 바이트 사본 `Murim_Review_A01.mp4` (60.000초, 33,383,434 bytes, SHA256 b57dac77cb94959aa43fa03e78d91c8c4334b21cb4295cff13be7ee09d7a1e2b; 이 대화 컨테이너에서 재검증). 평가 전에 Gemini에 v0.1/FAIL/목표점수/기존 비평을 전달하지 않는다. 익명 이름은 심사 편향 완화용이며 내용 자체의 블라인드 보장은 아님.
+- 사용자 역할은 첨부와 프롬프트 전송, 응답 원문 반환뿐. ChatGPT가 원문 근거·모달리티·버전 검증, 항목별 가중치 계산, 중대 결함 및 재작업 우선순위 분류, Prompt B 작성 및 M-VML 수정안·실제 재제작·재검증을 담당. 회신을 가공하거나 좋은 점수만 선별 금지. 원문은 승인된 저장 범위에 보존하며 비밀·미디어 원본 Git 전송 금지. 사용자에게 JSON 편집/스키마 변환/수동 코드 수정 요구 금지. 두 단계의 자연어/표 응답도 수용하고 필요 시 확인하되 누락 점수는 추정하지 않는다. 매 새 작품은 별도 독립 심사, 동일 파일 점수 쇼핑 금지.
+- 현재 `MANUAL_RELAY_SELECTED / A01_REQUEST_READY / EXTERNAL_REVIEW_NOT_RUN / QUALITY_HOLD`. A01 평가 요청은 심사 기준 보정 및 결함 확인용이며 새 v0.2 완성작이 아님. v0.2 진본/음성/MP4/Windows output 연동 미완료. 다음 한 단계: 사용자 Gemini A01 원문 수신 → 검증·개선 처방 B → 실제 새 영상 제작 및 독립 재심사. 실제 관객 심사 별도. API 연동은 사용자 요청 전 보류.
+
 ## 2026-11-22 — 외부 LLM 독립 심사·개선 처방 제안 반영
 
 - 사용자 제안: 외부 LLM에 실제 작품과 시청자 평가 프롬프트를 제공, 점수와 개선안을 받아 실제 재제작에 반영. `docs/EXTERNAL_VIEWER_REVIEW_PROMPT_V1.md`에 2단계 독립 평가/개선 처방 프롬프트, JSON 응답 계약, 근거 타임코드·책임 에이전트·재검증, blind A/B, 비용/권리/모달리티 경계 기록. 기존 VIEWER_VALUE_GATE_V1의 10축/95점/각 9점 기준 및 4-GATE 유지. 외부 평가와 실제 관객 반응 별도.
