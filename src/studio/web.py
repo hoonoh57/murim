@@ -13,6 +13,7 @@ from .workspace import (Store, LOCK, ID, MAX_FILE, assets, asset_path, digest, s
                         get_scene, track, register_asset, xml_bytes, state, validate, read_xml, voice_key)
 from .render import render, executables, media_info
 from .voice import synthesize
+from .comfy import store_graph,listed_graphs,generate,MAX_GRAPH
 
 ROOT=Path(__file__).resolve().parents[2]
 store=Store(ROOT)
@@ -190,3 +191,26 @@ def review(pid):
     folder=safe(store.folder(pid),'reviews',directory=True,create=True);name=uuid.uuid4().hex[:12]+'.json'
     with (folder/name).open('x',encoding='utf-8') as f:json.dump({'render':rid,'sha256':r['sha256'],'revision':r['revision'],'reviewer':'human-relayed','raw':raw,'status':'UNADJUDICATED'},f,ensure_ascii=False,indent=2)
     return jsonify(saved=name)
+
+
+@BP.get('/api/project/<pid>/workflows')
+def workflows(pid):return jsonify(workflows=listed_graphs(store,pid))
+
+
+@BP.post('/api/project/<pid>/workflows')
+def register_workflow(pid):
+    f=request.files.get('file')
+    if not f or Path(f.filename or '').suffix.lower()!='.json':raise ValueError('Select trusted API-form JSON')
+    with LOCK:
+        current(pid,request.form.get('revision'))
+        return jsonify(store_graph(store,pid,f.stream.read(MAX_GRAPH+1),request.form.get('trusted')=='yes'))
+
+
+@BP.post('/api/project/<pid>/comfy')
+def generate_comfy(pid):
+    x=data()
+    if not JOB_LOCK.acquire(False):raise ValueError('Another production job is running')
+    try:
+        d,h=current(pid,x.get('revision'));r=generate(store,pid,d,x.get('scene'),x.get('workflow'),x.get('mapping'),x.get('confirmed'));store.save(pid,d,h)
+        return brief(pid,comfy_result=r)
+    finally:JOB_LOCK.release()

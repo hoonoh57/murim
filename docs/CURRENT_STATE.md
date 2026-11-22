@@ -1,3 +1,10 @@
+## 2026-11-22 — 기존 로컬 ComfyUI API 그래프 연결부 포함 통합 후보
+
+- 이전 Studio 초기 commit 36f792d의 자동 립싱크 큐 미구현 상태를 확장. 동작·영상 탭에서 사용자가 이전에 직접 검증한 신뢰 로컬 API workflow JSON(일반 UI graph와 구분)을 등록. 이미지·음성·동작 프롬프트 입력 및 정확한 저장 노드 선택, 기존 ComfyUI http://127.0.0.1:8188 object_info/queue/prompt/history/view 사용. 공식 routes 및 server upload/image 구현 확인: https://github.com/Comfy-Org/docs/blob/main/development/comfyui-server/comms_routes.mdx , https://github.com/Comfy-Org/ComfyUI/blob/master/server.py . 로컬 API 서버가 실제 호환되는지는 Windows 확인 필요. 선택 이미지/음성 원본 해시, graph 해시, 입력 binding, job ID, 실제 video duration/hash 기록. 편집 대상에 자동 덮어쓰기 하지 않고 실제 영상 후보 등록→사용자 청취/시청→멀티트랙 선택 배치. 동기화 표시된 영상의 의존성 추적은 이전 작업 범위 유지.
+- 모델 다운로드/설치/서버 자동 기동/기존 큐 취소/임의 외부 URL 전송 금지. 신뢰 그래프 및 설치 커스텀 노드 실행에 명시적 사용자 승인 필요. 그래프 검사는 API 형식/명백한 외부·명령 노드 및 설치 종류/바인딩/저장 결과 확인이며 임의 사용자 커스텀 노드의 안전성을 입증하는 샌드박스 아님. GPU 작업 직렬 및 기존 큐 사용 중 차단. 입력 업로드 및 실제 local graph 성공은 NOT_RUN.
+- 검증: 이전 8개 + graph validation/immutable registration/bind/output selection 5개 = 13 PASS (컨테이너 실제 fixture FFmpeg 포함), py_compile 및 node --check PASS, 새 소스 6 blob SHA 일치. Flask 컨테이너 미설치 → 실제 HTTP & Windows WYSIWYG/SoVITS/ComfyUI 미검증. 원본 파일/기존 renderer 유지. 제한 문장 자연어 및 인간 매개 구조화 patch 지원, 범용 자동 LLM 해석 미구현. 7트랙 장면 슬롯 편집(완전한 자유 다중클립 겹침/drag NLE 미구현). 60초 작품 자체 품질 승인은 미완료.
+- 다음 로컬 검증: fast-forward 1회, run-studio.cmd → http://127.0.0.1:8080/studio/; 기존 세한도 8a9f3c33d62e import → 한 장면 음성/자막/효과 수정→구간 render→타 장면 byte reuse 확인. 기존 립싱크 API JSON은 동작·영상 탭에서 직접 등록 후 input/output 선택 및 실제 생성 검증. 현재 `INTEGRATED_STUDIO_EXECUTION_CANDIDATE / 13_FIXTURE_TESTS_PASS / WINDOWS_WYSIWYG_NOT_RUN / LOCAL_GPU_ADAPTERS_NOT_RUN / QUALITY_HOLD`. 전체 제품 완성 선언 금지.
+
 ## 2026-11-22 — 통합 제작 Web Studio 첫 실제 실행 후보 구현
 
 - 기존 `web_ui.py` Flask에 /studio/ blueprint 및 초기 Human Relay 홈 링크 추가. localhost 전용, debug/reloader 끔, 기존 사용자 세션 자동 삭제 중단. 기존 원고·v0.2 output 및 렌더러 보존. `run-studio.cmd` 1회 진입점. UI 6단계 탭과 7트랙(이미지/영상/효과/음성/자막/BGM/SFX), 실제 등록 미디어 재생/선택, scene CRUD/reorder/duration, track CRUD, 제한 자연어→typed patch/검토/CAS, 외부 수정안 및 제작 요청서, M-VML immutable revision 및 복원, 등록 이미지/영상/WAV 등 실제 파일 검증/가져오기, 원본 바이트 무결성, v0.2 run/receipt 가져오기, 구간·전체 렌더, A/B 및 심사 원문을 렌더 SHA에 결속.
