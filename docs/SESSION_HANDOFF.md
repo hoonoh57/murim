@@ -1,3 +1,10 @@
+## 2026-11-22 — 통합 제작 Web Studio 첫 실제 실행 후보 구현
+
+- 기존 `web_ui.py` Flask에 /studio/ blueprint 및 초기 Human Relay 홈 링크 추가. localhost 전용, debug/reloader 끔, 기존 사용자 세션 자동 삭제 중단. 기존 원고·v0.2 output 및 렌더러 보존. `run-studio.cmd` 1회 진입점. UI 6단계 탭과 7트랙(이미지/영상/효과/음성/자막/BGM/SFX), 실제 등록 미디어 재생/선택, scene CRUD/reorder/duration, track CRUD, 제한 자연어→typed patch/검토/CAS, 외부 수정안 및 제작 요청서, M-VML immutable revision 및 복원, 등록 이미지/영상/WAV 등 실제 파일 검증/가져오기, 원본 바이트 무결성, v0.2 run/receipt 가져오기, 구간·전체 렌더, A/B 및 심사 원문을 렌더 SHA에 결속.
+- `src/studio/workspace.py` canonical XML draft/검증/스코프; render.py 실제 선택 컷 FFmpeg, 원본 베이스라인과 cache hash 재사용, 카메라 5가지(이미지용), 자막 3효과, 3음원 트랙 mix, 실제 영상 trim, 필요한 음성 길이/무음 차단; voice.py 및 scripts/studio_sovits_worker.py 기존 E:/GPT-SoVITS 전용 python/v2 pair/별도 설정/권리 확인/실제 합성 및 waveform 검증, no SAPI fallback. 이번 실제 로컬 모델 호출은 NOT_RUN. media 등록은 프로젝트 outputs 내 create-only. 립싱크 기준 사용자 선택·동기화 참조 무효화 경로만 구현; 실제 성공 API graph, 노드 바인딩 미확인으로 자동 큐 미구현. 외부 자동 API 미구현; 수동 매개 및 실제 import 지원.
+- 기술 검증: 컨테이너 py_compile, node --check, unittest 8개 PASS(실제 FFmpeg 2장면 48frames render, 자막 변경→한 컷 새 hash, 다른 컷 cache hash 동일; CAS conflict/restore, 범위 제한, 잘못된 필드/자산, 음성 stale 차단, 변조 및 경로 검사). 테스트 fixture는 기술 검증만, 실제 작품성 근거 아님. 테스트한 9개 소스의 Git blob SHA 비교. Flask는 컨테이너 미설치, HTTP runtime/브라우저·Windows 진입점/실제 v0.2 데이터/실제 GPT-SoVITS 재실행/ComfyUI 실증 NOT_RUN. 기존 v0.2 작품성38.5 FAIL 유지. 남은 기능: 자유 자연어 LLM 자동해석, 등록 성공 ComfyUI lipsync 그래프 실행, 장면당 다중 독립 clip/drag/keyframe, 실제 UI 검증 및 품질 심사. `STUDIO_FIRST_INTEGRATED_BUILD / TECHNICAL_FIXTURE_PASS / WINDOWS_UI_NOT_RUN / LIPSYNC_AUTO_NOT_IMPLEMENTED / QUALITY_HOLD`.
+- 다음 사용자 로컬: GitHub fast-forward 1회, 기존 UI 종료 후 run-studio.cmd, http://127.0.0.1:8080/studio/. v0.2 8a9f3c33d62e 불러오기, 대본/자막/카메라 변경·실제 TTS 합성·구간 렌더 및 전체 렌더 재사용 확인. 이 빌드 전체 기능 완료/출시 가능 선언 금지.
+
 ## 2026-11-22 — 사용자 제안: 자연어 멀티트랙 반자동 통합 제작
 
 - 직전 실제 Windows run outputs/sehando/intro/v0.2/8a9f3c33d62e/intro.mp4 생성 PASS (사용자 콘솔, 1080p/60초 renderer 검증 통과); Gemini 사용자 전달 외부평가 38.5/100, V01..V10=[8,2,3,3,3,8,4,2,3,2], 작품성 FAIL. 모델의 80~90% 이탈 추정 및 개선 예상96은 실측/실제 개선 점수 아님. 1842 간찰의 1844년 책 도착 화면 배치, 반복 정지화면, SAPI 기계음, 미완결 결말 지적. 증거 원문은 대화, 영상 SHA 직접 재조회 미실행.

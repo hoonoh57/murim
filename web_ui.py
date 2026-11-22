@@ -13,6 +13,8 @@ from src.pipeline.prompt_combiner import PromptCombiner
 load_dotenv()
 
 app = Flask(__name__)
+from src.studio.web import BP as studio_blueprint
+app.register_blueprint(studio_blueprint)
 # Use a fixed key from .env for session persistence across restarts
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "murim_factory_stable_secret_dev_key")
 
@@ -38,7 +40,7 @@ def load_all_sessions():
         return
     
     # 오래된 세션 정리 (7일 초과)
-    cleanup_old_sessions(days=7)
+    # Keep existing user session files; no implicit expiry deletion.
     
     count = 0
     for filename in os.listdir(SESSIONS_DIR):
@@ -500,4 +502,4 @@ if __name__ == "__main__":
     print("  MURIM AI FACTORY — Human Relay UI")
     print("  http://localhost:8080")
     print("=" * 50 + "\n")
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=False, use_reloader=False)
