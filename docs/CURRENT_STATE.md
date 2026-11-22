@@ -1,3 +1,10 @@
+## 2026-11-22 — 실제 제작 진입점 / Gemini 비차단 운영
+
+- 사용자 지시: 외부 LLM 인간 매개 심사 때문에 전체 개발 지연 금지. A01 기준점 평가 회신은 병행 가능, 이미 알려진 결함의 개선 및 새 후보 제작 착수에 필수 대기조건이 아님. 새 실제 영상이 준비되었을 때 기존 평가 프롬프트를 전달; 공개/품질 승인 gate는 유지.
+- 새 `scripts/render_sehando_intro.py`는 기존 review_v02 XML의 7컷을 소비, 공식 출처 참조 이미지 다운로드 및 픽셀/해시 기록, Windows 설치된 한국어 SAPI(또는 실제 WAV 7개), 원본 크기 초과 확대 금지, 1080p24/1440프레임/60초 확인, 기존 루트 outputs/sehando/intro/v0.2/<run-id>/intro.mp4 및 receipt.json 생성. 정적 갤러리형 평가 후보이며 동작 생성, 전문 성우, 작품성 통과를 의미하지 않음. 기존 UI/ComfyUI 설치 및 원고 변경 없음.
+- 컨테이너 Python 문법, 7컷 합계 60초, fixture 화면 비례/크롭/출력경로, 잘못된 시간 차단 검증. 실제 원본 https://commons.wikimedia.org/wiki/File:Sehando_-_detail.jpg (6533×2652), 박물관 증10000과 1842 간찰의 공식 페이지는 열람했으나 컨테이너 원본 다운로드 실패(ENVIRONMENT_ISSUE). 실제 Windows SAPI/FFmpeg 및 원본 다운로드/렌더 NOT_RUN. 외부 심사 NOT_RUN. 새 영상 완성 또는 합격 표현 금지.
+- 다음 한 단계: 기존 승인 작업공간에서 GitHub 원본 fast-forward 동기화 후 `python scripts/render_sehando_intro.py` 실제 1회 실행. 필요한 Python/Pillow/FFmpeg/한국어 음성/인터넷이 없다면 실패 명시, 임의 설치 금지. 실제 후보 MP4와 receipt를 기준으로 사용자 감상과 외부 심사, 이후 개선. 현재 `RENDER_ENTRYPOINT_ADDED / SOURCE_DOWNLOAD_BLOCKED_IN_CONTAINER / WINDOWS_RENDER_NOT_RUN / QUALITY_HOLD`.
+
 ## 2026-11-22 — 외부 심사 운영: Gemini 인간 매개 방식 확정
 
 - 사용자 지시: 당분간 외부 LLM 심사는 Gemini 웹의 실제 MP4 첨부 및 사용자 복사·붙여넣기 방식. API/SDK/유료 자동심사 연동 개발 보류. 4-GATE와 기존 Council/Viewer Value Gate 95/100 및 축별 9/10, hard defect FAIL/미평가 HOLD 유지.
