@@ -149,6 +149,52 @@ class EditorialTest(unittest.TestCase):
         self.assertTrue(result['prior_indexed'])
         self.assertFalse(result['approved'])
         self.assertIsNotNone(next(e for e in self.e.events() if e['kind']=='relay_rejected'))
+    def test_document_plain_text_roundtrip_and_final(self):
+        self.mutate('prior_capture',raw='기존 비평')
+        v=self.e.view()
+        external='# 수정 시나리오\n실제 발화와 결말'
+        result=self.mutate('document_candidate',text=external,basis=v['original_text_revision'])
+        self.assertEqual(result['document_candidates'][0]['text'],external)
+        self.assertEqual(len(result['versions']),1)
+        self.assertFalse(result['approved'])
+        candidate=result['document_candidates'][0]['revision']
+        final=external+'\n사용자 직접 보완'
+        result=self.mutate('document_final',text=final,candidate=candidate,confirmed=True)
+        self.assertEqual(result['final_document']['text'],final)
+        self.assertEqual(self.e.view()['final_document']['text'],final)
+        self.assertFalse(result['ready'])
+        self.assertFalse(result['approved'])
+        with self.assertRaises(ValueError):self.review()
+        with self.assertRaises(ValueError):self.mutate('plan',plan=self.plan(),note='bypass')
+    def test_document_compile_rejects_new_words_and_stale_link(self):
+        v=self.e.view()
+        p=self.plan()
+        text='\n'.join(s['narration']+'\n'+s['subtitle'] for s in p['scenes'])+'\n확정 원문'
+        v=self.mutate('document_candidate',text=text,basis=v['original_text_revision'])
+        v=self.mutate('document_final',text=text,candidate=v['document_candidates'][0]['revision'],confirmed=True)
+        packet=dict(parent=v['latest']['revision'],document_revision='wrong',plan=p,note='연결')
+        with self.assertRaises(ValueError):self.mutate('document_compile',raw=json.dumps(packet))
+        packet['document_revision']=v['final_document']['revision']
+        packet['plan']=self.plan('new words')
+        with self.assertRaisesRegex(ValueError,'확정 원문에 없는 문장'):self.mutate('document_compile',raw=json.dumps(packet))
+        packet['plan']=p
+        v=self.mutate('document_compile',raw=json.dumps(packet))
+        self.assertTrue(v['document_linked'])
+        self.assertTrue(v['ready'])
+        self.assertFalse(v['approved'])
+        with self.assertRaisesRegex(ValueError,'확정 원문 불일치'):self.review()
+        r=dict(revision=v['latest']['revision'],document_revision=v['final_document']['revision'],
+            scores={k:10 for k in AXES},evidence='fixture',issues=[],resolutions=[],verdict='PASS')
+        self.mutate('review',raw=json.dumps(r),reviewer='fixture')
+        self.assertTrue(self.approve()['approved'])
+        next_text=text+' 새 결말'
+        v=self.e.view()
+        v=self.mutate('document_candidate',text=next_text,basis=v['final_document']['revision'])
+        v=self.mutate('document_final',text=next_text,candidate=v['document_candidates'][-1]['revision'],confirmed=True)
+        self.assertFalse(v['approved'])
+        self.assertFalse(v['document_linked'])
+        self.assertEqual(len(v['documents']),2)
+        with self.assertRaises(ValueError):self.e.require()
     def test_stale_token_and_unknown_review(self):
         self.mutate('plan',plan=self.plan(),note='v1')
         with self.assertRaises(ValueError):self.e.mutate('','plan',{'plan':self.plan('v2'),'note':'stale'})

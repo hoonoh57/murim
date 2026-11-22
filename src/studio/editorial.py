@@ -88,6 +88,21 @@ def plan_check(p,complete=True):
     if len(canonical(p))>900000: raise ValueError('제작안 용량 초과')
     return p
 
+def document_text(plan):
+    """Readable projection of the immutable original; no invented content."""
+    lines=[]
+    for k in FIELDS:
+        if plan[k].strip(): lines.extend([GUIDE[k],plan[k],''])
+    lines.append('장면별 실제 제작 원문')
+    for i,s in enumerate(plan['scenes'],1):
+        lines.extend(['',f"{i}. {s['title']} ({s['frames']/24:g}초)"])
+        for k,label in (('narration','발화'),('visual','화면'),('motion','동작'),('sound','음향'),('facts','사료'),('subtitle','자막')):
+            if s[k].strip(): lines.append(label+': '+s[k])
+    return '\n'.join(lines)
+
+def normalized_text(s):
+    return ' '.join(s.split())
+
 def plan_payload(v,data,relay=None):
     plan=plan_check(data.get('plan'),complete=relay is not None); rev=key(plan)
     if any(p['revision']==rev for p in v['versions']): raise ValueError('같은 제작안은 다시 제출할 수 없습니다. 실제 내용을 수정하세요.')
@@ -138,6 +153,7 @@ class Editorial:
         all_issues={i['id']:i for i in orig['issues']}
         issues=dict(all_issues)
         raw_prior=None; prior_indexed=False; review=None; approved=None; feedback=[]; pending_reply=None
+        original_text=document_text(orig['plan']); candidates=[]; documents=[]
         for e in events[1:]:
             d=e['data']
             if e['kind']=='prior_capture':
@@ -147,6 +163,10 @@ class Editorial:
                 all_issues.update({i['id']:i for i in d['issues']}); issues=dict(all_issues)
             elif e['kind']=='relay_rejected':
                 pending_reply=d
+            elif e['kind']=='document_candidate':
+                candidates.append(d)
+            elif e['kind']=='document_final':
+                documents.append(d); review=None; approved=None; issues=dict(all_issues)
             elif e['kind']=='plan':
                 plans.append(dict(d,original=False)); review=None; approved=None; pending_reply=None
                 if d.get('prior_issues'):
@@ -164,15 +184,18 @@ class Editorial:
             elif e['kind']=='feedback':
                 feedback.append(d); all_issues.update({i['id']:i for i in d['issues']}); issues.update({i['id']:i for i in d['issues']}); approved=None
         latest=plans[-1]
-        try: plan_check(latest['plan']); ready=not latest['original']
+        final_document=documents[-1] if documents else None
+        document_linked=bool(final_document and latest.get('document_revision')==final_document['revision'])
+        try: plan_check(latest['plan']); ready=not latest['original'] and (not final_document or document_linked)
         except ValueError: ready=False
-        ok=bool(approved and review and review['pass'] and not issues and approved['revision']==latest['revision'])
+        ok=bool(ready and approved and review and review['pass'] and not issues and approved['revision']==latest['revision'])
         doc,mvrev=self.store.load(self.pid)
         if ok:
             ok=doc.get('editorial-plan')==latest['revision'] and signature(doc)==signature_plan(latest['plan'])
         return dict(token=events[-1]['hash'] if events else '', original=orig, versions=plans,
             latest=latest,issues=list(issues.values()),prior_raw=raw_prior,prior_indexed=prior_indexed,all_issues=list(all_issues.values()),review=review,feedback=feedback,pending_reply=pending_reply,
             approved=ok,approval=approved,mvml_revision=mvrev,ready=ready,
+            original_text=original_text,original_text_revision=key(original_text),document_candidates=candidates,documents=documents,final_document=final_document,document_linked=document_linked,
             status='APPROVED' if ok else 'HOLD' if approved else 'REWORK_REQUIRED' if review and (issues or not review['pass']) else 'APPROVAL_REQUIRED' if review else 'HOLD')
     def mutate(self,token,action,data):
         with LOCK:
@@ -193,9 +216,41 @@ class Editorial:
                 if any(f['source']['render']==source['render'] and f['raw']==raw for f in v['feedback']): raise ValueError('이미 등록된 제작 후 비평')
                 prefix='POST-'+key([source,raw])[:12]
                 payload=dict(raw=raw,source=source,issues=[dict(id=prefix+'-%03d'%(j+1),description=string(x,4000),origin='actual-render-feedback') for j,x in enumerate(descriptions)])
+            elif action=='document_candidate':
+                text=string(data.get('text'),MAX_TEXT,label='외부 LLM 수정 원문')
+                basis=data.get('basis')
+                allowed={v['original_text_revision']}|{d['revision'] for d in v['documents']}
+                if basis not in allowed: raise ValueError('비교할 기준 원문을 다시 선택하세요.')
+                payload=dict(text=text,basis=basis,revision=key([basis,text]))
+                if any(c['revision']==payload['revision'] for c in v['document_candidates']): return v
+            elif action=='document_final':
+                text=string(data.get('text'),MAX_TEXT,label='최종 확정 원문')
+                candidate=next((c for c in v['document_candidates'] if c['revision']==data.get('candidate')),None)
+                if candidate is None: raise ValueError('먼저 비교할 외부 수정 원문을 저장하세요.')
+                if data.get('confirmed') is not True: raise ValueError('사용자 최종 원문 확정 필요')
+                if normalized_text(text)==normalized_text(v['final_document']['text'] if v['final_document'] else v['original_text']): raise ValueError('현재 원문과 같습니다. 실제 수정한 최종 원문을 확정하세요.')
+                if any(normalized_text(text)==normalized_text(d['text']) for d in v['documents']): raise ValueError('이전에 확정한 동일 원문입니다. 실제 수정 내용이 필요합니다.')
+                payload=dict(text=text,candidate=candidate['revision'],basis=candidate['basis'],parent=(v['final_document'] or {}).get('revision'),revision=key(text))
+            elif action=='document_compile':
+                final=v['final_document']
+                if not final: raise ValueError('먼저 최종 원문을 확정하세요.')
+                if v['document_linked'] and v['review']: raise ValueError('이미 심사된 확정본입니다. 새 원문을 확정하세요.')
+                raw=string(data.get('raw'),1200000,label='제작 연결 답변')
+                relay=relay_object(raw)
+                if relay.get('document_revision')!=final['revision']: raise ValueError('현재 확정 원문과 연결되지 않은 답변입니다.')
+                payload=relay_plan_payload(v,raw,'확정 원문을 변경하지 않고 제작 데이터로 연결')
+                source=normalized_text(final['text'])
+                for i,s in enumerate(payload['plan']['scenes'],1):
+                    for k in ('narration','subtitle'):
+                        if s[k].strip() and normalized_text(s[k]) not in source:
+                            raise ValueError(f'{i}번 장면 {k}: 확정 원문에 없는 문장입니다. 원문을 다시 쓰지 말고 그대로 연결하세요.')
+                payload['document_revision']=final['revision']
+                action='plan'
             elif action=='plan':
+                if v['final_document']: raise ValueError('확정 원문은 제작 연결을 통해서만 반영할 수 있습니다.')
                 payload=plan_payload(v,data)
             elif action in ('relay_plan','relay_receive'):
+                if v['final_document']: raise ValueError('확정 원문은 제작 연결을 통해서만 반영할 수 있습니다.')
                 raw=string(data.get('raw'),1200000,label='AI 답변')
                 instruction=string(data.get('instruction',''),10000,empty=True,label='감독 지시')
                 try:
@@ -209,12 +264,14 @@ class Editorial:
                     action='relay_rejected'
                     if v.get('pending_reply')==payload: return v
             elif action=='review':
+                if v['final_document'] and not v['document_linked']: raise ValueError('확정 원문을 먼저 제작 데이터에 연결하세요.')
                 if v['latest']['original'] or v['review'] is not None: raise ValueError('수정 제작안마다 독립 심사 1회; 재시도는 새 수정본에서')
                 plan_check(v['latest']['plan'])
                 if (v['original']['known_failed'] or v['prior_raw']) and not v['prior_indexed']: raise ValueError('기존 Gemini 비평 원문 및 문제 목록을 먼저 등록하세요')
                 raw=string(data.get('raw'),1200000); reviewer=string(data.get('reviewer'),200)
                 r=relay_object(raw)
                 if not isinstance(r,dict) or r.get('revision')!=v['latest']['revision']: raise ValueError('심사 대상 제작안 해시 불일치')
+                if v['final_document'] and r.get('document_revision')!=v['final_document']['revision']: raise ValueError('심사 대상 확정 원문 불일치')
                 scores=r.get('scores')
                 if not isinstance(scores,dict) or set(scores)!=set(AXES): raise ValueError('6개 사전 제작 심사 축 필요')
                 for x in scores.values():
@@ -236,6 +293,7 @@ class Editorial:
                 payload=dict(revision=v['latest']['revision'],raw=raw,reviewer=reviewer,scores=scores,total=total,issues=new,closed=closed if passed else [],resolutions=res,evidence=r['evidence'],pass_=passed)
                 payload['pass']=payload.pop('pass_')
             elif action=='approval':
+                if v['final_document'] and not v['document_linked']: raise ValueError('확정 원문 제작 연결과 독립 심사 필요')
                 if v['approved'] or not v['review'] or not v['review']['pass'] or v['issues'] or data.get('confirmed') is not True:
                     raise ValueError('독립 재심사 통과 및 모든 결함 해소·인간 승인 필요')
                 if data.get('mvml_revision')!=v['mvml_revision']: raise ValueError('M-VML 리비전 충돌')
