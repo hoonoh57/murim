@@ -1,3 +1,9 @@
+## 2026-11-22 — 외부 LLM 독립 심사·개선 처방 제안 반영
+
+- 사용자 제안: 외부 LLM에 실제 작품과 시청자 평가 프롬프트를 제공, 점수와 개선안을 받아 실제 재제작에 반영. `docs/EXTERNAL_VIEWER_REVIEW_PROMPT_V1.md`에 2단계 독립 평가/개선 처방 프롬프트, JSON 응답 계약, 근거 타임코드·책임 에이전트·재검증, blind A/B, 비용/권리/모달리티 경계 기록. 기존 VIEWER_VALUE_GATE_V1의 10축/95점/각 9점 기준 및 4-GATE 유지. 외부 평가와 실제 관객 반응 별도.
+- 기존 Gemini/Anthropic 클라이언트는 영상 독립 심사 adapter를 실증하지 않은 상태. Gemini 공식 video input/Claude image input 문서 확인. 현재 대화 연결에서 Gemini/Claude 독립 API 호출은 미확보. 외부 모델 호출/유료 요청/미디어 전송 미실행. 원본 v0.1 FAIL, v0.2 원본 확보·음성·MP4 미완료 그대로 유지. `EXTERNAL_REVIEW_PROTOCOL_WRITTEN / EXTERNAL_REVIEW_NOT_RUN / QUALITY_HOLD`.
+- 다음: 실제 v0.1 영상으로 승인된 외부 video 심사 경로와 rubric calibration 검증, 진본/내레이션을 갖춘 새로운 MP4 제작→독립 재심사 및 실제 사용자/관객 검증. 점수 맞추기식 반복 요청 또는 미실행 PASS 금지.
+
 ## 2026-11-22 — 시청 가치 평가 기준 v1 및 세한도 v0.2 원작 중심 재제작 시안
 
 - 사용자: v0.1 부정 평가는 출력 기능 위주의 시험에 따른 정상적인 결과. 이제 “왜 이 주제에 시간을 써야 하지?”에 답하는 평가 기준과 책임별 개선 루프를 구조화하고 재제작 요청.
