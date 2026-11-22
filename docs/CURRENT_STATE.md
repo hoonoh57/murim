@@ -1,3 +1,10 @@
+## 2026-11-22 — 실제 Windows FFmpeg/PATH 복구, 도판 HTTP 429 및 자산 캐시 개선
+
+- 사용자 Windows 콘솔: 7f3c4b0 fast-forward PASS; Gyan FFmpeg 기존 패키지 9.1 업그레이드 후 Bin 디렉터리를 현 세션 PATH에 추가하여 ffmpeg/ffprobe 인식 PASS. 기존 SAPI Korean voice enumeration을 넘어서 outputs/sehando/intro/v0.2/3b193356f04c 생성까지 확인. 첫 asset(ART:DETAIL@1) 다운로드 시 Wikimedia HTTP 429, 요청 ID daab851. `PARTIAL_CHANGE` (output run만 생성), ENVIRONMENT_ISSUE (remote source rate limit) + PRODUCT_DEFECT (render/download coupling). 음성 합성 및 렌더 NOT_RUN.
+- renderer에 immutable source cache (outputs/sehando/intro/source-cache), SHA256/해상도/출처 등록, offline reuse, --import-detail (등록된 Commons 원본 6533x2652, 사용자 공급 바이트는 진본 검증 완료 아님), --download-missing (누락 박물관 자산만 명시 다운로드), --prepare-assets 추가. Wikimedia 자동 요청 제외; 다른 HTTP 429는 Retry-After 표시 후 중단, 같은 실행에서 재요청 안 함. 기존 실패 폴더/사용자 파일 보존, 이미지 대체/품질 기준 완화 없음.
+- 컨테이너 py_compile 및 source-cache unit tests 8 PASS, 실제 테스트한 파일 Git blob 일치 확인. mocking은 fixture 단위 검증에 한정, 실제 박물관 다운로드/Windows 재실행/음성/MP4/외부 심사/품질 승인 NOT_RUN. 현재 원본 파일 미확보. 공식 대체 확보 경로: 국립중앙박물관 2020-08-20 보도자료 사진자료.zip 25.4MB, 공공누리 1유형 표시 https://www.museum.go.kr/MUSEUM/contents/M0701040000.do?arcId=17039&catCustomType=post&catId=93&cp=101&schM=view&sv= ; ZIP 내용 미확인, 동일 원본 자동 대체 금지. 귀속·원본 검수 후 별도 등록.
+- 다음: 요청 제한 해제 후 정상 Commons 원본 확보 또는 박물관 공식 자료 확보 및 검수, 한 번 등록. Commons 파일 확보 시 `python scripts/render_sehando_intro.py --import-detail "<Sehando - detail.jpg>" --download-missing` (현 PATH 세션에서 안전한 fast-forward 동기화 후). 이후 cache 재사용 offline. `ASSET_CACHE_TEST_PASS / REAL_ASSET_NOT_ACQUIRED / WINDOWS_RENDER_NOT_RUN / QUALITY_HOLD`.
+
 ## 2026-11-22 — 실제 제작 진입점 / Gemini 비차단 운영
 
 - 사용자 지시: 외부 LLM 인간 매개 심사 때문에 전체 개발 지연 금지. A01 기준점 평가 회신은 병행 가능, 이미 알려진 결함의 개선 및 새 후보 제작 착수에 필수 대기조건이 아님. 새 실제 영상이 준비되었을 때 기존 평가 프롬프트를 전달; 공개/품질 승인 gate는 유지.

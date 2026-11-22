@@ -4,6 +4,7 @@ No remote execution, model installation, paid API, or publication. Review candid
 import argparse, hashlib, json, os, re, shutil, stat, subprocess, sys, uuid
 from pathlib import Path
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError
 from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
 
@@ -39,16 +40,20 @@ def plan(xml):
     if pos != 60 or not shots: raise ValueError('Timeline must be exactly 60 seconds')
     return reg, shots
 
-def safe_output(root):
+def safe_directory(root, parts):
     root = root.resolve(); p = root
-    for part in ('outputs','sehando','intro','v0.2'):
+    for part in parts:
         p = p / part
         if p.exists() or p.is_symlink():
             if p.is_symlink() or not p.is_dir() or getattr(p.lstat(), 'st_file_attributes', 0) & getattr(stat, 'FILE_ATTRIBUTE_REPARSE_POINT', 0):
                 raise ValueError('Unsafe output path: ' + str(p))
         else: p.mkdir()
         if not p.resolve().is_relative_to(root): raise ValueError('Output escapes project')
-    p = p / uuid.uuid4().hex[:12]; p.mkdir(); return p
+    return p
+
+def safe_output(root):
+    p = safe_directory(root, ('outputs','sehando','intro','v0.2')) / uuid.uuid4().hex[:12]
+    p.mkdir(); return p
 
 def run(args):
     p = subprocess.run([str(x) for x in args], capture_output=True, check=False)
@@ -58,20 +63,66 @@ def run(args):
 def probe(ffprobe, p):
     return json.loads(run([ffprobe,'-v','error','-show_streams','-show_format','-of','json',p]))
 
-def acquire(asset, p):
+MAX_ASSET_BYTES = 25*1024*1024
+
+def inspect_image(asset, p):
     from PIL import Image
-    request = Request(asset['url'], headers={'User-Agent':'MurimResearch/1.0 (source image retrieval for private evaluation)'})
-    with urlopen(request, timeout=30) as r:
-        if urlsplit(r.geturl()).hostname not in ALLOWED: raise ValueError('Unexpected source host')
-        data = r.read(25*1024*1024+1)
-    if len(data)>25*1024*1024: raise ValueError('Source exceeds byte budget')
-    p.write_bytes(data)
+    if p.stat().st_size > MAX_ASSET_BYTES: raise ValueError('Source exceeds byte budget')
     with Image.open(p) as im:
+        if im.format not in ('JPEG','PNG') or min(im.size)<240: raise ValueError('Invalid source image')
         im.load(); w,h=im.size
-        if im.format not in ('JPEG','PNG') or min(w,h)<240: raise ValueError('Invalid source image')
     if asset.get('expected-width') and (w,h)!=(int(asset['expected-width']),int(asset['expected-height'])):
-        raise ValueError('High-resolution source dimensions differ')
-    return dict(asset, file=p.name, sha256=sha(p), width=w, height=h, retrieval='SOURCE_URL_BYTES_VERIFIED', approval='REVIEW_ONLY')
+        raise ValueError('High-resolution source dimensions differ: '+str((w,h)))
+    return dict(width=w,height=h,sha256=sha(p))
+
+def download(asset, p):
+    request = Request(asset['url'], headers={'User-Agent':'MurimResearch/1.0 (source image retrieval for private evaluation)'})
+    try:
+        with urlopen(request, timeout=30) as r:
+            u=urlsplit(r.geturl())
+            if u.scheme!='https' or u.hostname not in ALLOWED: raise ValueError('Unexpected source host')
+            data = r.read(MAX_ASSET_BYTES+1)
+    except HTTPError as e:
+        if e.code==429:
+            raise RuntimeError('HTTP 429 rate limited; no retry. Retry-After='+str(e.headers.get('Retry-After','unspecified'))+'; source='+asset['source']) from e
+        raise
+    if len(data)>MAX_ASSET_BYTES: raise ValueError('Source exceeds byte budget')
+    p.write_bytes(data)
+
+def asset_key(asset):
+    return hashlib.sha256(json.dumps(asset,sort_keys=True,ensure_ascii=False).encode('utf-8')).hexdigest()
+
+def cache_asset(root, asset, imported=None, allow_download=False):
+    cache=safe_directory(root, ('outputs','sehando','intro','source-cache'))
+    key=asset_key(asset); entry=cache/key
+    if entry.exists() or entry.is_symlink():
+        entry=safe_directory(root, ('outputs','sehando','intro','source-cache',key))
+        p=entry/'image.jpg'; receipt=entry/'receipt.json'
+        for q in (p,receipt):
+            if not q.is_file() or q.is_symlink() or getattr(q.lstat(),'st_file_attributes',0)&getattr(stat,'FILE_ATTRIBUTE_REPARSE_POINT',0): raise ValueError('Missing/unsafe cached asset: '+str(q))
+        rec=json.loads(receipt.read_text(encoding='utf-8'))
+        if rec.get('asset')!=asset or rec.get('image')!=inspect_image(asset,p): raise ValueError('Cached asset identity/hash mismatch: '+asset['id'])
+        if imported is not None and sha(imported)!=rec['image']['sha256']: raise ValueError('Different import for existing immutable asset: '+asset['id'])
+        return p,rec
+    if imported is None and (not allow_download or urlsplit(asset['url']).hostname=='upload.wikimedia.org'):
+        raise ValueError('Source not cached: '+asset['id']+'; obtain approved original from '+asset['source']+'; use --import-detail for ART:DETAIL@1 or --download-missing for museum assets')
+    stage=cache/('pending-'+uuid.uuid4().hex); stage.mkdir(); p=stage/'image.jpg'
+    try:
+        if imported is not None:
+            if imported.stat().st_size>MAX_ASSET_BYTES: raise ValueError('Source exceeds byte budget')
+            shutil.copyfile(imported,p); retrieval='USER_SUPPLIED_REFERENCE_BYTES; source attribution declared, authenticity review pending'
+        else:
+            download(asset,p); retrieval='SOURCE_URL_BYTES_RETRIEVED'
+        rec=dict(asset=asset,image=inspect_image(asset,p),retrieval=retrieval,approval='REVIEW_ONLY')
+        (stage/'receipt.json').write_text(json.dumps(rec,ensure_ascii=False,indent=2),encoding='utf-8')
+        if entry.exists() or entry.is_symlink(): raise ValueError('Cache entry collision; no overwrite')
+        stage.rename(entry)
+        return entry/'image.jpg',rec
+    except Exception:
+        # Only the new, private staging directory is removed; no existing asset is touched.
+        for q in (p,stage/'receipt.json'):
+            if q.is_file(): q.unlink()
+        stage.rmdir(); raise
 
 def korean_voice():
     if os.name!='nt': raise RuntimeError('Windows Korean SAPI voice required; no silent fallback')
@@ -114,11 +165,20 @@ def frame(s,a,src,target):
     paper.save(target); return {'crop_native':list(native),'display_pixels':list(im.size),'upscaled':False}
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('--plan-only',action='store_true'); ap.add_argument('--voice-dir',type=Path); args=ap.parse_args()
+    ap=argparse.ArgumentParser(); ap.add_argument('--plan-only',action='store_true'); ap.add_argument('--voice-dir',type=Path)
+    ap.add_argument('--import-detail',type=Path,help='Local original Sehando - detail.jpg from the registered Commons source, 6533x2652')
+    ap.add_argument('--download-missing',action='store_true',help='Fetch only missing registered museum assets; no Wikimedia automatic requests')
+    ap.add_argument('--prepare-assets',action='store_true',help='Validate/cache source assets without rendering')
+    args=ap.parse_args()
     reg,shots=plan(XML)
     if args.plan_only:
         print('[PASS] M-VML 7-cut 60-second plan validated' if len(shots)==7 else '[PASS] M-VML 60-second plan validated'); return
-    from PIL import Image
+    cached={}
+    for aid in sorted({s['asset'] for s in shots}):
+        local=args.import_detail if aid=='ART:DETAIL@1' else None
+        cached[aid]=cache_asset(ROOT,reg[aid],local,args.download_missing)
+    if args.prepare_assets:
+        print('[PASS] Source assets cached; authenticity and rights review pending'); return
     ff,fp=shutil.which('ffmpeg'),shutil.which('ffprobe')
     if not ff or not fp: raise RuntimeError('FFmpeg and ffprobe must already be available')
     voice='USER_WAV' if args.voice_dir else korean_voice()
@@ -126,7 +186,10 @@ def main():
     try:
         shutil.copyfile(XML,out/'source.mvml.xml'); assets={}; parts=[]
         for aid in sorted({s['asset'] for s in shots}):
-            p=out/(aid.split(':')[1].split('@')[0].lower()+'.jpg'); assets[aid]=acquire(reg[aid],p)
+            p=out/(aid.split(':')[1].split('@')[0].lower()+'.jpg'); cached_path, rec=cached[aid]
+            shutil.copyfile(cached_path,p)
+            if sha(p)!=rec['image']['sha256']: raise ValueError('Cached copy hash mismatch: '+aid)
+            assets[aid]=dict(reg[aid],file=p.name,**rec['image'],retrieval=rec['retrieval'],approval='REVIEW_ONLY')
         (out/'assets.json').write_text(json.dumps(assets,ensure_ascii=False,indent=2),encoding='utf-8')
         for s in shots:
             p=out/(s['id']+'.wav'); png=out/(s['id']+'.png'); mp4=out/(s['id']+'.mp4')
