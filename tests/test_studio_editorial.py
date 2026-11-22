@@ -89,6 +89,43 @@ class EditorialTest(unittest.TestCase):
         self.assertTrue(self.review()['review']['pass'])
         self.assertTrue(self.approve()['approved'])
         self.assertEqual(self.e.view()['feedback'][0]['source'],source)
+    def test_plain_critique_capture_and_relay_plan(self):
+        raw='Gemini 원문\n| 항목 | 문제 |\n| 서사 | 결말 미완성 |'
+        self.mutate('prior_capture',raw=raw)
+        self.assertEqual(self.e.view()['prior_raw'],raw)
+        self.assertFalse(self.e.view()['prior_indexed'])
+        v=self.e.view()
+        response={'parent':v['latest']['revision'],'plan':self.plan(),'note':'결말 개편','prior_issues':['결말 미완성']}
+        whole='사람이 읽는 변경 설명\n```json\n'+json.dumps(response,ensure_ascii=False)+'\n```'
+        updated=self.mutate('relay_plan',raw=whole,instruction='결말을 완성해 줘')
+        self.assertTrue(updated['prior_indexed'])
+        self.assertEqual(updated['latest']['raw_response'],whole)
+        self.assertEqual(updated['latest']['instruction'],'결말을 완성해 줘')
+        self.assertEqual(len(updated['issues']),1)
+        self.assertFalse(updated['approved'])
+        with self.assertRaises(ValueError): self.mutate('relay_plan',raw=whole)
+    def test_capture_without_extraction_blocks_review(self):
+        self.mutate('prior_capture',raw='원문 비평')
+        self.mutate('plan',plan=self.plan(),note='기존 방식')
+        with self.assertRaisesRegex(ValueError,'문제 목록'):self.review()
+    def test_whole_review_answer_kept_and_resolutions_visible(self):
+        self.mutate('prior_review',raw='원문',issues=['결함'])
+        self.mutate('plan',plan=self.plan(),note='v1')
+        v=self.e.view()
+        r=dict(revision=v['latest']['revision'],scores={k:10 for k in AXES},evidence='대본 근거',
+            issues=[],resolutions=[dict(id=v['issues'][0]['id'],resolved=True,evidence='수정된 문장')],verdict='PASS')
+        whole='사람이 읽는 독립 평가\n```json\n'+json.dumps(r,ensure_ascii=False)+'\n```'
+        result=self.mutate('review',raw=whole,reviewer='fixture')
+        self.assertEqual(result['review']['raw'],whole)
+        self.assertEqual(result['review']['resolutions'],r['resolutions'])
+        self.assertTrue(result['review']['pass'])
+        self.assertFalse(result['approved'])
+    def test_unstructured_response_cannot_become_plan(self):
+        before=self.e.view()['token']
+        with self.assertRaises(ValueError):self.mutate('relay_plan',raw='예상 96점 / 앞으로 개선할 계획')
+        self.assertEqual(self.e.view()['token'],before)
+        self.assertFalse(self.e.view()['approved'])
+
     def test_stale_token_and_unknown_review(self):
         self.mutate('plan',plan=self.plan(),note='v1')
         with self.assertRaises(ValueError):self.e.mutate('','plan',{'plan':self.plan('v2'),'note':'stale'})

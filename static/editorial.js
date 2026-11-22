@@ -1,8 +1,9 @@
 'use strict';
 // Pre-production authority lives on the server; disabled tabs are only a usability aid.
 let editorialState=null,editorialDraft=null,editorialPid=null,preMode='policy',preVisible=true,editorialSerial=0,editorialNote='';
+let inputs={critique:'',instruction:'',answer:'',review:'',reviewer:''};
 function editorialAllowed(){return !!editorialState?.approved&&editorialPid===doc?.id}
-function preDirty(){return editorialDraft&&editorialState&&JSON.stringify(editorialDraft)!==JSON.stringify(editorialState.latest.plan)}
+function preDirty(){return !!(inputs.critique.trim()||inputs.answer.trim()||inputs.review.trim())}
 window.addEventListener('beforeunload',e=>{if(preDirty()){e.preventDefault();e.returnValue=''}});
 function preEl(tag,text){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e}
 function preButton(root,title,fn){const b=preEl('button',title);b.type='button';b.onclick=()=>{if(!busy)Promise.resolve().then(fn).catch(err)};root.append(b);return b}
@@ -21,7 +22,7 @@ function preLayout(){
 }
 async function editorialRefresh(d){
     const seq=++editorialSerial,changed=editorialPid!==d.id;
-    if(changed){editorialPid=d.id;editorialState=null;editorialDraft=null;editorialNote='';preVisible=true;preMode='policy'}
+    if(changed){editorialPid=d.id;editorialState=null;editorialDraft=null;editorialNote='';inputs={critique:'',instruction:'',answer:'',review:'',reviewer:''};preVisible=true;preMode='policy'}
     preLayout();
     const v=await api('/project/'+d.id+'/editorial');
     if(seq!==editorialSerial||doc?.id!==d.id)return;
@@ -30,47 +31,128 @@ async function editorialRefresh(d){
     if(changed||changedToken||!editorialDraft){editorialDraft=structuredClone(v.latest.plan);editorialNote=''}
     if(!v.approved)preVisible=true;
     preLayout();if(preVisible)drawEditorial();else drawEditorialContext();
+    if(changed&&$('notice').textContent.startsWith('작품을 열어 주세요'))notice('작품 열기 완료 · 사전 제작에서 비평과 개선안을 확인하세요');
 }
 function showEditorial(mode){preMode=mode;preVisible=true;preLayout();drawEditorial()}
 function drawEditorialContext(){const e=$('approvedContext');if(!e||!editorialAllowed())return;const plan=editorialState.latest.plan,shot=plan.scenes.find(s=>s.id===sid);e.textContent=shot?'승인 제작안 '+editorialState.latest.revision.slice(0,12)+'\\n시각: '+shot.visual+'\\n동작: '+(shot.motion||'정지 이미지 중심')+'\\n음향: '+shot.sound+'\\n사료: '+shot.facts:'';}
 document.querySelectorAll('[data-pre]').forEach(e=>e.onclick=()=>showEditorial(e.dataset.pre));
 $('enterProduction').onclick=()=>{if(editorialAllowed()){if(preDirty()){notice('미저장 제작안을 먼저 저장하거나 새로고침하세요',true);return}preVisible=false;preLayout();setTab('story');showSelected();drawEditorialContext()}};
 async function preMutate(kind,data){
-    if(kind!=='plan'&&preDirty())throw Error('편집 중인 제작안을 먼저 새 버전으로 저장하세요');
+    // The pasted response is cleared only after a successful server write.
     const id=doc.id;
     await action(async()=>{
         const v=await api('/project/'+id+'/editorial',{token:editorialState.token,action:kind,data});
         if(doc.id!==id)return;
         editorialState=v;editorialDraft=structuredClone(v.latest.plan);editorialNote='';
+        if(kind==='prior_capture')inputs.critique='';
+        if(kind==='relay_plan'){inputs.answer='';inputs.instruction='';preMode='script'}
+        if(kind==='review'){inputs.review='';inputs.reviewer='';preMode='gate'}
         if(kind==='approval')update(await api('/project/'+id));
         if(kind==='feedback'){preVisible=true;preMode='gate';$('reviewText').value='';$('structuralIssues').value='';}
         preLayout();drawEditorial();notice('사전 제작 이력 저장 · '+v.status);
     },'사전 제작안 검증 및 저장 중…');
 }
-const sceneLabels={title:'장면 제목',frames:'길이(초)',narration:'실제 성우 발화 대본 (의도적 무음은 음향 설계에서 설명)',visual:'시각 설계·사용할 원작/이미지/구도',motion:'동작 영상 지시 (정지 이미지면 비움)',sound:'성우·음악·효과음·정적의 설계',facts:'사료 출처·역사 사실/재연 구분',subtitle:'실제 자막'};
-function uuidScene(){return Array.from(crypto.getRandomValues(new Uint8Array(6)),n=>n.toString(16).padStart(2,'0')).join('')}
-function prePlanSave(root){
-    const note=preField(root,'수정 이유와 원본 대비 변경 내용 (필수)',editorialNote,x=>editorialNote=x,3);
-    preButton(root,'수정 제작안 새 버전 저장',()=>preMutate('plan',{plan:editorialDraft,note:note.value}));
-    preText(root,'미완성 초안도 버전으로 저장할 수 있습니다. 필수 항목을 모두 작성한 저장본만 심사할 수 있습니다. 같은 내용은 새 버전으로 인정하지 않으며 새 버전은 이전 승인을 잠급니다.');
+
+const order=['purpose','audience','policy','story','facts','visual','audio','ending'];
+const axisLabels={viewer_value:'시청 가치',narrative:'서사 몰입',historical_evidence:'사실과 근거',visual_design:'시각 설계',audio_design:'음향 설계',coherence:'전체 정합성'};
+const sceneLabels={title:'장면 제목',narration:'실제 발화 대본',visual:'화면 연출',motion:'동작',sound:'음향',facts:'사료 및 출처',subtitle:'자막'};
+const stateLabels={APPROVED:'제작 승인',HOLD:'검토 대기',REWORK_REQUIRED:'재수정 필요',APPROVAL_REQUIRED:'독립 심사 통과 · 인간 승인 대기'};
+function field(root,label,k,rows=4){return preField(root,label,inputs[k],x=>inputs[k]=x,rows)}
+function rawDetails(root,label,value){if(!value)return;const d=preEl('details');d.append(preEl('summary',label),preEl('pre',value));root.append(d)}
+function copyButton(root,label,make){return preButton(root,label,async()=>{await navigator.clipboard.writeText(make());notice('복사 완료 · 외부 AI에 붙여 넣고 답변 전체를 가져오세요')})}
+function changeText(root,oldValue,newValue){
+    const row=preEl('div');row.className='pre-grid';
+    for(const [title,value] of [['수정 전',oldValue],['수정 후',newValue]]){
+        const c=preEl('div');c.className='pre-read';c.append(preEl('h4',title),preEl('p',value||'기록 없음'));row.append(c)}
+    root.append(row)
 }
-function prePrompt(v){
-    return '제작 전 독립 편집 심사입니다. 아직 영상·음성은 생성하지 않았습니다. 실제 영상 품질 점수나 예상 합격점은 만들지 마세요. 작품 기획과 실제 장면별 대본의 완결성, 시청자 가치, 사실 출처, 화면·음향 설계, 전체 시나리오와 장면의 일관성을 엄정히 심사하세요. 기존 문제의 해결 여부를 개별 ID와 실제 변경 문장/장면의 근거로 검증하세요. 모든 부족한 점을 issues에 빠짐없이 기록하세요. score는 0~10 또는 자료 부족 null, 근거를 evidence에 기록. 구체적인 결함이나 미확인이 있으면 PASS 금지. 실제 제작안의 독립 판단만 반환하세요. JSON 객체만 반환: '+JSON.stringify({revision:v.latest.revision,scores:Object.fromEntries(v.axes.map(x=>[x,null])),evidence:'축별 판단 근거',issues:['구체적 결함; 없으면 빈 배열'],resolutions:v.issues.map(i=>({id:i.id,resolved:false,evidence:'수정된 원문 증거 또는 미해결 원인'})),verdict:'FAIL 또는 HOLD 또는 PASS'},null,2)+'\n\n미해결 문제:\n'+JSON.stringify(v.issues,null,2)+'\n\n기존 비평 원문(누락 지적사항도 확인):\n'+(v.prior_raw||v.original.prior_summary||'없음')+'\n\n제작 후 구조 결함 비평:\n'+JSON.stringify(v.feedback||[],null,2)+'\n\n심사 대상 제작안:\n'+JSON.stringify(v.latest.plan,null,2);
+function sceneText(s){if(!s)return '해당 장면 없음';return s.title+' · '+(s.frames/24).toFixed(2)+'초\n'+Object.entries(sceneLabels).filter(([k])=>k!=='title').map(([k,label])=>label+': '+(s[k]||'—')).join('\n\n')}
+function manuscript(p){return p.scenes.map((s,i)=>String(i+1)+'. '+s.title+' ('+(s.frames/24).toFixed(2)+'초)\n'+(s.narration||'(발화 없음)')).join('\n\n')}
+function promptForPlan(v){
+    const schema={parent:v.latest.revision,plan:v.latest.plan,note:'기존 결함별 실제 수정 근거와 원본 대비 변경점',prior_issues:['기존 비평 원문에서 발견한 모든 결함을 빠짐없이 추출']};
+    return '당신은 실제 콘텐츠를 수정하는 감독·작가입니다. 다음 감독 지시와 비평을 바탕으로 기획과 전체 실제 대본, 장면별 연출을 직접 다시 작성하십시오. 고칠 예정이라는 설명만 하지 말고 완성된 수정 원문을 제출하십시오. 역사 사실과 재연을 분리하고 미확인 출처를 지어내지 마십시오. 기존 실패 원인 전체를 수정하고 새 문제는 숨기지 마십시오. 답변 처음에는 사람이 읽는 원문 대비 개선 요약과 수정 전후 실제 문장 예시를 쓰고, 마지막에는 프로그램이 읽을 json 코드 블록 1개를 넣으십시오. 내부 데이터는 아래 모양 그대로, plan은 일부 패치가 아닌 전체 수정본. 모든 기획 항목·장면 제목·시각·음향·사료를 채우고, 발화 없음은 sound에 이유를 기록하십시오. 장면 id는 12자리 소문자 16진수, frames는 24fps 정수 24~1440. prior_issues는 기존 비평 원문의 전체 구체적 결함 목록이며 점수 예상이나 칭찬은 제외. note에는 실제 바뀐 대본·장면을 지목하십시오. 합격점 또는 심사 결과를 생성하지 마십시오.\n\n감독 수정 지시: '+(inputs.instruction.trim()||'기존 비평의 문제를 모두 해결하고 실제 시나리오를 완성하라.')+'\n\n기존 비평 원문:\n'+(v.prior_raw||v.original.prior_summary||'없음')+'\n\n현재 미해결 문제:\n'+JSON.stringify(v.issues)+'\n\n직전 독립 심사:\n'+(v.review?.raw||'미실행')+'\n\n실제 영상 구조 비평:\n'+JSON.stringify(v.feedback||[])+'\n\n현재 원문 및 프로그램 전달 형식:\n'+JSON.stringify(schema,null,2);
 }
-function rewritePanel(root,v){
-    const c=preCard(root,'외부 LLM 수정안 작성 · 인간 매개');
-    preText(c,'기존 작품/제작안의 모든 실패 원인을 해결하는 새 기획과 실제 시나리오를 요청합니다. 예상 합격점을 만들지 말고 실제 독립 재심사를 받으세요. 외부 전송 권리는 사용자가 확인합니다.');
-    const prompt='당신은 이 작품의 수정 담당 감독·작가·미술 및 음향 감독입니다. 이전 실패 결과를 근거로 목적과 시청자 가치, 제작 방침, 전체 실제 시나리오와 장면별 연출을 재설계하세요. 기존 문제 각각을 수정된 내용에 반영하고 역사 사실과 재연 구분, 출처, 미확인 사항을 명시하세요. 확인되지 않은 사료와 권리, 비교작, 데이터와 점수는 발명하지 마세요. 화면·음성 효과를 추가하는 데 그치지 말고 구조적 원인을 고치세요. 전체 실제 대본을 장면 순서에 맞게 작성하세요. 필요하면 장면 추가/삭제·순서 변경을 하되 id는 기존 유지 또는 새 12자리 소문자 16진수. frames는 24fps 정수 24~1440. narration이 비면 sound에 의도적 무음 근거를 명시. motion은 정지 화면이면 빈 문자열. 각 장면 필드 및 제작안 필드의 형식을 그대로 지키세요. JSON 객체 {plan: 완전한 제작안, note: 문제 ID별 원본 대비 구체적 수정 이유와 근거}만 반환하세요. 기존 비평: '+(v.prior_raw||v.original.prior_summary||'미등록')+'\n문제 목록: '+JSON.stringify(v.issues,null,2)+'\n제작 후 비평: '+JSON.stringify(v.feedback||[],null,2)+'\n현재 심사: '+(v.review?.raw||'미실행')+'\n현재 계획 JSON: '+JSON.stringify(v.latest.plan,null,2);
-    const request=preField(c,'수정 요청서',prompt,()=>{},7);request.readOnly=true;
-    preButton(c,'수정 요청서 복사',async()=>{await navigator.clipboard.writeText(request.value);notice('수정 요청서 복사 · 외부 LLM과 인간 매개')});
-    const response=preField(c,'외부 수정안 JSON 붙여넣기 (아직 저장·승인되지 않음)','',()=>{},7);
-    preButton(c,'수정안 초안으로 불러오기',()=>{
-        const result=JSON.parse(response.value),candidate=result.plan;
-        const sameKeys=(a,b)=>a&&typeof a==='object'&&Object.keys(a).sort().join(',')===Object.keys(b).sort().join(',');
-        if(!sameKeys(candidate,v.latest.plan)||!Array.isArray(candidate.scenes)||!candidate.scenes.length||candidate.scenes.some(s=>!sameKeys(s,v.latest.plan.scenes[0]))||typeof result.note!=='string')throw Error('제작안 JSON 형식 불일치');
-        if(Object.keys(v.fields).some(k=>typeof candidate[k]!=='string')||candidate.scenes.some(s=>typeof s.frames!=='number'||Object.keys(s).some(k=>k!=='frames'&&typeof s[k]!=='string')))throw Error('제작안 필드 유형 오류');
-        editorialDraft=structuredClone(candidate);editorialNote=result.note;showEditorial('policy');notice('외부 수정안 초안 로드 · 직접 검토 및 새 버전 저장 필요');
-    });
+function promptForReview(v){
+    const schema={revision:v.latest.revision,scores:Object.fromEntries(v.axes.map(x=>[x,null])),evidence:'각 항목의 실제 원문 근거',issues:[],resolutions:v.issues.map(i=>({id:i.id,resolved:false,evidence:'실제 변경 전후 문장, 장면 및 판단 근거'})),verdict:'HOLD'};
+    return '당신은 제작에 참여하지 않은 독립 편집 심사자입니다. 아래 기존 원문과 실제 수정본을 비교하여 모든 비평 결함이 실질적으로 해소되었는지 검증하십시오. 단순 변경·추상적 약속은 해결이 아닙니다. 기존 비평 원문에 있는데 목록에서 누락된 문제와 새 문제는 issues에 모두 포함하십시오. 실제 영상/음향은 아직 생성 전이므로 실행 결과나 실제 관객 반응을 평가했다고 주장하지 마십시오. 기획과 실제 대본의 시청 가치, 서사, 역사 근거, 시각 설계, 음향 설계, 장면 간 정합성을 각각 0~10으로 독립 평가하고 자료 부족은 null. 해결하지 못한 결함이 있으면 PASS 금지. 점수 기대나 제작자의 주장은 심사 근거가 아닙니다. 사람이 읽을 수정 전후 평가표와 실제 문장 근거를 먼저 작성하고, 마지막에 아래 형식의 json 코드 블록 1개를 반환하십시오.\n\n기존 비평 원문:\n'+(v.prior_raw||v.original.prior_summary||'없음')+'\n\n기존 원본:\n'+JSON.stringify(v.original.plan,null,2)+'\n\n직전 제작안:\n'+JSON.stringify(v.versions.at(-2)?.plan||v.original.plan,null,2)+'\n\n실제 수정본:\n'+JSON.stringify(v.latest.plan,null,2)+'\n\n영상 구조 비평:\n'+JSON.stringify(v.feedback||[])+'\n\n검증 대상 문제:\n'+JSON.stringify(v.issues)+'\n\n프로그램 전달 형식:\n'+JSON.stringify(schema,null,2);
+}
+function relayRepair(root,answer,make){copyButton(root,'AI 응답 정리 요청 복사',()=>make()+'\n\n아래는 이미 받은 답변입니다. 내용과 평가를 임의로 개선하거나 변경하지 말고, 위에서 요구한 전달 블록을 완성하십시오. 실제 수정 원문 또는 실제 독립 평가가 없는 경우 그 사실을 명확히 밝히십시오.\n\n'+answer.value)}
+function drawDirective(root,v){
+    const c=preCard(root,'1. 기존 비평');
+    if(v.original.prior_summary)preText(c,v.original.prior_summary+' · 예상 개선 점수는 합격 증거가 아닙니다.');
+    if(v.prior_raw){preText(c,'기존 Gemini 응답 원문 보존 완료');rawDetails(c,'비평 원문 펼치기',v.prior_raw)}
+    else{
+        field(c,'Gemini 비평 답변 전체 붙여넣기','critique',5);
+        preButton(c,'비평 원문 저장',()=>preMutate('prior_capture',{raw:inputs.critique}));
+        preText(c,v.original.known_failed?'먼저 기존 비평 원문을 저장하세요. 문제 분류와 개선안은 AI에게 맡깁니다.':'기존 비평이 없는 새 작품이라면 다음 단계로 진행할 수 있습니다.');
+    }
+    if(v.original.known_failed&&!v.prior_raw)return;
+    const d=preCard(root,'2. AI에게 무엇을 고치라고 할까요?');
+    field(d,'감독의 자연어 수정 지시 (비우면 기존 비평 전체 개선)','instruction',3).placeholder='예: 1842년 자료 사용 오류를 고치고, 첫 3초에 실제 사건으로 몰입시키며 결말까지 완결해 줘.';
+    copyButton(d,'수정 요청 복사',()=>promptForPlan(v));
+    preText(d,'ChatGPT 또는 Gemini에 붙여넣고 실제로 수정된 답변 전체를 아래에 가져오세요. 프로그램 전달 데이터는 AI가 작성합니다. 직접 형식을 수정할 필요는 없습니다.');
+    const a=field(d,'AI가 반환한 수정 답변 전체','answer',5);
+    const b=preButton(d,'수정본 저장 및 전후 비교',()=>preMutate('relay_plan',{raw:inputs.answer,instruction:inputs.instruction}));b.classList.add('primary');
+    relayRepair(d,a,()=>promptForPlan(v));
+    if(!v.latest.original)preButton(d,'현재 수정본 비교 보기',()=>showEditorial('script'));
+}
+function drawCompare(root,v){
+    const c=preCard(root,'실제 대본과 기획의 전후 비교');
+    const pair=preEl('div'),bar=preEl('div');bar.className='bar';
+    const selects=[];
+    for(const [label,initial] of [['기준 버전',0],['비교 버전',v.versions.length-1]]){
+        const l=preEl('label',label),s=preEl('select');v.versions.forEach((x,i)=>{const op=preEl('option',i===0?'V0 원본':'V'+i+(x.review?' · '+(x.review.pass?'심사 통과':'재수정'):' · 미심사'));op.value=String(i);s.append(op)});s.value=String(initial);l.append(s);bar.append(l);selects.push(s);}
+    c.append(bar,pair);
+    function compare(){
+        pair.replaceChildren();const from=v.versions[Number(selects[0].value)],to=v.versions[Number(selects[1].value)];
+        preText(pair,'V'+selects[0].value+' → V'+selects[1].value+' · '+(to.review?'독립 심사 '+(to.review.total===null?'미평가':to.review.total.toFixed(1)+'/100'):'독립 심사 전'));
+        const story=preCard(pair,'실제로 읽게 될 대본 전체');changeText(story,manuscript(from.plan),manuscript(to.plan));
+        const changes=preCard(pair,'기획·연출의 실제 변경점');
+        let count=0;for(const k of order)if(from.plan[k]!==to.plan[k]){changes.append(preEl('h4',v.fields[k]));changeText(changes,from.plan[k],to.plan[k]);count++}
+        const old=from.plan.scenes,newScenes=to.plan.scenes;
+        const ids=[...new Set([...old.map(x=>x.id),...newScenes.map(x=>x.id)])];
+        for(const id of ids){const a=old.find(x=>x.id===id),b=newScenes.find(x=>x.id===id);if(sceneText(a)!==sceneText(b)||old.indexOf(a)!==newScenes.indexOf(b)){const item=preEl('details');item.append(preEl('summary',(b?.title||a?.title)+(a&&b?' · 변경':b?' · 추가':' · 제거')));changeText(item,a?String(old.indexOf(a)+1)+'번\n'+sceneText(a):'',b?String(newScenes.indexOf(b)+1)+'번\n'+sceneText(b):'');changes.append(item);count++}}
+        if(!count)preText(changes,'변경된 내용 없음');
+        if(to.note)rawDetails(pair,'AI의 변경 설명 (독립 심사 전 주장)',to.note);
+        if(to.raw_response)rawDetails(pair,'AI 수정 응답 원문',to.raw_response);
+        if(to.review)reviewSummary(pair,to.review,v);
+    }
+    selects.forEach(s=>s.onchange=compare);compare();
+    preButton(root,'추가 수정 지시',()=>showEditorial('policy'));preButton(root,'독립 심사로 이동',()=>showEditorial('gate'));
+}
+function reviewSummary(root,r,v){
+    const c=preCard(root,'독립 심사 결과 · '+(r.total===null?'미평가':r.total.toFixed(1)+'/100'));
+    preText(c,(r.pass?'심사 통과':'제작 보류')+' · '+r.reviewer);
+    const table=preEl('table');table.className='pre-table';const tr=preEl('tr');for(const k of ['평가 항목','점수','판정'])tr.append(preEl('th',k));table.append(tr);
+    for(const k of v.axes){const x=r.scores[k],row=preEl('tr');for(const val of [axisLabels[k]||k,x===null?'미평가':x+'/10',x===null?'보류':x>=9?'기준 충족':'개선 필요'])row.append(preEl('td',String(val)));table.append(row)}c.append(table);
+    if(r.evidence)preText(c,r.evidence);
+    if(r.resolutions){for(const item of r.resolutions){const issue=v.all_issues.find(i=>i.id===item.id),d=preCard(c,(item.resolved?'심사자: 해결':'미해결')+' · '+(issue?.description||item.id));preText(d,item.evidence)}}
+    for(const x of r.issues)preText(c,'새 문제: '+x.description);
+    rawDetails(c,'독립 심사 답변 원문',r.raw);
+}
+function drawGate(root,v){
+    const c=preCard(root,'결함 해결 현황');
+    if(v.original.prior_summary)preText(c,v.original.prior_summary+' · 기존 영상 평가와 새 기획 평가는 별도입니다.');
+    for(const i of v.issues)preText(c,'미해결/재검증 필요 · '+i.description);
+    if(!v.issues.length)preText(c,'추적 중인 미해결 문제 없음. 심사 및 승인 조건은 별도.');
+    if(v.review)reviewSummary(root,v.review,v);
+    else if(v.ready&&(!v.original.known_failed||v.prior_indexed)&&(!v.prior_raw||v.prior_indexed)){
+        const d=preCard(root,'독립 AI에게 실제 수정본 검토 요청');
+        copyButton(d,'독립 재심사 요청 복사',()=>promptForReview(v));
+        preText(d,'수정 담당 AI와 별도의 심사 세션에 전달하고 답변 전체를 복사해 오세요. 예상 점수나 수정 담당자의 자체 평가를 등록하지 마세요.');
+        field(d,'심사 모델·세션 (예: Gemini 별도 세션)','reviewer',1);
+        const a=field(d,'독립 심사 답변 전체','review',5);
+        preButton(d,'심사 결과 등록',()=>preMutate('review',{raw:inputs.review,reviewer:inputs.reviewer}));
+        relayRepair(d,a,()=>promptForReview(v));
+    }else preText(root,'먼저 비평을 등록하고 실제 수정본을 완성하세요.');
+    if(v.review?.pass&&!v.issues.length&&!v.approved){
+        const d=preCard(root,'제작 승인');preText(d,'독립 심사 기준 충족. 실제 원문과 수정 결과를 비교하고 제작 진행 여부를 결정하세요.');
+        const who=preField(d,'승인자','',()=>{},1);
+        const b=preButton(d,'검토 완료 · 이 수정본으로 제작 승인',()=>{if(confirm('원문 대비 실제 수정과 심사 근거를 검토했으며 현재 버전의 제작을 승인합니까?'))return preMutate('approval',{confirmed:true,approver:who.value,mvml_revision:v.mvml_revision})});b.classList.add('primary');
+    }
+    if(v.approved)preText(root,'이 버전은 제작 승인 상태입니다. 실제 완성 영상 평가는 별도입니다.');
+    if(!v.approved)preButton(root,'다시 개선하기',()=>showEditorial('policy'));
+    for(const f of v.feedback||[])rawDetails(root,'실제 영상 비평 · '+f.source.render,f.raw);
 }
 bind('returnEditorial',async()=>{
     if(!editorialAllowed())throw Error('현재 승인된 제작안이 필요합니다');
@@ -80,66 +162,8 @@ bind('returnEditorial',async()=>{
 });
 function drawEditorial(){
     const v=editorialState,root=$('prePanel');root.replaceChildren();
-    if(!v||!editorialDraft){$('preStatus').textContent='사전 제작 상태 조회 중';return}
-    $('preStatus').textContent=v.status+' · 원본 포함 '+v.versions.length+'개 제작안 · 미해결 '+v.issues.length+'개 · '+(v.approved?'제작 진입 가능':'제작 잠금');
-    if(preMode==='policy'){
-        preText(root,'기획과 시나리오를 확정한 후에만 제작합니다. 실제 영상 심사와 기획 심사는 별도입니다.');
-        for(const [k,label] of Object.entries(v.fields))preField(root,label,editorialDraft[k],x=>editorialDraft[k]=x);
-        prePlanSave(root);
-        preButton(root,'시나리오·장면 설계로 이동',()=>showEditorial('script'));
-        if(!preDirty())rewritePanel(root,v);
-    }else if(preMode==='script'){
-        preText(root,'이 장면 목록의 순서·제목·길이·실제 발화 대본이 승인 후 타임라인에 반영됩니다. 기존 실패 장면의 미디어는 자동 배치하지 않습니다.');
-        editorialDraft.scenes.forEach((s,i)=>{
-            const c=preCard(root,(i+1)+'. '+s.title);
-            for(const [k,label] of Object.entries(sceneLabels)){
-                if(k==='frames'){const l=preEl('label',label),n=preEl('input');n.type='number';n.min='1';n.max='60';n.step='0.0416667';n.value=s.frames/24;n.oninput=()=>s.frames=Math.round(Number(n.value)*24);l.append(n);c.append(l)}
-                else preField(c,label,s[k],x=>s[k]=x,k==='title'?1:3);
-            }
-            if(i>0)preButton(c,'↑ 장면 순서',()=>{[editorialDraft.scenes[i-1],editorialDraft.scenes[i]]=[s,editorialDraft.scenes[i-1]];drawEditorial()});
-            if(i+1<editorialDraft.scenes.length)preButton(c,'↓ 장면 순서',()=>{[editorialDraft.scenes[i+1],editorialDraft.scenes[i]]=[s,editorialDraft.scenes[i+1]];drawEditorial()});
-            if(editorialDraft.scenes.length>1)preButton(c,'장면 제거',()=>{if(confirm('초안에서 장면을 제거할까요?')){editorialDraft.scenes.splice(i,1);drawEditorial()}});
-        });
-        preButton(root,'+ 새 장면',()=>{editorialDraft.scenes.push({id:uuidScene(),title:'새 장면',frames:144,narration:'',visual:'',motion:'',sound:'',facts:'',subtitle:''});drawEditorial()});
-        prePlanSave(root);
-    }else{
-        if(preDirty()){preText(root,'저장되지 않은 기획 또는 시나리오가 있습니다. 먼저 새 버전을 저장해야 심사할 수 있습니다.');prePlanSave(root);return}
-        const original=preCard(root,'기존 실제 작품의 비평 · 원본 보존');
-        if(v.original.prior_summary)preText(original,v.original.prior_summary);
-        if(v.prior_raw)original.append(preEl('pre',v.prior_raw));
-        else if(!v.review){
-            const raw=preField(original,'Gemini 기존 비평 원문 붙여넣기','',()=>{},6);
-            const issues=preField(original,'원문에서 확인한 모든 결함 (한 줄에 한 건; 요약 누락 확인)','',()=>{},5);
-            preButton(original,'기존 비평 원문 및 결함 등록',()=>preMutate('prior_review',{raw:raw.value,issues:issues.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)}));
-        }
-        for(const f of (v.feedback||[])){const fc=preCard(root,'실제 영상에서 돌아온 비평 · '+f.source.render);preText(fc,'영상 SHA-256 '+f.source.sha256);fc.append(preEl('pre',f.raw))}
-        const todo=preCard(root,'미해결 결함 (새 수정본의 재심사에서 검증)');
-        for(const i of v.issues)preText(todo,i.id+' · '+i.description);
-        if(!v.issues.length)preText(todo,'등록된 미해결 결함 없음. 독립 심사 및 인간 승인은 별도.');
-        const comparison=preCard(root,'프로젝트별 원본 / 수정본 비교');
-        const select=preEl('select');for(const [i,p] of v.versions.entries()){const o=preEl('option',(i+1)+' · '+p.revision.slice(0,12)+' · '+p.note);o.value=String(i);select.append(o)}select.value=String(v.versions.length-1);comparison.append(select);
-        const pair=preEl('div');pair.className='pre-grid';comparison.append(pair);
-        function compare(){pair.replaceChildren();for(const [name,p] of [['원본',v.versions[0]],['비교본',v.versions[Number(select.value)]]]){const c=preCard(pair,name);c.append(preEl('pre',JSON.stringify(p.plan,null,2)));if(p.review){preText(c,'심사 '+p.review.reviewer+' · '+(p.review.total===null?'미평가':p.review.total.toFixed(1)+'/100')+' · '+(p.review.pass?'PASS':'FAIL/HOLD'));c.append(preEl('pre',p.review.raw))}}}
-        select.onchange=compare;compare();
-        if(v.review){const c=preCard(root,'현재 버전 독립 심사 결과');preText(c,v.review.reviewer+' · '+(v.review.total===null?'미평가':v.review.total.toFixed(1)+'/100')+' · '+(v.review.pass?'PASS':'FAIL/HOLD'));c.append(preEl('pre',v.review.raw))}
-        else if(!v.latest.original&&v.ready){
-            const c=preCard(root,'Gemini 등 독립 심사 · 인간 매개');
-            const prompt=preField(c,'저장된 수정본 심사 요청서',prePrompt(v),()=>{},8);prompt.readOnly=true;
-            preButton(c,'심사 요청서 복사',async()=>{await navigator.clipboard.writeText(prompt.value);notice('복사 완료: 별도 독립 세션에 전달하세요')});
-            const who=preField(c,'심사 모델·버전 / 독립 세션 식별자','',()=>{},1);
-            const raw=preField(c,'심사 응답 JSON 원문','',()=>{},8);
-            preButton(c,'독립 심사 원문 등록',()=>preMutate('review',{reviewer:who.value,raw:raw.value}));
-        }
-        rewritePanel(root,v);
-        if(!v.review&&!v.ready)preText(root,'기획·시나리오 필수 항목이 아직 미완성입니다. 00A/00B에서 작성한 수정본을 저장하세요.');
-        if(v.review?.pass&&!v.approved){
-            const c=preCard(root,'최종 인간 승인 · 승인된 장면 설계 전달');
-            preText(c,'심사 95점 이상, 모든 축 9점 이상, 미해결 결함 0건을 서버에서 확인합니다. 실제 응답·결함 해결 증거·사료·시나리오 일치 여부를 직접 검토하세요.');
-            const approver=preField(c,'승인자','',()=>{},1),label=preEl('label'),check=preEl('input');check.type='checkbox';label.append(check,document.createTextNode('모든 문제의 실제 해결과 수정안을 검토했고 이 버전의 제작을 승인합니다.'));c.append(label);
-            preButton(c,'승인 및 타임라인 생성',()=>{if(!check.checked)throw Error('인간 승인 확인 필요');return preMutate('approval',{confirmed:true,approver:approver.value,mvml_revision:v.mvml_revision})});
-        }
-        if(v.approved)preText(root,'승인된 버전: '+v.latest.revision+' · 실제 결과물 품질 심사는 별도.');
-        preText(root,'기준 원본 M-VML 리비전: '+v.original.source_revision);
-        if(v.original.known_failed){const a=preEl('a','기존 실패 작품 A 재생 (읽기 전용)');a.href=base+p('/baseline');a.target='_blank';a.rel='noopener';root.append(a)}
-    }
+    if(!v){$('preStatus').textContent='사전 제작 상태 조회 중';return}
+    $('preStatus').textContent='V'+(v.versions.length-1)+' · '+(stateLabels[v.status]||v.status)+' · 미해결 '+v.issues.length+'건 · '+(v.approved?'제작 가능':'제작 잠금');
+    if(preMode==='policy')drawDirective(root,v);else if(preMode==='script')drawCompare(root,v);else drawGate(root,v);
+    if(v.original.known_failed){const a=preEl('a','기존 실패 영상 다시 보기');a.href=base+p('/baseline');a.target='_blank';a.rel='noopener';root.append(a)}
 }

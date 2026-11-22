@@ -32,6 +32,18 @@ def string(value, limit=MAX_TEXT, empty=False):
         raise ValueError('필수 내용 누락 또는 길이 초과')
     return value
 
+def relay_object(raw):
+    """Accept a whole human-relayed answer, preserving prose outside the machine block."""
+    raw=string(raw,1200000)
+    try: obj=json.loads(raw)
+    except json.JSONDecodeError:
+        blocks=re.findall(r"```(?:json|murim)[ \t]*\r?\n(.*?)\r?\n```",raw,re.S|re.I)
+        if len(blocks)!=1: raise ValueError('응답 전체를 받았지만 제작 정보가 없습니다. 응답 정리 요청을 복사해 AI에게 전달하고 새 답변 전체를 붙여 넣으세요.')
+        try: obj=json.loads(blocks[0])
+        except json.JSONDecodeError as exc: raise ValueError('AI 응답이 불완전합니다. 응답 정리 요청으로 다시 받아 주세요.') from exc
+    if not isinstance(obj,dict): raise ValueError('AI 응답 형식이 올바르지 않습니다.')
+    return obj
+
 def baseline(store,pid):
     doc,rev=store.load(pid)
     # Original timeline is the first immutable revision, not the last edited draft.
@@ -107,14 +119,18 @@ class Editorial:
         plans=[dict(revision=key(orig['plan']),plan=orig['plan'],note='기존 원본 (미승인)',original=True)]
         all_issues={i['id']:i for i in orig['issues']}
         issues=dict(all_issues)
-        raw_prior=None; review=None; approved=None; feedback=[]
+        raw_prior=None; prior_indexed=False; review=None; approved=None; feedback=[]
         for e in events[1:]:
             d=e['data']
-            if e['kind']=='prior_review':
+            if e['kind']=='prior_capture':
                 raw_prior=d['raw']
+            elif e['kind']=='prior_review':
+                raw_prior=d['raw']; prior_indexed=True
                 all_issues.update({i['id']:i for i in d['issues']}); issues=dict(all_issues)
             elif e['kind']=='plan':
                 plans.append(dict(d,original=False)); review=None; approved=None
+                if d.get('prior_issues'):
+                    all_issues.update({i['id']:i for i in d['prior_issues']}); prior_indexed=True
                 issues=dict(all_issues) # Revised plans must recheck prior resolved issues too.
             elif e['kind']=='review':
                 review=d
@@ -135,14 +151,17 @@ class Editorial:
         if ok:
             ok=doc.get('editorial-plan')==latest['revision'] and signature(doc)==signature_plan(latest['plan'])
         return dict(token=events[-1]['hash'] if events else '', original=orig, versions=plans,
-            latest=latest,issues=list(issues.values()),prior_raw=raw_prior,review=review,feedback=feedback,
+            latest=latest,issues=list(issues.values()),prior_raw=raw_prior,prior_indexed=prior_indexed,all_issues=list(all_issues.values()),review=review,feedback=feedback,
             approved=ok,approval=approved,mvml_revision=mvrev,ready=ready,
             status='APPROVED' if ok else 'HOLD' if approved else 'REWORK_REQUIRED' if review and (issues or not review['pass']) else 'APPROVAL_REQUIRED' if review else 'HOLD')
     def mutate(self,token,action,data):
         with LOCK:
             ev=self.events(); v=self.view(ev)
             if token!=v['token']: raise ValueError('제작안 리비전 충돌: 다시 읽으세요')
-            if action=='prior_review':
+            if action=='prior_capture':
+                if v['prior_raw'] is not None or v['review'] is not None: raise ValueError('기존 비평 원문은 이미 등록되었습니다.')
+                payload=dict(raw=string(data.get('raw')))
+            elif action=='prior_review':
                 if v['prior_raw'] is not None or any(e['kind']=='review' for e in ev): raise ValueError('기존 비평은 재심사 전에 1회 등록')
                 raw=string(data.get('raw')); descriptions=data.get('issues')
                 if not isinstance(descriptions,list) or not descriptions or len(descriptions)>100: raise ValueError('원문에서 확인한 문제 목록 필요')
@@ -154,17 +173,28 @@ class Editorial:
                 if any(f['source']['render']==source['render'] and f['raw']==raw for f in v['feedback']): raise ValueError('이미 등록된 제작 후 비평')
                 prefix='POST-'+key([source,raw])[:12]
                 payload=dict(raw=raw,source=source,issues=[dict(id=prefix+'-%03d'%(j+1),description=string(x,4000),origin='actual-render-feedback') for j,x in enumerate(descriptions)])
-            elif action=='plan':
-                plan=plan_check(data.get('plan'),complete=False); rev=key(plan)
+            elif action in ('plan','relay_plan'):
+                relay=None
+                if action=='relay_plan':
+                    raw=string(data.get('raw'),1200000); relay=relay_object(raw)
+                    if relay.get('parent')!=v['latest']['revision']: raise ValueError('이전 버전의 수정 응답입니다. 현재 수정 요청을 다시 복사하세요.')
+                    data=dict(plan=relay.get('plan'),note=relay.get('note'),instruction=string(data.get('instruction',''),10000,empty=True))
+                plan=plan_check(data.get('plan'),complete=relay is not None); rev=key(plan)
                 if any(p['revision']==rev for p in v['versions']): raise ValueError('같은 제작안은 다시 제출할 수 없습니다. 실제 내용을 수정하세요.')
                 payload=dict(revision=rev,plan=plan,note=string(data.get('note'),10000),parent=v['latest']['revision'])
+                if relay is not None:
+                    payload.update(raw_response=raw,instruction=data['instruction'])
+                    if v['prior_raw'] and not v['prior_indexed']:
+                        descriptions=relay.get('prior_issues')
+                        if not isinstance(descriptions,list) or not 1<=len(descriptions)<=100: raise ValueError('AI가 기존 비평의 전체 결함 목록을 정리하지 않았습니다. 응답 정리 요청을 사용하세요.')
+                        payload['prior_issues']=[dict(id='PRIOR-%03d'%(j+1),description=string(x,4000),origin='human-relayed-ai-extraction') for j,x in enumerate(descriptions)]
+                action='plan'
             elif action=='review':
                 if v['latest']['original'] or v['review'] is not None: raise ValueError('수정 제작안마다 독립 심사 1회; 재시도는 새 수정본에서')
                 plan_check(v['latest']['plan'])
-                if v['original']['known_failed'] and not v['prior_raw']: raise ValueError('기존 Gemini 비평 원문 및 문제 목록을 먼저 등록하세요')
-                raw=string(data.get('raw')); reviewer=string(data.get('reviewer'),200)
-                try: r=json.loads(raw)
-                except json.JSONDecodeError as exc: raise ValueError('심사 JSON 형식 오류') from exc
+                if (v['original']['known_failed'] or v['prior_raw']) and not v['prior_indexed']: raise ValueError('기존 Gemini 비평 원문 및 문제 목록을 먼저 등록하세요')
+                raw=string(data.get('raw'),1200000); reviewer=string(data.get('reviewer'),200)
+                r=relay_object(raw)
                 if not isinstance(r,dict) or r.get('revision')!=v['latest']['revision']: raise ValueError('심사 대상 제작안 해시 불일치')
                 scores=r.get('scores')
                 if not isinstance(scores,dict) or set(scores)!=set(AXES): raise ValueError('6개 사전 제작 심사 축 필요')
@@ -184,7 +214,7 @@ class Editorial:
                 total=sum(scores.values())/len(AXES)*10 if complete else None
                 passed=bool(complete and total>=95 and min(scores.values())>=9 and not new and set(closed)==known and r.get('verdict')=='PASS')
                 # A rejected revision may not close old issues; carry them forward for the next review.
-                payload=dict(revision=v['latest']['revision'],raw=raw,reviewer=reviewer,scores=scores,total=total,issues=new,closed=closed if passed else [],pass_=passed)
+                payload=dict(revision=v['latest']['revision'],raw=raw,reviewer=reviewer,scores=scores,total=total,issues=new,closed=closed if passed else [],resolutions=res,evidence=r['evidence'],pass_=passed)
                 payload['pass']=payload.pop('pass_')
             elif action=='approval':
                 if v['approved'] or not v['review'] or not v['review']['pass'] or v['issues'] or data.get('confirmed') is not True:
