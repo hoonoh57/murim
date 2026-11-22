@@ -1,3 +1,11 @@
+## 2026-11-23 — GPT-SoVITS v2 요청/반환 재사용 안내문서
+
+- 목적: 다른 세션에서도 GPT-SoVITS v2의 실제 JSON 인수, 실행 명령, 저장 WAV, Studio API 응답/자산 경로를 추측하지 않고 재현. `docs/GPT_SOVITS_V2_TTS_OPERATIONS.md`를 TTS 호출 SSOT로 추가.
+- 소스 검증: `src/studio/voice.py` 및 `scripts/studio_sovits_worker.py` 호출 계약, 고정 v2 가중치, `text/prompt_text/speed/temperature`, `voice.wav/resolved_tts.yaml`, `src/studio/web.py` 음성 API 및 자산 GET, `workspace.py` 해시 바인딩/변경 무효화, `render.py` 길이 검사와 독립 레거시 mock 차이 문서화.
+- 변경 범위: **문서/README/상태·인계 문서만**, 실제 음성 모델·런타임·Studio·워커 소스는 변경하지 않음. Studio 승인 잠금 우회 없이, 독립 워커 예시와 승인 후 Studio 흐름 구분.
+- 검증: 현재 소스의 상수/경로/파라미터 일치성 및 Markdown 정적 대조 대상. **Windows 로컬 실제 WAV 새 합성 NOT_RUN, 최종 청취 및 사용자 권리 확인 NOT_VERIFIED**.
+- 다음 단계: 필요할 때 권리 확인 후 사용자 Windows 기존 엔진에서 1회 직접 호출하여 실제 WAV/해시/샘플레이트/길이와 청취 결과를 문서의 실행 증거로 별도 기록.
+
 ## 2026-11-22 — 사용자 시각적 서사 결함 уточ-분류 / 문화 스킬 격리
 
 - 실제 사용자 피드백: Gemini 지적은 **같은 세한도 도판을 60초 인트로 대부분에 의미 없이 지속 노출**, 무협형 자극이 부족하다는 논점이 아님. 작품 본질은 시각적 새 발견과 역사적 사건의 실질적 연결. G2 ART_DIRECTOR_PRODUCT_DEFECT.

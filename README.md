@@ -1,3 +1,7 @@
+## GPT-SoVITS v2 한국어 TTS 요청/반환 — 세션 간 공용 문서 (2026-11-23)
+
+기존 로컬 GPT-SoVITS에 한국어 텍스트·속도·Temperature를 전달하여 WAV를 **직접 생성**하거나 Studio **장면 음성으로 등록**하는 정확한 명령/JSON/모델/파일/오류 경로: [GPT-SoVITS v2 TTS 요청·실행·반환 운영 설명서](docs/GPT_SOVITS_V2_TTS_OPERATIONS.md). 이 문서를 다른 세션의 TTS 작업 SSOT로 읽는다. 기존 모델/참조 WAV와 소스는 변경하지 않는다.
+
 ## 2026-11-22 — 콘텐츠 생산 품질 복구 (G1/G2 내부 우선)
 
 영상 제작이나 외부 Gemini의 전면 재집필보다 **내부 감독/작가/리서치/Council의 작품 완성**을 우선한다. [Editorial Master](docs/skills/EDITORIAL_MASTER_SKILL_V2.md) · [사료 진실성](docs/skills/SOURCE_TRUTH_SKILL_V2.md) · [서사](docs/skills/CINEMATIC_NARRATIVE_SKILL_V2.md) · [독립 반대심사](docs/skills/INTERNAL_RED_TEAM_SKILL_V2.md)을 새 역사서사 전용 스킬로 구분하고, 기존 무협 강제 규칙을 분리했다. [시각 서사 스킬](docs/skills/CULTURAL_VISUAL_DRAMATURGY_SKILL_V1.md) / [세한도 내부 품질 실패 원장](docs/production/SEHANDO_INTERNAL_QUALITY_REMEDIATION_V1.md) / [v0.3 집필 지시](docs/production/SEHANDO_V03_EDITORIAL_ASSIGNMENT.md). 기존 4-GATE 최종 제품 실물 검증 유지. 레거시 mock 자동영상 생산 경로는 기본 HOLD이며, 스킬 등록을 작품 품질 PASS로 오인하지 않는다. 외부 원문 수정은 감독이 승인한 범위에만 국한한다.
