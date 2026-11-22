@@ -1,3 +1,10 @@
+## 2026-11-22 — 사용자 제안: 자연어 멀티트랙 반자동 통합 제작
+
+- 직전 실제 Windows run outputs/sehando/intro/v0.2/8a9f3c33d62e/intro.mp4 생성 PASS (사용자 콘솔, 1080p/60초 renderer 검증 통과); Gemini 사용자 전달 외부평가 38.5/100, V01..V10=[8,2,3,3,3,8,4,2,3,2], 작품성 FAIL. 모델의 80~90% 이탈 추정 및 개선 예상96은 실측/실제 개선 점수 아님. 1842 간찰의 1844년 책 도착 화면 배치, 반복 정지화면, SAPI 기계음, 미완결 결말 지적. 증거 원문은 대화, 영상 SHA 직접 재조회 미실행.
+- 기존 E:/GPT-SoVITS 설치/refs/사전학습 v2/v3/v4 발견. 기존 narrator.wav 1초/mean=max -91dB 무음 확인. 잘못된 custom 설정 대신 별도 설정으로 v2 실제 추론 및 참조 대사 추가/분할 조정 후 사용자 발음10 음색10 성우톤5, 끊김 해소, v3/v4 비슷하다는 정성 의견(0은 미평가). v2 잠정 사용 가능 후보, 성우 화법·참조 이용권·제품 연동 미완료. 현재 실제 시험 params cut0, top_k10 top_p0.8 temperature0.65 speed0.92 seed42, split_bucket false, 참조 텍스트 포함; 세부 재현 설정은 사용자 실제 run config 확인 필요. 모델 설치/기존 설정 덮어쓰기 금지.
+- 사용자: 한 화면에서 자연어 TTS/화면 효과/자막 효과/배경 이미지·영상 CRUD, 움직임 설명 편집, 기존 말과 입술 동기화 성공 ComfyUI workflow, 외부 LLM 이미지 및 인간 매개, 미완성 부분씩 보완. 기존 `docs/MURIM_VML_STUDIO_ARCHITECTURE_V0_1.md` 최상단에 우선 구현 방향 추가; 별도 제품/문서 중복 생성 없음. 실제 성공 workflow 파일 및 증거는 미확인, 외부 provider API 보류. 현재 기존 Studio는 v0.1 단일 컷 UI; v0.2 renderer 및 source-cache, SoVITS 시험은 별도. `V02_RENDER_PASS_USER_REPORTED / V02_EXTERNAL_REVIEW_FAIL_38_5 / TTS_V2_AUDITION_PARTIAL / MULTITRACK_STUDIO_DESIGN_PROPOSED / QUALITY_HOLD`.
+- 다음 한 단계: 기존 Studio에서 실제 v0.2 output/receipt/M-VML을 열고 선택 구간의 편집 및 부분 재생성/비교/복원 경로를 구현·검증, v2 TTS를 기존 설치에서 호출. 새 모델 설치나 별도 데모 우선 개발 금지. 전체 작품 95/축9 및 hard defect gate 유지.
+
 ## 2026-11-22 — 실제 Windows FFmpeg/PATH 복구, 도판 HTTP 429 및 자산 캐시 개선
 
 - 사용자 Windows 콘솔: 7f3c4b0 fast-forward PASS; Gyan FFmpeg 기존 패키지 9.1 업그레이드 후 Bin 디렉터리를 현 세션 PATH에 추가하여 ffmpeg/ffprobe 인식 PASS. 기존 SAPI Korean voice enumeration을 넘어서 outputs/sehando/intro/v0.2/3b193356f04c 생성까지 확인. 첫 asset(ART:DETAIL@1) 다운로드 시 Wikimedia HTTP 429, 요청 ID daab851. `PARTIAL_CHANGE` (output run만 생성), ENVIRONMENT_ISSUE (remote source rate limit) + PRODUCT_DEFECT (render/download coupling). 음성 합성 및 렌더 NOT_RUN.

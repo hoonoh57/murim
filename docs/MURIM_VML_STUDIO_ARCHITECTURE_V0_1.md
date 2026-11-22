@@ -1,3 +1,17 @@
+## 2026-11-22 — 통합 자연어 멀티트랙 반자동 제작 우선 방향
+
+사용자 제안: 기존 검증된 제작 자원을 한 편집 화면에서 선택하고, 미완성 항목만 자연어로 반복 수정·보완. 완전 자동화 완료나 외부 LLM 회신을 기다리지 않고 실제 작품을 개선. 이 방향은 기존 M-VML/4-GATE의 확장 제안이며, 아직 편집기 기능 구현 완료가 아니다.
+
+### 단일 편집 표면과 편집 원본
+- 기존 Studio를 발전시킨 로컬 통합 UI. 좌측 작업/자원 라이브러리, 중앙 실제 합성 미리보기와 transport, 우측 선택 범위/자연어/변경안 및 작업 상태, 하단 동기화된 영상·이미지·카메라/효과·내레이션·자막·BGM·SFX 멀티트랙. 생성과 편집을 위해 여러 별도 도구를 사용자가 오갈 필요를 최소화. 기존 isolated v0.1 pilot 보존, 실제 v0.2 output/receipt/source-cache를 읽는 경로로 첫 vertical slice.
+- M-VML은 유일한 편집 명세 SSOT; UI/IR/캐시는 파생 상태. 트랙 이벤트 ID·source asset revision·source in/out·timeline start/end integer frame·z-order/mix·keyframes·생성 의도/동작 설명·잠금·dependency를 명시. 텍스트/실제 발화/자막은 구분하되 연결 ID로 동기화. 시간 변경은 ripple/고정 길이/여백 선택을 명시, 다른 클립을 무단 덮어쓰지 않음. 기존 final render는 immutable. 수정은 신규 draft revision, undo/redo, A/B preview, 명시적 선택/승인. 원본 미디어 삭제와 트랙에서 제거는 별개의 동작.
+- 자연어 → 현재 선택 ID/time range + 허용된 typed patch 제안 → 변경 diff/영향/비용 확인 → 서버 schema·권한·revision(CAS) 검증 → 적용 → dirty 범위 재생성 → 구간 미리보기/채택. LLM 출력은 신뢰하지 않는 제안이며 임의 코드·shell·경로·URL·provider 호출 불허. 수정/추가/이동/삭제/교체/undo는 동일 patch 경로. 1차에는 직접 inspector와 제한 문법, 자유 자연어는 실제 검증된 LLM 또는 인간 매개 patch 전달을 선택; 해석 불가를 임의로 성공 처리하지 않는다.
+- TTS 변경 → 연결 자막 및 립싱크 타이밍 dirty; camera/effect/subtitle styling은 합성 구간만 dirty; background asset 변경은 해당 영상 생성/합성 의존성만 dirty. 승인된 미변경 artifact hashes 보존. BGM/SFX 믹스 영향 범위 명시; 최종 concat/mux는 필요할 수 있지만 불필요한 모델 재추론 금지. 실제 음성 시간, 자막 cue, 립싱크 및 프레임 경계 재검증. 캐시 키는 입력 해시+엔진/버전+params+workflow revision+upstream deps. 기존 source-cache 재사용; 다중 이름으로 중복 소유 금지.
+- 기존 pipeline/provider 책임 재사용. Audio: 기존 E:/GPT-SoVITS runtime, v2 정상 사전학습 pair, 참조/실제 발화/속도/샘플링 프로필, 사용자 청취 및 음량/길이/무음 검사. 기존 custom 설정은 잘못된 모델 경로(음원분리 ckpt/easy-install.pth); 기존 설치 파일 수정 금지, 별도 config 사용. v2 사용자 청취 발음10 음색10 성우톤5; v3/v4 비슷하다는 정성 의견, 정량 미평가. 참조 narrator_ref_7s.wav 및 대사 확보, 참조 이용 권리 확인 필요. 화법별 참조 구간은 실제 음성/권리 확인 후 등록. 기본 SAPI/무음 mock으로 자동 대체 금지.
+- Video: 기존 ComfyUIClient와 사용자가 성공을 보고한 말/입술 동기화 workflow 우선 재사용. 정확한 로컬 workflow JSON, 성공 output/설치 노드/가중치/입출력 node binding을 아직 확인하지 못했으므로 현재 repo의 WAN/LTX placeholder를 성공 workflow로 간주하지 않는다. motion description은 사람/LLM 편집 가능한 명세이며 실제 생성/검증과 분리. GPU 작업 순차, 선택 샷만 실행.
+- 외부 생성/연구/심사: UI에서 선택 구간과 필요한 출처/프롬프트/참조를 export, 사용자 복사·붙여넣기 및 파일 import → provenance/권리/해시/해상도 확인 → 후보 등록 → preview 선택. 외부 LLM 자동 연동 강제 없음; 승인 없는 자산 전송, 비용 발생, 공개 게시 금지. 미완성 트랙/에셋은 pending/blocked 명시, 다른 편집을 차단하지 않음. 품질 승인과 게시 gate는 유지.
+- 구현 집중 순서: (1) 실제 v0.2 run을 열고 장면·트랙별 실제 재생/seek, 수정 draft/undo/dirty 추적, 기존 outputs 저장; (2) 기존 v2 TTS의 선택 구간 실제 WAV 재생성 및 검증된 합성/자막 수정, 비교 및 채택; (3) camera/effect/자막 및 이미지·영상·BGM·SFX CRUD, 실제 부분 렌더; (4) 입술 동기화의 정확한 성공 workflow 확인 후 선택 구간 연결; 외부 수동 import/export는 필요한 시점에 병행. 독립 데모 여러 개로 분산하지 않고 하나의 실제 작품에서 vertical slice를 검증. 1차 제품 검증: 기존 v0.2 원본 유지, 선택 Sxx 음성/자막/카메라 수정 후 새 MP4, 미변경 클립의 hash 보존과 영향 구간 확인, 실제 편집 화면/재생 전후 확인. 성우 화법5를 작품성 통과로 기록하지 않음.
+
 # Murim VML (Video Markup Language) & Studio — architecture proposal v0.1
 
 2026-11-22 KST. Status: **DESIGN_PROPOSED / LANGUAGE_NOT_IMPLEMENTED / REAL_RENDER_NOT_RUN / QUALITY_NOT_VERIFIED**.
