@@ -1,3 +1,10 @@
+## 2026-11-22 — 최우선 복구: 제작 전 편집 승인 게이트
+
+- 사용자 지시: 기존 38.5점 실패 제작안이 바로 멀티트랙 제작되는 구조 금지. 원래·수정 버전, 기획·제작 방침·실제 시나리오, 인간 매개 외부 수정/독립 검증/결함 해결·승인까지 Studio에서 수행. 기존 6단계 제작은 후순위.
+- 현재 소스: 00A/B/C 신설, 프로젝트 불변 제작안·심사 이력, 서버 제작 잠금, 승인된 대본 및 장면 전달, 실제 영상 비평으로 사전 제작 재개. [권위 계약](../AGENTS.md), [사용법](PREPRODUCTION_STUDIO_GUIDE.md), [검증 상태](CURRENT_STATE.md). 기존 실패 영상 8a9f3c33d62e 그대로 보존. 알려진 4개 지적은 요약이며 실제 Gemini 원문/전체 결함 등록 필요.
+- 검증: 새 gate 9 fixture tests PASS, JS 구문 PASS; Windows UI/HTTP/GPU/새 실제 작품 품질 NOT_RUN. 실제 승인 없는 프로젝트 HOLD. 과거 아래 렌더/립싱크 우선 작업은 사전 제작 승인 후 진행.
+- 다음: 사용자 실제 Windows 00A/B/C 확인 후 00C에 기존 Gemini 비평 원문을 등록, 기획·시나리오 외부 수정안 생성/직접 보완·새 버전 저장, 독립 심사. 미해결 문제 하나라도 있으면 제작 잠금 유지. 실 영상 최종 품질 게이트는 독립.
+
 ## 2026-11-22 — 기존 로컬 ComfyUI API 그래프 연결부 포함 통합 후보
 
 - 이전 Studio 초기 commit 36f792d의 자동 립싱크 큐 미구현 상태를 확장. 동작·영상 탭에서 사용자가 이전에 직접 검증한 신뢰 로컬 API workflow JSON(일반 UI graph와 구분)을 등록. 이미지·음성·동작 프롬프트 입력 및 정확한 저장 노드 선택, 기존 ComfyUI http://127.0.0.1:8188 object_info/queue/prompt/history/view 사용. 공식 routes 및 server upload/image 구현 확인: https://github.com/Comfy-Org/docs/blob/main/development/comfyui-server/comms_routes.mdx , https://github.com/Comfy-Org/ComfyUI/blob/master/server.py . 로컬 API 서버가 실제 호환되는지는 Windows 확인 필요. 선택 이미지/음성 원본 해시, graph 해시, 입력 binding, job ID, 실제 video duration/hash 기록. 편집 대상에 자동 덮어쓰기 하지 않고 실제 영상 후보 등록→사용자 청취/시청→멀티트랙 선택 배치. 동기화 표시된 영상의 의존성 추적은 이전 작업 범위 유지.

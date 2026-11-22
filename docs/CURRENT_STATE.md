@@ -1,3 +1,11 @@
+## 2026-11-22 — 사전 제작 품질 게이트 / 프로젝트별 편집 버전·독립 심사
+
+- 사용자 실제 Studio 화면 확인: 세한도 8a9f3c33d62e 7장면과 멀티트랙 표시, Revision conflict 관찰. 전체 Windows 제품 PASS 아님. 사용자가 불합격 제작안으로 영상화하는 구조를 지적: PRODUCT_DEFECT / AUTHORITY_DRIFT. 우선순위를 G1/G2 편집 승인으로 전환.
+- 00A 기획·제작 방침 / 00B 시나리오·장면 설계 / 00C 독립심사·승인 추가. 프로젝트별 outputs/studio/<id>/preproduction 불변 해시 연결 이력, 기존 M-VML 원본 및 기존 미디어 보존. Gemini 38.5/100 실패 기록의 4개 알려진 문제는 요약으로 seed, 실제 원문+모든 문제 등록 필요. 외부 LLM 수정 요청·JSON 초안 가져오기, 수정안 및 원본 비교·버전 기록, 독립 심사 요청/원문 등록, 기존 결함별 해결 근거와 새 문제 검증, 미평가/미해결/기준 미달 잠금; 실제 외부 호출 및 독립성 인증은 미구현(인간 매개).
+- 서버 측 미승인 제작 edit/asset/restore/voice/render/workflows/comfy 및 제작 prompt 차단. 합격 6개 편집 축 동등 가중 95/100·축별9 이상·문제0 및 인간 승인 후 승인된 장면 순서/제목/길이/대본을 새 M-VML에 전달(기존 실패 미디어 자동 선택 제거, 자산 registry/원본 유지). 구조적 변경은 새 사전 제작안 심사, 미세 트랙 조정만 허용. 렌더 receipt에 editorial_plan 해시 연결. 06 실제 영상의 구조적 비평은 검증된 render id/파일 SHA에 연결해 사전 제작으로 반환. 실제 영상 최종 VIEWER_VALUE_GATE_V1 10축 별도.
+- 신규 gate 테스트 9개 실제 Python unittest PASS 및 compile(실행된 editorial.py/workspace.py/tests의 Git blob 대조), JS 구문 검사 PASS. 이전 13개 재실행 없음. Flask 미설치 환경으로 실제 HTTP/Windows WYSIWYG·GPU·실 Gemini 새 평가 NOT_RUN. 기존 실패 작품의 실제 비평 원문 입력, 현 사전 제작안 수정·재심사·사용자 승인 NOT_RUN. 현재 PREPRODUCTION_GATE_CANDIDATE / QUALITY_HOLD. 이전 장면 렌더 우선 작업은 승인 후로 연기.
+- 다음 한 단계: GitHub FF 1회 및 run-studio.cmd 재실행 → 기존 저장된 작품 열기(불필요 재import 금지) → 00C Gemini 원문·전체 결함 등록 → 00A/00B 실제 재설계·수정안 저장 및 별도 독립 심사. 목표 미달 시 반복 제작 대신 문제 해결/원인 재설계. 실제 승인 전 생성/렌더 금지.
+
 ## 2026-11-22 — 기존 로컬 ComfyUI API 그래프 연결부 포함 통합 후보
 
 - 이전 Studio 초기 commit 36f792d의 자동 립싱크 큐 미구현 상태를 확장. 동작·영상 탭에서 사용자가 이전에 직접 검증한 신뢰 로컬 API workflow JSON(일반 UI graph와 구분)을 등록. 이미지·음성·동작 프롬프트 입력 및 정확한 저장 노드 선택, 기존 ComfyUI http://127.0.0.1:8188 object_info/queue/prompt/history/view 사용. 공식 routes 및 server upload/image 구현 확인: https://github.com/Comfy-Org/docs/blob/main/development/comfyui-server/comms_routes.mdx , https://github.com/Comfy-Org/ComfyUI/blob/master/server.py . 로컬 API 서버가 실제 호환되는지는 Windows 확인 필요. 선택 이미지/음성 원본 해시, graph 해시, 입력 binding, job ID, 실제 video duration/hash 기록. 편집 대상에 자동 덮어쓰기 하지 않고 실제 영상 후보 등록→사용자 청취/시청→멀티트랙 선택 배치. 동기화 표시된 영상의 의존성 추적은 이전 작업 범위 유지.

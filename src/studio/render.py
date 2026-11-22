@@ -200,5 +200,5 @@ def render(store,pid,doc,revision,scene_id=None):
         fc.append(''.join(pairs)+f'concat=n={len(ss)}:v=1:a=1[v][a]')
         run(args+['-filter_complex_threads','2','-filter_complex',';'.join(fc),'-map','[v]','-map','[a]','-frames:v',str(frames),'-t',str(frames/FPS),'-c:v','libx264','-threads','2','-preset','fast','-crf','18','-c:a','aac','-ar','48000','-ac','2','-movflags','+faststart',result])
     validate_clip(fp,result,frames)
-    receipt=dict(id=out.name,revision=revision,scene=scene_id,frames=frames,sha256=digest(result),clips=records,status='DRAFT_RENDERED_QUALITY_NOT_APPROVED')
+    receipt=dict(id=out.name,revision=revision,editorial_plan=doc.get('editorial-plan'),scene=scene_id,frames=frames,sha256=digest(result),clips=records,status='DRAFT_RENDERED_QUALITY_NOT_APPROVED')
     (out/'receipt.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8');return receipt

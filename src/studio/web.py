@@ -14,6 +14,7 @@ from .workspace import (Store, LOCK, ID, MAX_FILE, assets, asset_path, digest, s
 from .render import render, executables, media_info
 from .voice import synthesize
 from .comfy import store_graph,listed_graphs,generate,MAX_GRAPH
+from .editorial import Editorial, GUIDE, AXES
 
 ROOT=Path(__file__).resolve().parents[2]
 store=Store(ROOT)
@@ -48,10 +49,36 @@ def data():
 def current(pid,revision):
     d,h=store.load(pid)
     if revision!=h:raise ValueError('Revision conflict; reload current project')
+    Editorial(store,pid).require(d)
     return d,h
 
 
 def brief(pid,**more):return jsonify(dict(store.describe(pid),**more))
+
+@BP.get('/api/project/<pid>/editorial')
+def editorial_view(pid):
+    with LOCK:
+        return jsonify(dict(Editorial(store,pid).view(),fields=GUIDE,axes=AXES))
+
+@BP.post('/api/project/<pid>/editorial')
+def editorial_mutation(pid):
+    x=data()
+    if not JOB_LOCK.acquire(False):raise ValueError('제작 작업 종료 후 사전 제작안을 변경하세요')
+    try:
+        action=x.get('action'); payload=x.get('data',{})
+        if not isinstance(payload,dict):raise ValueError('제작안 요청 객체 필요')
+        if action=='feedback':
+            rid=payload.get('render','')
+            if not isinstance(rid,str) or not ID.fullmatch(rid):raise ValueError('실제 렌더 선택 필요')
+            folder=safe(store.folder(pid),'renders/'+rid,directory=True)
+            record=json.loads(safe(folder,'receipt.json').read_text(encoding='utf-8'))
+            if record.get('id')!=rid or digest(safe(folder,'intro.mp4'))!=record.get('sha256'):raise ValueError('Render integrity error')
+            payload=dict(payload,source=dict(render=rid,sha256=record['sha256'],revision=record['revision'],editorial_plan=record.get('editorial_plan')))
+        result=Editorial(store,pid).mutate(x.get('token'),action,payload)
+        return jsonify(dict(result,fields=GUIDE,axes=AXES))
+    finally:
+        JOB_LOCK.release()
+
 
 
 @BP.get('/')
@@ -87,6 +114,7 @@ def edit(pid):
     x=data()
     with LOCK:
         d,h=current(pid,x.get('revision'));n,dirty=patch(d,x.get('ops'))
+        Editorial(store,pid).require(n)
         if x.get('preview') is True:return jsonify(state=state(n),dirty=dirty,revision=h)
         store.save(pid,n,h);return brief(pid,dirty=dirty)
 
@@ -95,7 +123,7 @@ def edit(pid):
 def restore(pid):
     x=data()
     with LOCK:
-        d,h=current(pid,x.get('revision'));old,_=store.load(pid,x.get('target'));store.save(pid,old,h)
+        d,h=current(pid,x.get('revision'));old,_=store.load(pid,x.get('target'));Editorial(store,pid).require(old);store.save(pid,old,h)
         return brief(pid)
 
 
@@ -173,13 +201,14 @@ def baseline(pid):
 
 @BP.get('/api/project/<pid>/prompt/<sid>')
 def relay_prompt(pid,sid):
-    d,h=store.load(pid);s=get_scene(d,sid);context=next(x for x in state(d)['scenes'] if x['id']==sid)
+    d,h=store.load(pid);approved=Editorial(store,pid).require(d);s=get_scene(d,sid);context=next(x for x in state(d)['scenes'] if x['id']==sid)
     opts=[a for a in state(d)['assets'] if a['id'] in {t.get('asset') for t in s}]
     mode=request.args.get('mode','patch')
     if mode=='patch':
         text='현재 선택 장면만 수정하는 JSON 배열을 제안. 외부 파일/코드/URL/명령 실행 금지. 허용: set(scene,track,values), remove(scene,track), scene(scene,title,frames). track=image(asset,text),video(asset,text,in),effect(camera,amount,text),voice(text,speed,temperature,gain,offset,in),subtitle(text,mode,size,color,offset,end),bgm/sfx(asset,gain,offset,in,text). 카메라 static/push/pull/pan-right/pan-left, 자막 plain/fade/reveal. 시간은 24fps 정수 프레임. 등록된 asset ID만 허용. 미확인 사실 창작 금지. JSON 배열만 응답.\n'
     else:text='선택 장면의 고해상도 이미지 또는 영상 후보 제작. 기존 원작/생성 재현 구분, 역사 고증, 색채·구도·움직임·캐릭터 일관성 고려. 원화의 내용과 글자 생성/변조 금지. 1920×1080 이상의 이미지 또는 장면 길이에 맞는 영상; 출처/사용권 명시. 아래 미디어 참조는 사용자가 명시적으로 첨부.\n'
-    return jsonify(prompt=text+json.dumps({'scene':context,'selected_assets':opts},ensure_ascii=False,indent=2),revision=h)
+    plan=approved['latest']['plan']; directive=next(x for x in plan['scenes'] if x['id']==sid)
+    return jsonify(prompt=text+json.dumps({'approved_plan_revision':approved['latest']['revision'],'production_policy':{k:v for k,v in plan.items() if k!='scenes'},'approved_scene':directive,'scene':context,'selected_assets':opts},ensure_ascii=False,indent=2),revision=h)
 
 
 @BP.post('/api/project/<pid>/review')
