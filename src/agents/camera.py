@@ -8,12 +8,15 @@ from src.core.models import Scenario
 
 
 class CameraAgent(BaseAgent):
-    def __init__(self, is_mock: bool = True):
+    def __init__(self, is_mock: bool = True, content_mode: str = "wuxia"):
         super().__init__(agent_type="camera", is_mock=is_mock)
-        self.system_prompt = build_full_system_prompt("camera")
+        self.content_mode = content_mode
+        self.system_prompt = build_full_system_prompt("camera", content_mode=content_mode)
 
     def plan_camera_angles(self, scenes: List) -> List:
         """감정 → 카메라 매핑: skills 기반"""
+        if self.content_mode == "historical_art":
+            raise ValueError("각 쇼트의 새 정보·실제 시선 목적이 없는 자동 감정→카메라 변환은 금지합니다.")
         print(f"[Camera] Planning camera angles for {len(scenes)} scenes.")
 
         emotion_map = {
@@ -46,6 +49,8 @@ class CameraAgent(BaseAgent):
         return plan
 
     def revise_camera_plan(self, original_plan: str, critiques: list) -> str:
+        if self.content_mode == "historical_art":
+            raise ValueError("문화·예술 컷은 독립된 시각적 새 정보의 근거로만 설계합니다")
         if not critiques:
             return original_plan
 

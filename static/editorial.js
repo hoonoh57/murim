@@ -82,7 +82,7 @@ function changeText(root,oldValue,newValue){
 function sceneText(s){if(!s)return '해당 장면 없음';return s.title+' · '+(s.frames/24).toFixed(2)+'초\n'+Object.entries(sceneLabels).filter(([k])=>k!=='title').map(([k,label])=>label+': '+(s[k]||'—')).join('\n\n')}
 function manuscript(p){return p.scenes.map((s,i)=>String(i+1)+'. '+s.title+' ('+(s.frames/24).toFixed(2)+'초)\n'+(s.narration||'(발화 없음)')).join('\n\n')}
 function promptForDocument(v,basis){
-    return '아래 원문을 직접 고쳐서 전체 수정 원문만 반환하세요. 비평·의견·수정 설명·점수·예상 점수·JSON·코드 블록을 쓰지 마세요. 완성된 기획과 실제 시나리오, 장면 순서·소요 시간·발화·화면·음향·자막·사료 출처를 포함하십시오. 개선되지 않은 부분도 누락하지 말고 전체 문서를 다시 제출하십시오. 확인되지 않은 역사 사실과 출처를 발명하지 마십시오.\n\n감독 지시:\n'+(inputs.instruction.trim()||'기존 비평의 모든 결함을 실제 원문에 반영하여 개선하세요.')+'\n\n참고 비평 (수정 대상이 아니라 기준):\n'+(v.prior_raw||v.original.prior_summary||'없음')+'\n\n최근 독립 심사:\n'+(v.review?.raw||'없음')+'\n\n수정할 원문:\n'+basis.text;
+    return '당신은 작품을 지휘하는 감독이 아니라 범위 제한된 외부 원고 편집자입니다. 감독이 구체적으로 지시한 문단·장면만 실제 원문 문장으로 수정하세요. 고정된 시대·사건·관점·인물 관계·결말·검증된 사실을 임의 변경하지 마세요. 지정되지 않은 부분은 단 한 글자도 새로 쓰지 않고 보존하세요. 전체 문서를 반환하되 실제 변경 문장만 달라야 합니다. 비평·의견·예상 점수·JSON·코드 블록은 반환하지 마세요. 감독의 변경 지시가 없으면 원문을 그대로 반환하며 무단 수정하지 마세요. 출처 미확인 사실과 인물 심리·대사를 창작하지 마세요.\n\n감독 지시:\n'+(inputs.instruction.trim()||'변경 지시가 지정된 부분에만 반영하세요. 지정되지 않은 부분은 절대 변경하지 마세요.')+'\n\n참고 비평 (수정 대상이 아니라 기준):\n'+(v.prior_raw||v.original.prior_summary||'없음')+'\n\n최근 독립 심사:\n'+(v.review?.raw||'없음')+'\n\n수정할 원문:\n'+basis.text;
 }
 function promptForCompile(v){
     const schema={parent:v.latest.revision,document_revision:v.final_document.revision,plan:v.latest.plan,note:'확정 원문 제작 연결 설명',prior_issues:['기존 비평의 모든 구체적 결함']};
@@ -109,8 +109,8 @@ function drawDirective(root,v){
     if(v.document_candidates.length)documentSelect(ctl,'저장된 외부 수정본',[{revision:'',label:'새 수정 원문'},...v.document_candidates.map((d,i)=>({...d,label:'수정본 '+(i+1)}))],inputs.selected,x=>{
         if(!abandon()){drawEditorial();return}const candidate=v.document_candidates.find(c=>c.revision===x);inputs.selected=x;inputs.candidate=candidate?.text||'';inputs.final=candidate?.text||'';if(candidate)inputs.basis=candidate.basis;drawEditorial();
     });
-    field(c,'추가 수정 지시 (선택 사항)','instruction',2);
-    copyButton(c,'원문 재작성 요청 복사',()=>promptForDocument(v,basis));
+    field(c,'외부에 허용할 수정 범위 (감독이 지정)','instruction',2);
+    copyButton(c,'지정 범위 수정 요청 복사',()=>promptForDocument(v,basis));
     copyButton(c,'기준 원문만 복사',()=>basis.text);
     const pair=preEl('div');pair.className='pre-grid';c.append(pair);
     const left=preCard(pair,'원문 · '+basis.label);

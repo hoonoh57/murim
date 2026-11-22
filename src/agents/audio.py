@@ -7,24 +7,33 @@ from src.core.models import Scenario
 
 
 class AudioAgent(BaseAgent):
-    def __init__(self, is_mock: bool = True):
+    def __init__(self, is_mock: bool = True, content_mode: str = "wuxia"):
         super().__init__(agent_type="audio", is_mock=is_mock)
         self.generator = AudioGenerator(is_mock=is_mock)
-        self.system_prompt = build_full_system_prompt("audio")
+        self.content_mode = content_mode
+        self.system_prompt = build_full_system_prompt("audio", content_mode=content_mode)
 
     def tts(self, text: str) -> str:
+        if self.content_mode == "historical_art":
+            raise ValueError("검증된 실제 낭독 원고·음성 품질 G3 전 자동 TTS는 금지합니다.")
         return self.generator.tts(text)
 
     def generate_sfx(self, description: str) -> str:
+        if self.content_mode == "historical_art":
+            raise ValueError("역사서사 음향은 장면 의미/권리 확인 이전 임의 생성 금지")
         print(f"[Audio] Generating SFX for: {description}")
         return MockHelper.get_mock_path("audio", "sfx_mock.mp3")
 
     def generate_bgm(self, mood: str) -> str:
+        if self.content_mode == "historical_art":
+            raise ValueError("문화·예술 BGM은 승인된 음향 설계와 청취 검증 필요")
         print(f"[Audio] Composing BGM for mood: {mood}")
         return MockHelper.get_mock_path("audio", "bgm_mock.mp3")
 
     def validate_narration_length(self, text: str, scene_duration_sec: float) -> dict:
         """나레이션 텍스트가 장면 시간에 맞는지 검증"""
+        if self.content_mode == "historical_art":
+            raise ValueError("무협 3초 무음/초당 문자수 기준은 역사서사에 적용 불가")
         available = scene_duration_sec - NARRATION_RULES["silence_tail_sec"]
         max_chars = int(available * NARRATION_RULES["chars_per_sec"])
         actual = len(text)
@@ -40,9 +49,13 @@ class AudioAgent(BaseAgent):
 
     def get_narration_guide(self, scene_duration_sec: float) -> str:
         """장면 시간에 맞는 나레이션 가이드 반환"""
+        if self.content_mode == "historical_art":
+            raise ValueError("문화·예술 음성은 실제 낭독으로 시간 측정해야 합니다")
         return build_narration_prompt(scene_duration_sec)
 
     def revise_soundscape(self, original_mood: str, critiques: list) -> str:
+        if self.content_mode == "historical_art":
+            raise ValueError("문화·예술 음향은 무협형 자동 감정 포장으로 고칠 수 없습니다")
         if not critiques:
             return original_mood
 

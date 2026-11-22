@@ -1,3 +1,7 @@
+## 2026-11-22 — 콘텐츠 생산 품질 복구 (G1/G2 내부 우선)
+
+영상 제작이나 외부 Gemini의 전면 재집필보다 **내부 감독/작가/리서치/Council의 작품 완성**을 우선한다. [Editorial Master](docs/skills/EDITORIAL_MASTER_SKILL_V2.md) · [사료 진실성](docs/skills/SOURCE_TRUTH_SKILL_V2.md) · [서사](docs/skills/CINEMATIC_NARRATIVE_SKILL_V2.md) · [독립 반대심사](docs/skills/INTERNAL_RED_TEAM_SKILL_V2.md)을 새 역사서사 전용 스킬로 구분하고, 기존 무협 강제 규칙을 분리했다. [시각 서사 스킬](docs/skills/CULTURAL_VISUAL_DRAMATURGY_SKILL_V1.md) / [세한도 내부 품질 실패 원장](docs/production/SEHANDO_INTERNAL_QUALITY_REMEDIATION_V1.md) / [v0.3 집필 지시](docs/production/SEHANDO_V03_EDITORIAL_ASSIGNMENT.md). 기존 4-GATE 최종 제품 실물 검증 유지. 레거시 mock 자동영상 생산 경로는 기본 HOLD이며, 스킬 등록을 작품 품질 PASS로 오인하지 않는다. 외부 원문 수정은 감독이 승인한 범위에만 국한한다.
+
 ## 사전 제작 우선 — 2026-11-22
 
 작품을 열면 00A 원문 비교·확정, 00B 확정본 이력, 00C 제작 연결·승인이 먼저 열린다. 불합격 기획·미해결 비평·미평가 상태에서는 실제 생성/렌더 불가. 승인된 수정안만 기존 6단계 제작에 전달. 세한도 기존 실패 작품은 다시 가져오지 말고 저장된 작품을 열어 원문과 외부 수정 원문 비교 및 최종 문서 확정부터 시작한다. [사전 제작 UI 사용설명서](docs/PREPRODUCTION_STUDIO_GUIDE.md). 이전 README의 렌더 및 GPU 검증 지시는 사전 제작 승인 이후 적용한다.

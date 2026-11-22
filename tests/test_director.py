@@ -34,16 +34,14 @@ class TestDirectorAgent(unittest.TestCase):
             if os.path.exists(agent.log_file):
                 os.remove(agent.log_file)
 
-    def test_orchestrate_episode_success(self):
-        topic = "Test Topic"
-        events = "Test Events"
-        result = self.director.orchestrate_episode(topic, events, self.agents)
-        
-        self.assertIsInstance(result, ProductionResult)
-        self.assertEqual(result.status, "success")
-        self.assertTrue(len(result.image_paths) > 0)
-        self.assertIsNotNone(result.audio_path)
-        self.assertIn("images", result.scenario.assets)
+    def test_unapproved_mock_cannot_produce_any_assets(self):
+        # A false-positive production result would violate the actual G1/G2 gates.
+        self.agents["imaging"].generate = lambda *a, **k: self.fail("image generation crossed HOLD")
+        self.agents["video"].generate_from_image = lambda *a, **k: self.fail("video generation crossed HOLD")
+        self.agents["audio"].tts = lambda *a, **k: self.fail("audio generation crossed HOLD")
+        result = self.director.orchestrate_episode("Test Topic","Test Events",self.agents)
+        self.assertIsNone(result)
+
 
     def test_check_balance(self):
         report = self.director.check_balance(self.agents)

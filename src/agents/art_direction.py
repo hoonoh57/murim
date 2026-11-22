@@ -7,12 +7,15 @@ from src.core.models import Scenario
 
 
 class ArtDirectionAgent(BaseAgent):
-    def __init__(self, is_mock: bool = True):
+    def __init__(self, is_mock: bool = True, content_mode: str = "wuxia"):
         super().__init__(agent_type="art_direction", is_mock=is_mock)
-        self.system_prompt = build_full_system_prompt("art_direction")
+        self.content_mode = content_mode
+        self.system_prompt = build_full_system_prompt("art_direction", content_mode=content_mode)
 
     def design_style_guide(self, worldview: str) -> dict:
         """감정 온도 기반 스타일 가이드 — skills 연동"""
+        if self.content_mode == "historical_art":
+            raise ValueError("진본·출처·관찰 목적이 연결된 승인된 시각 설계가 필요합니다.")
         print(f"[ArtDirection] Designing style guide for: {worldview}")
 
         temp_map = SYNC_LAWS["emotional_temperature"]
@@ -44,6 +47,8 @@ class ArtDirectionAgent(BaseAgent):
 
     def get_emotional_palette(self, temperature: str) -> dict:
         """감정 온도 코드로 직접 팔레트 조회"""
+        if self.content_mode == "historical_art":
+            raise ValueError("문화·예술 조명은 획일 감정 팔레트로 자동 결정할 수 없습니다")
         palettes = {
             "냉": {"palette": ["#1A1A2E", "#16213E", "#0F3460"], "lighting": SYNC_LAWS["emotional_temperature"]["냉"]},
             "온": {"palette": ["#DAA520", "#CD853F", "#D2691E"], "lighting": SYNC_LAWS["emotional_temperature"]["온"]},
@@ -53,6 +58,8 @@ class ArtDirectionAgent(BaseAgent):
         return palettes.get(temperature, palettes["온"])
 
     def revise_style_guide(self, original_concept: str, critiques: list) -> str:
+        if self.content_mode == "historical_art":
+            raise ValueError("문화·예술 미술감독 승인 없는 자동 콘셉트 재작성 금지")
         if not critiques:
             return original_concept
 

@@ -10,13 +10,16 @@ from src.core.models import Scenario
 
 
 class ImagingAgent(BaseAgent):
-    def __init__(self, is_mock: bool = True):
+    def __init__(self, is_mock: bool = True, content_mode: str = "wuxia"):
         super().__init__(agent_type="imaging", is_mock=is_mock)
         self.generator = ImageGenerator(is_mock=is_mock)
-        self.system_prompt = build_full_system_prompt("imaging")
+        self.content_mode = content_mode
+        self.system_prompt = build_full_system_prompt("imaging", content_mode=content_mode)
 
     def generate(self, prompt: str, style_guide: dict = None) -> str:
         """프롬프트에 캐릭터 앵커 + 세계관 네거티브 자동 보강"""
+        if self.content_mode == "historical_art":
+            raise ValueError("문화유산 진본을 무협 인물 생성으로 대체할 수 없습니다. 자산 권리 및 원전 검증이 필요합니다.")
         # 캐릭터 앵커가 없으면 자동 삽입
         if HERO_LCM["face"][:20] not in prompt:
             prompt = (
@@ -46,6 +49,8 @@ class ImagingAgent(BaseAgent):
         age: int = 16,
     ) -> str:
         """동기화 매트릭스 기반 프롬프트 자동 생성 후 이미지 생성"""
+        if self.content_mode == "historical_art":
+            raise ValueError("역사·예술 모드에서 무협 인물/세계관 자동 이미지 생성 불가")
         full_prompt = build_full_prompt(
             action=action,
             location_code=location_code,
@@ -62,6 +67,8 @@ class ImagingAgent(BaseAgent):
 
     def get_negative_prompt(self, scene_type: str = "outdoor") -> str:
         """장면 유형에 따른 네거티브 프롬프트 반환"""
+        if self.content_mode == "historical_art":
+            raise ValueError("문화·예술 작품에 무협형 네거티브 자동 주입 금지")
         base = f"{NEGATIVE_UNIVERSAL}, {WORLD_NEGATIVE}, {NEGATIVE_CHARACTER}"
         extras = {
             "cave":    ", outdoor, sunlight, sky, clouds, trees, grass",
@@ -73,6 +80,8 @@ class ImagingAgent(BaseAgent):
         return base + extras.get(scene_type, "")
 
     def revise_prompt(self, original_prompt: str, critiques: list) -> str:
+        if self.content_mode == "historical_art":
+            raise ValueError("문화·예술 원본은 8K/시네마틱 문구 추가만으로 품질 상승 불가")
         if not critiques:
             return original_prompt
 

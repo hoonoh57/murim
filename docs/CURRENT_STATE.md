@@ -1,3 +1,22 @@
+## 2026-11-22 — 사용자 시각적 서사 결함 уточ-분류 / 문화 스킬 격리
+
+- 실제 사용자 피드백: Gemini 지적은 **같은 세한도 도판을 60초 인트로 대부분에 의미 없이 지속 노출**, 무협형 자극이 부족하다는 논점이 아님. 작품 본질은 시각적 새 발견과 역사적 사건의 실질적 연결. G2 ART_DIRECTOR_PRODUCT_DEFECT.
+- `experiments/mvml_intro_lab/review_v02/intro.mvml.xml` 정적 분석: ART:DETAIL@1 S01/S03/S05/S06 32초, ART:OBJECT@1 S02/S04 18초, 총 50/60초 세한도 도판 반복, S01/S03/S06 같은 원본 전체 구도 24초. **XML 기획값이지 최종 실제 영상 계측/이탈률 아님**. 시각적 의미 없는 자막/헤딩 교체는 새 쇼트 가치가 아니며 내부 G2에서 REWORK해야 했음.
+- 새 `docs/skills/CULTURAL_VISUAL_DRAMATURGY_SKILL_V1.md`: 매 쇼트 새 시각정보/실제 지각 대상·원전/재현 시점·사료·장면 길이 정당성·반복 사유와 WYSIWYG 검증; 무의미한 원화 반복 거부, 의미 있는 정지 자체 허용. `src/core/visual_dramaturgy.py` 계획 정적 감사/반복 자산·프레이밍 지적, 기존 XML 음의 회귀 fixture와 긍정 계획 비교 test 추가. 실제 품질 자동 합격 아님.
+- Art Direction/Camera/Imaging/Video/Audio/Marketing에 명시적 content_mode='historical_art' 스킬 분리 및 레거시 Wuxia 자동 감정조명/앵커/켄 번즈/침묵·문장 수/CTR 생성 차단. 기존 Wuxia 기본은 변경하지 않고 역사서사의 잘못된 우회만 fail-closed. 새로운 스킬 파일 로드와 Python 정적 스킬 구성점 검사 대상.
+- Studio 기존 렌더러에 실물 시청 시각 품질 PASS 감지는 아직 연결하지 않음. Studio G1/G2·사전 제작 문서 확정 및 출처/품질 게이트 계속 HOLD. **테스트 통과는 50초 반복 영상 문제 해결/원고 v0.3 완료를 뜻하지 않음**. 실제 3~5분 새 영상 생성·외부 LLM 재심사·GPU/Windows WYSIWYG NOT_RUN.
+- 다음 한 단계: 확정된 작품 계약 아래 사료팩/실제 경쟁작 시청 → v0.3 6막 원고/첫 60초 시각 사건 지도 내부 제작 → 실제 접촉시트·낭독 사전 품질 심사. 외부에게 전체 작품 재구성 권한 없음.
+
+## 2026-11-22 — 품질책임 내부 회복: 사료 기반 스킬 v2 / legacy 자동생성 HOLD
+
+- 사용자 제기: 외부 LLM이 모든 것을 바꾸는 게 문제의 본질이 아니라 **내부 우리 제작 목표·작가·감독·품질심사 조직이 낮은 품질 원문을 방치한 것**. PRODUCT_DEFECT (creative contract / pipeline admission)로 분류. Trash in, trash out 금지.
+- 기존 코드 실제 원인: Writer 기본 무협 15비트, Council mock의 'Revised' 제목 점수 상승, 7.5 평균 GO, 비평 파싱 오류 7점 fallback, Director 마지막 점수가 6.0~7.5여도 G3 자동 생성, 세한도 v0.2 장편 및 실험 60초 원고 혼동 위험. 사용자 v0.1 실제 영상 FAIL 및 v0.2 후반 서사 경고는 보존.
+- docs/skills에 역사서사 전용 Editorial Master / Source Truth / Cinematic Narrative / Internal Red Team v2 작성, `src/core/skills.py` content_mode='historical_art' 분리. Writer와 Council이 명시적 장르 모드에서 v2 문서 로드; Wuxia 전용 지침 유입 차단. 역사서사용 Council 담당자 교체. 외부 문서 수정은 감독 지정 범위만; 전체 작품 자유 재작성 불가.
+- Council mock 점수 0/NOT_EVALUATED, 파싱/키 부재 시 보류, Council 평균 점수만으로 GO 불가. Director 레거시 자동 제작: mock/미승인 Studio/확정 원문 불일치/9.5 미달/G3 자산 권리 게이트 부재면 HOLD, 기존 Studio의 검증된 제작 편집 경로를 사용해야 함. 별도 Studio 내부 기획·대본·독립 승인 경로를 대체하지 않음.
+- `docs/production/SEHANDO_INTERNAL_QUALITY_REMEDIATION_V1.md`, `SEHANDO_V03_EDITORIAL_ASSIGNMENT.md`에 v0.2 국소 좋은 부분 보호, 2~5막 재설계·6막 신정보 지도/사료팩/직접 경쟁작 검토/무음악 독서/최종 실제 원고 제출을 명시. 이는 실제 v0.3 원문이나 사료팩이 작성됐다는 뜻이 아니다.
+- 검증: 코드/테스트 변경과 문서 계약 정합성 확인 중; Python 전체/새 회귀 및 Windows WYSIWYG·실제 원고/독립 관객 비교는 NOT_RUN. 최종 상태 CREATIVE_REMEDIATION_REQUIRED / G1_G2_HOLD / FULL_PRODUCT_PASS_NOT_CLAIMED.
+- 다음 작업 하나: **사료팩/실제 경쟁작 관측 확보 → v0.2 전편 후반 구조 감사 → v0.3 구체적 원문 수정**. 완성 원고를 외부에 보내기 전 내부 Red Team 수용 증거 확보. 바뀌지 않은 자산·모델·원작 보호. 제품 실행 검증은 준비된 변경 후 한번.
+
 ## 2026-11-22 — 문서 중심 사전 제작 UX
 
 - 사용자 WYSIWYG 피드백: 기존 수정 답변 형식 검사 때문에 원문 비교·확정 자체가 차단됨. PRODUCT_DEFECT. 원문 편집과 제작 변환을 분리.

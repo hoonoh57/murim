@@ -3,15 +3,22 @@ from src.evolution.skill_tracker import DraftPractice
 from src.core.models import Scenario
 
 class MarketingAgent(BaseAgent):
-    def __init__(self, is_mock: bool = True):
+    def __init__(self, is_mock: bool = True, content_mode: str = "wuxia"):
         super().__init__(agent_type="marketing", is_mock=is_mock)
+        from src.core.skills import build_full_system_prompt
+        self.content_mode = content_mode
+        self.system_prompt = build_full_system_prompt("marketing", content_mode=content_mode)
         
     def generate_assets(self, scenario: Scenario) -> dict:
         print(f"[Marketing] Generating assets for: {scenario.title}")
+        if self.content_mode == "historical_art":
+            raise ValueError("검증된 작품 고유 시청 가치 없이 무협형 CTR 패키징 사용 금지")
         return {"title": f"🔥 {scenario.title} 🔥", "description": scenario.synopsis, "tags": ["무협", "천마", "회귀"]}
 
     def revise_strategy(self, original_strategy: str, critiques: list) -> str:
         """비평을 바탕으로 마케팅 전략을 개선합니다."""
+        if self.content_mode == "historical_art":
+            raise ValueError("문화·예술 작품은 무협 CTR 최적화 템플릿으로 수정할 수 없습니다")
         if not critiques:
             return original_strategy
 

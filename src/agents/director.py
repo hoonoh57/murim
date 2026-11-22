@@ -48,10 +48,28 @@ class DirectorAgent(BaseAgent):
                 print(f" -> Training {agent_name} (Priority: {target['priority']})")
                 agent.self_practice(focus="Ecosystem Balance Optimization")
 
-    def orchestrate_episode(self, topic: str, events: str, agents: Dict[str, BaseAgent]):
+    def orchestrate_episode(self, topic: str, events: str, agents: Dict[str, BaseAgent], *, project_id=None, store=None):
         """전체 파이프라인 조율 (기획 -> 비평 -> 수정 -> 리소스 제작 -> 마케팅)"""
         from src.core.models import ProductionResult
-        print(f"\n[Director] Starting orchestration for: {topic}")
+        # Fail closed: mock practice or a free-standing episode request is not a
+        # verified project manuscript. Studio is the approval authority.
+        if self.is_mock or any(getattr(a, "is_mock", True) for a in agents.values()):
+            print("[HOLD] Mock production cannot be approved")
+            return None
+        if not project_id or store is None:
+            print("[HOLD] Approved Studio project and source revision required")
+            return None
+        try:
+            from src.studio.editorial import Editorial
+            editorial = Editorial(store, project_id).require()
+        except (ValueError, OSError, KeyError) as exc:
+            print("[HOLD] Studio editorial gate not approved: " + str(exc))
+            return None
+        approved_document = editorial.get("final_document")
+        if not approved_document or not editorial.get("document_linked"):
+            print("[HOLD] The verified final manuscript is not linked")
+            return None
+        print(f"\n[Director] Starting verified-project orchestration: {project_id}")
         
         # 0. 에이전트 확보
         writer = agents.get("writer")
@@ -69,7 +87,9 @@ class DirectorAgent(BaseAgent):
         # 1. 시나리오 생성 및 품질 관리 (Writer + Council)
         print("\n[GATE 1] Scenario Generation & Review")
         scenario = writer.write_scenario(EpisodeRequest(topic=topic, events=events))
-        
+        if scenario.script.strip() != approved_document["text"].strip():
+            print("[HOLD] Writer output diverges from approved final manuscript")
+            return None
         attempts = 0
         max_attempts = 3
         while attempts < max_attempts:
@@ -77,19 +97,26 @@ class DirectorAgent(BaseAgent):
             print(f"\n[Director] Quality Review - Attempt {attempts}/{max_attempts}")
             scenario = writer.council.evaluate(scenario)
             
-            if scenario.final_score >= 7.5:
-                print(f"[Director] Quality approved ({scenario.final_score:.1f}).")
+            if scenario.final_score is not None and scenario.final_score >= 9.5:
+                print("[HOLD] Council score is diagnostic; Studio approval remains authoritative")
                 break
             
             if attempts < max_attempts:
-                print(f"[Director] Quality ({scenario.final_score:.1f}) below threshold (7.5). Ordering REWORK.")
+                print(f"[Director] Quality ({scenario.final_score:.1f}) below internal target (9.5). Ordering REWORK.")
                 scenario = writer.revise_scenario(scenario, scenario.critiques)
+                if scenario.script.strip() != approved_document["text"].strip():
+                    print("[HOLD] Reworked script differs from human-approved original")
+                    return None
             else:
                 print(f"[Director] Maximum rework attempts reached. Current Score: {scenario.final_score:.1f}")
 
-        if scenario.final_score < 6.0:
-            print("[Director] KILL: Final quality unacceptable. Production cancelled.")
+        if scenario.final_score is None or scenario.final_score < 9.5:
+            print("[HOLD] Internal Council not at target; no assets generated")
             return None
+        # The legacy pathway does not have a trusted G3 source/rights/asset gate.
+        # Handoff to approved Studio only; never auto-produce unchecked media.
+        print("[HOLD] G3 master assets and rights require Studio evidence; legacy generator disabled")
+        return None
 
         # 2. 프로덕션 기획 (Art Direction, Camera)
         print("\n[GATE 2] Production Planning")

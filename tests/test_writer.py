@@ -13,8 +13,8 @@ class TestWriterAgent(unittest.TestCase):
         result = self.writer.self_practice(focus_point="전투 씬의 긴장감 묘사")
         
         # Check if the result string contains score improvement info
-        self.assertIn("습작 및 진화 완료", result)
-        self.assertIn("점수 변화", result)
+        self.assertIn("모의 실습 기록", result)
+        self.assertIn("품질 검증 아님", result)
         
         # Verify evolution log has entries
         self.assertTrue(len(self.writer.log.practice_history) > 0)
@@ -24,16 +24,18 @@ class TestWriterAgent(unittest.TestCase):
         self.assertIsInstance(practice.scenario, Scenario)
         
         # Strengthened assertions
-        self.assertGreater(self.writer.log.total_xp, initial_xp)
-        self.assertGreaterEqual(practice.scenario.final_score, 0)
-        self.assertLessEqual(practice.scenario.final_score, 10)
+        # Mock Council cannot invent score progress or production qualification.
+        self.assertEqual(self.writer.log.total_xp, initial_xp)
+        self.assertEqual(practice.scenario.final_score, 0.0)
+        self.assertTrue(all(c.comment.startswith("NOT_EVALUATED") for c in practice.scenario.critiques))
 
     def test_revise_scenario(self):
         scenario = Scenario(title="Title", synopsis="Syn", script="Script", scenes=[], sound_guide={})
         critiques = [] # Empty list for mock
         revised = self.writer.revise_scenario(scenario, critiques)
         self.assertIsInstance(revised, Scenario)
-        self.assertTrue("Revised" in revised.title or "MOCK" in revised.title)
+        self.assertEqual(revised.title,"Title")
+        self.assertEqual(revised.script,"Script")
 
     def tearDown(self):
         import os

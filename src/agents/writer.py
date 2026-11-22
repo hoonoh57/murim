@@ -10,11 +10,16 @@ from src.agents.base_agent import BaseAgent
 
 
 class WriterAgent(BaseAgent):
-    def __init__(self, is_mock: bool = True):
+    def __init__(self, is_mock: bool = True, content_mode: str = "wuxia"):
         super().__init__(agent_type="writer", is_mock=is_mock)
+        self.content_mode = content_mode
+        self.council.content_mode = content_mode
+        if content_mode == "historical_art":
+            from src.core.constants import HISTORICAL_ART_PERSONAS
+            self.council.personas = HISTORICAL_ART_PERSONAS
         self.engine = ScenarioEngine(is_mock=is_mock)
-        # 스킬 기반 시스템 프롬프트 (초월적 서술자 + 15비트 + 금지패턴)
-        self.system_prompt = build_full_system_prompt("writer")
+        # 장르 명시적 분기: 역사서사에는 무협 전용 15비트·천마 설정을 주입하지 않음
+        self.system_prompt = build_full_system_prompt("writer", content_mode=self.content_mode)
 
     def write_scenario(self, request: EpisodeRequest) -> Scenario:
         print(f"[Writer] Writing scenario for topic: {request.topic}")
@@ -29,8 +34,7 @@ class WriterAgent(BaseAgent):
         print(f"[Writer] Revising scenario based on council feedback...")
 
         if self.is_mock:
-            scenario.title += " (Revised)"
-            scenario.script += "\n\n[Revision] 비평가들의 의견을 반영하여 묘사를 강화했습니다."
+            # Rehearsal is not a revised manuscript. Never manufacture quality improvement.
             return scenario
 
         feedback_summary = "\n".join(
@@ -39,11 +43,11 @@ class WriterAgent(BaseAgent):
         )
 
         prompt = (
-            f"다음은 당신이 쓴 무협 시나리오에 대한 6인 비평위원회의 의견입니다.\n\n"
+            f"다음은 당신이 쓴 {'사료 기반 역사서사' if self.content_mode == 'historical_art' else '무협'} 시나리오에 대한 6인 비평위원회의 의견입니다.\n\n"
             f"{feedback_summary}\n\n"
-            f"이 의견들을 적극 반영하여 시나리오를 수정하고 JSON 형식으로 다시 작성해주세요.\n"
-            f"15비트 구조를 반드시 준수하세요. 총 {len(BEAT_STRUCTURE)}개 비트.\n"
-            f"원본 제목: {scenario.title}\n원본 대본: {scenario.script}"
+            f"실제 근거가 있는 결함만 해당 범위의 원문을 수정하고 JSON 형식으로 다시 제출하세요.\n"
+            + (f"15비트 구조를 반드시 준수하세요. 총 {len(BEAT_STRUCTURE)}개 비트.\n" if self.content_mode == "wuxia" else "사료 기반 장편의 기존 관점·사건·결말은 감독의 변경 승인 없이 재설계하지 마세요.\n")
+            + f"원본 제목: {scenario.title}\n원본 대본: {scenario.script}"
         )
 
         response = self.client.messages.create(
@@ -92,7 +96,7 @@ class WriterAgent(BaseAgent):
         self.add_experience(practice, score_v1, score_v2)
 
         improvement = score_v2 - score_v1
-        return f"습작 및 진화 완료. 점수 변화: {score_v1:.1f} -> {score_v2:.1f} ({improvement:+.1f})"
+        return (f"모의 실습 기록 (작품 품질 검증 아님): {score_v1:.1f} -> {score_v2:.1f}" if self.is_mock else f"실제 비평 연습 결과: {score_v1:.1f} -> {score_v2:.1f} ({improvement:+.1f})")
 
     def _parse_scenario(self, raw_data, topic, events) -> Scenario:
         if "error" in raw_data:
@@ -106,5 +110,5 @@ class WriterAgent(BaseAgent):
             synopsis=events,
             script=raw_data.get("script", ""),
             scenes=parsed_scenes,
-            sound_guide=raw_data.get("sound_guide", {"bgm": "Epic Wuxia", "fx": "Sword Clashing"})
+            sound_guide=raw_data.get("sound_guide", {})
         )

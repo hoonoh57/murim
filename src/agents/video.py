@@ -7,12 +7,15 @@ from src.core.models import Scenario
 
 
 class VideoAgent(BaseAgent):
-    def __init__(self, is_mock: bool = True):
+    def __init__(self, is_mock: bool = True, content_mode: str = "wuxia"):
         super().__init__(agent_type="video", is_mock=is_mock)
         self.generator = VideoGenerator(is_mock=is_mock)
-        self.system_prompt = build_full_system_prompt("video")
+        self.content_mode = content_mode
+        self.system_prompt = build_full_system_prompt("video", content_mode=content_mode)
 
     def generate_from_image(self, image_path: str, prompt: str, camera_plan: dict = None) -> str:
+        if self.content_mode == "historical_art":
+            raise ValueError("검증된 시각 쇼트와 권리 없이 자동 이미지→영상 생성할 수 없습니다.")
         full_prompt = prompt
         if camera_plan:
             angle = camera_plan.get("angle", "")
@@ -28,6 +31,8 @@ class VideoAgent(BaseAgent):
         camera_plan: dict = None,
     ) -> str:
         """동기화 법칙 기반 영상 생성 — Ken Burns 방향 자동 결정"""
+        if self.content_mode == "historical_art":
+            raise ValueError("문화·예술 장르는 Ken Burns 자동 모션 대신 승인된 시각 설계 필요")
         ken_burns = get_ken_burns_direction(narrative_context)
         motion = f"Ken Burns {ken_burns}"
 
@@ -40,6 +45,8 @@ class VideoAgent(BaseAgent):
         return self.generator.generate_from_image(image_path, full_prompt)
 
     def revise_plan(self, original_focus: str, critiques: list) -> str:
+        if self.content_mode == "historical_art":
+            raise ValueError("문화·예술 영상의 모션은 사료/시각적 발견 계획 없이는 자동 최적화하지 않습니다")
         if not critiques:
             return original_focus
 
