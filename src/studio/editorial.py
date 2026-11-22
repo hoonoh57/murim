@@ -27,9 +27,10 @@ def canonical(value):
 def key(value):
     return hash_bytes(canonical(value))
 
-def string(value, limit=MAX_TEXT, empty=False):
-    if not isinstance(value,str) or len(value)>limit or (not empty and not value.strip()):
-        raise ValueError('필수 내용 누락 또는 길이 초과')
+def string(value, limit=MAX_TEXT, empty=False, label='내용'):
+    if not isinstance(value,str): raise ValueError(label+' 항목이 없거나 문장이 아닙니다.')
+    if len(value)>limit: raise ValueError(label+' 길이 초과: '+str(len(value))+' / '+str(limit)+'자')
+    if not empty and not value.strip(): raise ValueError(label+' 항목이 비어 있습니다.')
     return value
 
 def relay_object(raw):
@@ -72,20 +73,37 @@ def baseline(store,pid):
 
 def plan_check(p,complete=True):
     if not isinstance(p,dict) or set(p)!=set(FIELDS)|{'scenes'}: raise ValueError('제작안 필드 불일치')
-    for k in FIELDS: string(p[k],40000,empty=not complete)
+    for k in FIELDS: string(p[k],40000,empty=not complete,label=GUIDE[k])
     rows=p['scenes']
     if not isinstance(rows,list) or not 1<=len(rows)<=200: raise ValueError('장면 1~200개 필요')
     ids=set()
-    for r in rows:
+    for number,r in enumerate(rows,1):
         if not isinstance(r,dict) or set(r)!=set(SCENE_FIELDS): raise ValueError('장면 필드 불일치')
         if not isinstance(r['id'],str) or not ID.fullmatch(r['id']) or r['id'] in ids: raise ValueError('장면 ID 오류')
         ids.add(r['id'])
         if type(r['frames']) is not int or not 24<=r['frames']<=1440: raise ValueError('장면 길이 1~60초 필요')
-        for k in ('title','narration','visual','sound','facts','subtitle'): string(r[k],160 if k=='title' else 4000,empty=not complete or k in ('narration','subtitle'))
-        string(r['motion'],4000,empty=True)
+        for k in ('title','narration','visual','sound','facts','subtitle'): string(r[k],160 if k=='title' else 4000,empty=not complete or k in ('narration','subtitle'),label=f'{number}번 장면 {k}')
+        string(r['motion'],4000,empty=True,label=f'{number}번 장면 동작')
     if sum(r['frames'] for r in rows)>24*3600: raise ValueError('전체 1시간 초과')
     if len(canonical(p))>900000: raise ValueError('제작안 용량 초과')
     return p
+
+def plan_payload(v,data,relay=None):
+    plan=plan_check(data.get('plan'),complete=relay is not None); rev=key(plan)
+    if any(p['revision']==rev for p in v['versions']): raise ValueError('같은 제작안은 다시 제출할 수 없습니다. 실제 내용을 수정하세요.')
+    payload=dict(revision=rev,plan=plan,note=string(data.get('note'),10000,label='원본 대비 수정 근거'),parent=v['latest']['revision'])
+    if relay is not None:
+        payload.update(raw_response=relay[0],instruction=data['instruction'])
+        if v['prior_raw'] and not v['prior_indexed']:
+            descriptions=relay[1].get('prior_issues')
+            if not isinstance(descriptions,list) or not 1<=len(descriptions)<=100: raise ValueError('AI가 기존 비평의 전체 결함 목록을 정리하지 않았습니다.')
+            payload['prior_issues']=[dict(id='PRIOR-%03d'%(j+1),description=string(x,4000,label='기존 비평 문제'),origin='human-relayed-ai-extraction') for j,x in enumerate(descriptions)]
+    return payload
+
+def relay_plan_payload(v,raw,instruction):
+    relay=relay_object(raw)
+    if relay.get('parent')!=v['latest']['revision']: raise ValueError('현재 버전에 대한 수정 응답이 아닙니다. 현재 수정 요청을 다시 복사하세요.')
+    return plan_payload(v,dict(plan=relay.get('plan'),note=relay.get('note'),instruction=instruction),(raw,relay))
 
 class Editorial:
     def __init__(self,store,pid):
@@ -119,7 +137,7 @@ class Editorial:
         plans=[dict(revision=key(orig['plan']),plan=orig['plan'],note='기존 원본 (미승인)',original=True)]
         all_issues={i['id']:i for i in orig['issues']}
         issues=dict(all_issues)
-        raw_prior=None; prior_indexed=False; review=None; approved=None; feedback=[]
+        raw_prior=None; prior_indexed=False; review=None; approved=None; feedback=[]; pending_reply=None
         for e in events[1:]:
             d=e['data']
             if e['kind']=='prior_capture':
@@ -127,8 +145,10 @@ class Editorial:
             elif e['kind']=='prior_review':
                 raw_prior=d['raw']; prior_indexed=True
                 all_issues.update({i['id']:i for i in d['issues']}); issues=dict(all_issues)
+            elif e['kind']=='relay_rejected':
+                pending_reply=d
             elif e['kind']=='plan':
-                plans.append(dict(d,original=False)); review=None; approved=None
+                plans.append(dict(d,original=False)); review=None; approved=None; pending_reply=None
                 if d.get('prior_issues'):
                     all_issues.update({i['id']:i for i in d['prior_issues']}); prior_indexed=True
                 issues=dict(all_issues) # Revised plans must recheck prior resolved issues too.
@@ -151,7 +171,7 @@ class Editorial:
         if ok:
             ok=doc.get('editorial-plan')==latest['revision'] and signature(doc)==signature_plan(latest['plan'])
         return dict(token=events[-1]['hash'] if events else '', original=orig, versions=plans,
-            latest=latest,issues=list(issues.values()),prior_raw=raw_prior,prior_indexed=prior_indexed,all_issues=list(all_issues.values()),review=review,feedback=feedback,
+            latest=latest,issues=list(issues.values()),prior_raw=raw_prior,prior_indexed=prior_indexed,all_issues=list(all_issues.values()),review=review,feedback=feedback,pending_reply=pending_reply,
             approved=ok,approval=approved,mvml_revision=mvrev,ready=ready,
             status='APPROVED' if ok else 'HOLD' if approved else 'REWORK_REQUIRED' if review and (issues or not review['pass']) else 'APPROVAL_REQUIRED' if review else 'HOLD')
     def mutate(self,token,action,data):
@@ -173,22 +193,21 @@ class Editorial:
                 if any(f['source']['render']==source['render'] and f['raw']==raw for f in v['feedback']): raise ValueError('이미 등록된 제작 후 비평')
                 prefix='POST-'+key([source,raw])[:12]
                 payload=dict(raw=raw,source=source,issues=[dict(id=prefix+'-%03d'%(j+1),description=string(x,4000),origin='actual-render-feedback') for j,x in enumerate(descriptions)])
-            elif action in ('plan','relay_plan'):
-                relay=None
-                if action=='relay_plan':
-                    raw=string(data.get('raw'),1200000); relay=relay_object(raw)
-                    if relay.get('parent')!=v['latest']['revision']: raise ValueError('이전 버전의 수정 응답입니다. 현재 수정 요청을 다시 복사하세요.')
-                    data=dict(plan=relay.get('plan'),note=relay.get('note'),instruction=string(data.get('instruction',''),10000,empty=True))
-                plan=plan_check(data.get('plan'),complete=relay is not None); rev=key(plan)
-                if any(p['revision']==rev for p in v['versions']): raise ValueError('같은 제작안은 다시 제출할 수 없습니다. 실제 내용을 수정하세요.')
-                payload=dict(revision=rev,plan=plan,note=string(data.get('note'),10000),parent=v['latest']['revision'])
-                if relay is not None:
-                    payload.update(raw_response=raw,instruction=data['instruction'])
-                    if v['prior_raw'] and not v['prior_indexed']:
-                        descriptions=relay.get('prior_issues')
-                        if not isinstance(descriptions,list) or not 1<=len(descriptions)<=100: raise ValueError('AI가 기존 비평의 전체 결함 목록을 정리하지 않았습니다. 응답 정리 요청을 사용하세요.')
-                        payload['prior_issues']=[dict(id='PRIOR-%03d'%(j+1),description=string(x,4000),origin='human-relayed-ai-extraction') for j,x in enumerate(descriptions)]
-                action='plan'
+            elif action=='plan':
+                payload=plan_payload(v,data)
+            elif action in ('relay_plan','relay_receive'):
+                raw=string(data.get('raw'),1200000,label='AI 답변')
+                instruction=string(data.get('instruction',''),10000,empty=True,label='감독 지시')
+                try:
+                    payload=relay_plan_payload(v,raw,instruction)
+                    action='plan'
+                except ValueError as exc:
+                    if action=='relay_plan': raise
+                    # Preserve the actual answer independently from the production plan.
+                    # No valid revision, score, or approval is created by a rejected answer.
+                    payload=dict(raw=raw,instruction=instruction,parent=v['latest']['revision'],error=str(exc))
+                    action='relay_rejected'
+                    if v.get('pending_reply')==payload: return v
             elif action=='review':
                 if v['latest']['original'] or v['review'] is not None: raise ValueError('수정 제작안마다 독립 심사 1회; 재시도는 새 수정본에서')
                 plan_check(v['latest']['plan'])

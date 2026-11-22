@@ -126,6 +126,29 @@ class EditorialTest(unittest.TestCase):
         self.assertEqual(self.e.view()['token'],before)
         self.assertFalse(self.e.view()['approved'])
 
+    def test_receive_plain_answer_preserves_without_approving(self):
+        raw='예상 96점. 향후 개선할 계획입니다.'
+        result=self.mutate('relay_receive',raw=raw,instruction='개선해줘')
+        self.assertEqual(result['pending_reply']['raw'],raw)
+        self.assertEqual(len(result['versions']),1)
+        self.assertFalse(result['approved'])
+        self.assertEqual(self.e.view()['pending_reply']['raw'],raw)
+        self.assertEqual(self.mutate('relay_receive',raw=raw,instruction='개선해줘')['token'],result['token'])
+    def test_receive_missing_field_reports_specific_and_then_recovers(self):
+        self.mutate('prior_capture',raw='기존 결말 오류')
+        p=self.plan();p['purpose']=''
+        packet=dict(parent=self.e.view()['latest']['revision'],plan=p,note='실제 변경',prior_issues=['결말 오류'])
+        result=self.mutate('relay_receive',raw=json.dumps(packet),instruction='개선')
+        self.assertIn('작품의 중심 질문',result['pending_reply']['error'])
+        self.assertEqual(len(result['versions']),1)
+        packet['plan']=self.plan()
+        whole='수정 답변\n```json\n'+json.dumps(packet,ensure_ascii=False)+'\n```'
+        result=self.mutate('relay_receive',raw=whole,instruction='개선')
+        self.assertIsNone(result['pending_reply'])
+        self.assertEqual(len(result['versions']),2)
+        self.assertTrue(result['prior_indexed'])
+        self.assertFalse(result['approved'])
+        self.assertIsNotNone(next(e for e in self.e.events() if e['kind']=='relay_rejected'))
     def test_stale_token_and_unknown_review(self):
         self.mutate('plan',plan=self.plan(),note='v1')
         with self.assertRaises(ValueError):self.e.mutate('','plan',{'plan':self.plan('v2'),'note':'stale'})

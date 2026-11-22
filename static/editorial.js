@@ -45,11 +45,18 @@ async function preMutate(kind,data){
         if(doc.id!==id)return;
         editorialState=v;editorialDraft=structuredClone(v.latest.plan);editorialNote='';
         if(kind==='prior_capture')inputs.critique='';
-        if(kind==='relay_plan'){inputs.answer='';inputs.instruction='';preMode='script'}
+        if(kind==='relay_plan'||kind==='relay_receive'){
+            if(v.pending_reply){inputs.answer=v.pending_reply.raw;inputs.instruction=v.pending_reply.instruction;preMode='policy'}
+            else{inputs.answer='';inputs.instruction='';preMode='script'}
+        }
         if(kind==='review'){inputs.review='';inputs.reviewer='';preMode='gate'}
         if(kind==='approval')update(await api('/project/'+id));
         if(kind==='feedback'){preVisible=true;preMode='gate';$('reviewText').value='';$('structuralIssues').value='';}
-        preLayout();drawEditorial();notice('사전 제작 이력 저장 · '+v.status);
+        preLayout();drawEditorial();
+        if(kind==='relay_receive'){
+            if(v.pending_reply)notice('답변 원문 보존 · 수정본으로 미적용: '+v.pending_reply.error,true);
+            else notice('실제 수정본 V'+(v.versions.length-1)+' 저장 · 전후 비교를 확인하세요');
+        }else notice('사전 제작 이력 저장 · '+v.status);
     },'사전 제작안 검증 및 저장 중…');
 }
 
@@ -88,12 +95,27 @@ function drawDirective(root,v){
     }
     if(v.original.known_failed&&!v.prior_raw)return;
     const d=preCard(root,'2. AI에게 무엇을 고치라고 할까요?');
+    if(v.pending_reply&&!inputs.answer){inputs.answer=v.pending_reply.raw;inputs.instruction=v.pending_reply.instruction}
     field(d,'감독의 자연어 수정 지시 (비우면 기존 비평 전체 개선)','instruction',3).placeholder='예: 1842년 자료 사용 오류를 고치고, 첫 3초에 실제 사건으로 몰입시키며 결말까지 완결해 줘.';
     copyButton(d,'수정 요청 복사',()=>promptForPlan(v));
     preText(d,'ChatGPT 또는 Gemini에 붙여넣고 실제로 수정된 답변 전체를 아래에 가져오세요. 프로그램 전달 데이터는 AI가 작성합니다. 직접 형식을 수정할 필요는 없습니다.');
-    const a=field(d,'AI가 반환한 수정 답변 전체','answer',5);
-    const b=preButton(d,'수정본 저장 및 전후 비교',()=>preMutate('relay_plan',{raw:inputs.answer,instruction:inputs.instruction}));b.classList.add('primary');
-    relayRepair(d,a,()=>promptForPlan(v));
+    const a=field(d,'AI가 반환한 수정 답변 전체','answer',6);
+    a.placeholder='수정 담당 AI의 전체 답변을 여기에 붙여 넣으세요. 자동 수신됩니다.';
+    const result=preEl('p');result.setAttribute('role','status');d.append(result);
+    const count=()=>{result.textContent=a.value.trim()?'답변 '+a.value.length.toLocaleString()+'자 입력됨':'아직 답변이 입력되지 않았습니다';};
+    a.addEventListener('input',count);count();
+    const receive=()=>{inputs.answer=a.value; if(!a.value.trim()){result.textContent='먼저 AI 수정 답변 전체를 붙여 넣어 주세요.';a.focus();return}return preMutate('relay_receive',{raw:a.value,instruction:inputs.instruction})};
+    const b=preButton(d,'답변 반영 및 전후 비교',receive);b.classList.add('primary');
+    preText(d,'답변 전체를 붙여넣으면 자동으로 수신·검증합니다. 직접 입력하거나 여러 부분으로 편집했으면 위 버튼을 누르세요.');
+    a.addEventListener('paste',e=>{const text=e.clipboardData?.getData('text/plain');if(busy||!text?.trim())return;e.preventDefault();a.value=text;inputs.answer=text;count();Promise.resolve().then(receive).catch(err)});
+    if(v.pending_reply){
+        const pending=preCard(d,'답변 수신 완료 · 수정본 미반영');
+        pending.classList.add('pre-pending');
+        preText(pending,'답변 원문은 프로젝트에 저장되었습니다. 아직 유효한 실제 수정본이 아니므로 버전과 제작 잠금은 유지합니다.');
+        preText(pending,'미반영 이유: '+v.pending_reply.error);
+        rawDetails(pending,'받은 AI 답변 전체 보기',v.pending_reply.raw);
+        copyButton(pending,'누락 항목 보완 요청 복사',()=>promptForPlan(v)+'\n\n직전 답변의 문제: '+v.pending_reply.error+'\n이전 AI 답변을 보존하면서 누락된 실제 제작 내용과 전달 데이터를 보완하십시오. 실제 수정이 없으면 전체 대본을 작성하고, 예상 점수는 합격으로 주장하지 마십시오.\n\n직전 답변:\n'+a.value);
+    }else relayRepair(d,a,()=>promptForPlan(v));
     if(!v.latest.original)preButton(d,'현재 수정본 비교 보기',()=>showEditorial('script'));
 }
 function drawCompare(root,v){
