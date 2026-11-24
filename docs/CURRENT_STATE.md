@@ -1,3 +1,9 @@
+## 2026-11-24 — 압축 실물 영상 제작기술 시장 검증 계약
+
+- 사용자 확정: 짧은 애니메이션/숏드라마 등 시장용 압축 실물로 제작 기술 자체를 검증·개선. [실물 시장 실증 계약](MURIM_SHORT_FORM_MARKET_VALIDATION.md) 추가. 난제 장면/완결 단편/연재형/확대는 가변적 실험 단계, 품질 하향 금지. 단위 기술과 전체 작품 각각 비교. 영상/타임라인/쇼트·엔진·스킬 버전 결속, 시청 이탈과 기술 원인의 통제 비교, 독립 신규 작품/표본 재검증.
+- YouTube 공식 Shorts 최대 3분/analytics/retention API/AI 표시/수익화 정책 및 TikTok 정책 조사. 후보 채널이며 실제 계정·권한·게시·관객·영상 제작·비교 NOT_RUN/NOT_CONNECTED. 외부 공개/수집/비용 별도 승인, 대량 중복 게시 금지.
+- 문서만 변경. DESIGN_HOLD / PRODUCT_CODING_FROZEN / COMPETITIVE_ALPHA_NOT_PROVEN / AUDIENCE_VALIDATION_NOT_RUN / REMEDIATION_REQUIRED 유지. D0~D5 전체 심사 OK 전 제품 코드 금지. 기존 도구를 이용한 실제 사전 비교와 권한·관객 표본 실현성 확보가 다음 설계 검증 대상.
+
 ## 2026-11-24 — 실제 독자·시청자 시장 평가 계약
 
 - 사용자 확정: 읽는 사람의 재미와 실제 선택을 최종 시장 검증에 반영. [실제 관객 검증 계약](MURIM_AUDIENCE_VALIDATION_CONTRACT.md) 추가 및 권위/설계/스킬 심사 문서 연결. 저비용 원고/연재→독자 행동/댓글→표적 개선→독립 검증→영상화 후보. 노출 부족과 서사 실패 분리, 실제 연독과 조회 proxy 구분, 소설/영상/앱 시장성 별도.

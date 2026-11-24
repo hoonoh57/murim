@@ -33,5 +33,9 @@
 Core: generic version/evidence/metric/observation 계약. Bridge: 채널/평가 Add-on 연결 및 실행. Add-on: 허용 채널 수집/전문 독자 반응 분석·매체 각색·개선 제안. Persistence: 작품/관측 기간/집계 정의/출처·권한/버전/해시/실험·평가·승인 이력. Manager: 정책/실험/비교/증거 인증/자원·권리/승격/rollback 및 관측. 플랫폼별 전용 하드코딩은 Core/Manager/Bridge/shell에 금지. 기본 화면에는 재미·독자 반응·개선된 작품을 쉽게 설명하고 복잡한 통계/오류는 기계검증에 모은다.
 전문가/LLM은 사전 결함 탐지와 개선 가설 생성·평가 보정; 실제 독자는 시장 선택; 시청자는 영상 경험; 실제 고객은 앱의 사용성/경제성 검증. 작품 시장성은 앱 시장성의 충분조건 아님.
 
+### 6.1 압축 실물 영상 시장 실증
+
+[제작기술 시장 실증 계약](MURIM_SHORT_FORM_MARKET_VALIDATION.md) 적용. 난제 장면→완결 단편→연재형 영상→본격 제작. 영상의 실제 시청·이탈·댓글을 해당 게시 revision/타임라인/쇼트·엔진·스킬 증거와 결속. 동일 조건의 기술 교체 비교 및 독립 관객 재검증 후 확대. 시청 지표만으로 기술 원인 확정 금지. 채널/포맷/권리/접근 정책 준수.
+
 ## 7. 현재 및 다음
 공식 문피아 AI 직접 생성물 불허 및 Royal Road 표시 정책 확인, 독자 평가 설계 추가. 실제 원고/독자 모집/게시/계정 연결/댓글 수집/시장 비교 미실행. 우선 한국어 독자 대상 허용된 사전 블라인드 비교 경로와 AI 허용 연재 채널의 정책·접근·표본을 검증. D0–D5 전체 설계 승인 전 제품 코딩 금지. 현재 DESIGN_HOLD / PRODUCT_CODING_FROZEN / COMPETITIVE_ALPHA_NOT_PROVEN / AUDIENCE_VALIDATION_NOT_RUN / REMEDIATION_REQUIRED.
