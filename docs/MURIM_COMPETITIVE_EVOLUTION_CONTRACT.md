@@ -34,5 +34,9 @@ JSON/Persistence: 출처/버전/해시/후보·실행·평가·승인·비교 �
 Central Manager: 공통 skill registry/선택/composition, 비교 실험 계획/권한/예산/작업 위임, 증거 확인/승격/rollback 및 targeted invalidation, 기계검증 관측. 도메인 의미/전문 작성 로직 구현 금지. 별도 여섯 번째 축이 아니다.
 사용자는 자연어로 방향/감수/수정 요청을 제공하고 AI가 품질 향상된 실제 원고를 제시한다. 프로젝트 취향/확정 결정은 revision으로 관리, 사용자에게 모델/프롬프트/평가 점수 선택을 강요하지 않는다. 작품의 기존 승인 및 비용/권리 경계 유지.
 
+### 5.1 실제 독자·시청자의 피드백
+
+[실제 관객 검증 계약](MURIM_AUDIENCE_VALIDATION_CONTRACT.md) 적용. 저비용 원고/연재 및 독자 검증을 작품과 스킬 진화의 근거로 활용하되 노출/연독 proxy/댓글 편향, 권리, 매체 차이 통제. 독립 재검증 전 전역 스킬 승격 금지.
+
 ## 6. 현재 및 다음
 M1-A 독립 품질 primitive 27 PASS, 전체 M0/Windows/구조 검증 미완료. 이 문서 및 시나리오 skill v1은 실제 실행이 아닌 신규 설계·출처 기반 후보. 전문 기관에 의한 Murim 검증 없음. 실물 경쟁 제품 비교 및 고객 검증 NOT_RUN. 다음 M1-B generic dependency/invalidation, skill version/reference 결속 및 이후 독립 Bridge/Manager/Persistence slice; 실물 screenplay benchmark는 해당 생성/독립 평가 capability와 승인된 실행 환경을 확보한 뒤 수행. 기존 제품 수정 없이 병행 준비 가능, 실제 비교 전 champion 교체 금지.

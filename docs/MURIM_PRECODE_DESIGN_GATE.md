@@ -60,5 +60,9 @@ Alpha 후보: 전문 수준의 실제 산출물 + 적은 사용자 기술 개입
 - VBench-2.0 https://vchitect.github.io/VBench-2.0-project/ ; EBU R128 https://tech.ebu.ch/publications/r128 ; OTIO https://opentimelineio.readthedocs.io/en/latest/ ; CutCraft https://arxiv.org/abs/2609.08275 (preprint); 실제 clip/편집/한국어 음성 적용 미검증. YouTube retention https://support.google.com/youtube/answer/9314415 는 관객 행동의 일부이지 작품성/매출 보장 아님.
 - 경쟁 앱 공식 문서: https://docs.sudowrite.com/using-sudowrite/1ow1qkGqof9rtcyGnrWUBS/what-is-story-bible/jmWepHcQdJetNrE991fjJC ; https://www.novelcrafter.com/courses/ultimate-beginners-guide/writing-a-complete-scene ; https://help.runwayml.com/hc/en-us/articles/51601639579667-Creating-with-Runway-Agent ; https://help.runwayml.com/hc/en-us/articles/53907039424915-Using-Agent-Skills ; https://ltx.io/blog/how-to-build-a-complete-pre-visualization-pipeline ; https://higgsfield.ai/creator-hub/help-center/tools/how-do-i-use-cinema-studio . 이미 Story Bible/개요/장면/재작성, 대화형 multi-shot, skill, pre-viz, camera/actor/element reuse가 존재. 실제 동일 결과 비교 NOT_RUN.
 
+### 5.1 실제 독자 시장 실증
+
+[실제 관객 검증 계약](MURIM_AUDIENCE_VALIDATION_CONTRACT.md)을 D3/D4 및 시장 검증의 구체적 기준으로 적용. 독자 행동·댓글·노출을 함께 분석하고 소설/영상/앱 시장성 별도. 문피아 AI 직접 생성물 금지 준수, 허용 채널 또는 동의한 한국어 독자 평가단. 실제 실증 NOT_RUN. 설계 동결 유지.
+
 ## 7. 다음 작업
 제품 코딩 재개 금지. [시나리오 전문 생산 상세 설계 심사](skills/screenplay-master/references/production-design-review.md)를 첫 대상 dossier로 발전. 각본 고위험 가정·평가자 보정·권리 확보 전문 원고/경쟁 앱/강한 LLM 대비 기존 도구로 실증할 수 있는 경로를 조사한다. 이어 모든 단위에 동일 절차를 적용하고 전체 설계 심사 완료 전 M1-B를 시작하지 않는다. 현 상태 DESIGN_HOLD, 전체 REMEDIATION_REQUIRED.

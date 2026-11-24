@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 실제 독자 시장 검증 추가
+
+[실제 관객 검증 계약](MURIM_AUDIENCE_VALIDATION_CONTRACT.md)과 D0–D5 설계 동결 계약 필독. 실제 독자 선택/연독/댓글을 시장 판단의 근거로 사용, LLM은 사전 결함 검사. 문피아 AI 직접 생성 본문/표지 불허 확인. 동의한 한국어 독자 또는 허용된 채널로 저비용 서사 실증 설계, 영상/앱 시장성 별도. 실제 독자/게시/수집 미실행. 제품 코딩 동결 유지. 다음은 사전 실물 비교 및 독자 평가의 권한·채널·표본 설계와 단위별 상세 심사.
+
 ## 2026-11-24 — 최우선 인계: 설계 OK 전 모든 신규 제품 코딩 동결
 
 AGENTS 최신 설계 동결 절 → [D0–D5 설계 게이트](MURIM_PRECODE_DESIGN_GATE.md) → [Screenplay 전문 생산 상세 설계 심사](skills/screenplay-master/references/production-design-review.md) → 기존 5축/캐스케이드/경쟁우위 계약. 이전 M1-B 착수 계획은 보류. 실제 연구·경쟁 기능 조사는 시작했고 실제 생성/인간·독립 LLM 평가/경쟁 비교/시장·GPU 실증은 NOT_RUN. 모든 단위의 설계 근거, 한계/실현성, 평가자 보정, 실물 사전 검증 및 전체 반대심사 완료 전 신규 제품 코딩 금지. 사용자에게 중간 기술 선택 요구 금지. 기존 제품/원본/승인 보존. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.

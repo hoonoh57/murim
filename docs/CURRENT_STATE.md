@@ -1,3 +1,9 @@
+## 2026-11-24 — 실제 독자·시청자 시장 평가 계약
+
+- 사용자 확정: 읽는 사람의 재미와 실제 선택을 최종 시장 검증에 반영. [실제 관객 검증 계약](MURIM_AUDIENCE_VALIDATION_CONTRACT.md) 추가 및 권위/설계/스킬 심사 문서 연결. 저비용 원고/연재→독자 행동/댓글→표적 개선→독립 검증→영상화 후보. 노출 부족과 서사 실패 분리, 실제 연독과 조회 proxy 구분, 소설/영상/앱 시장성 별도.
+- 문피아 공식 일반 FAQ 직접 AI 생성 본문·표지 불허 확인. Royal Road 표시 정책 확인(채널 후보, 채택 아님). 게시·데이터 수집/독자 모집·시장 실증 미실행; 무단 수집/게시/학습 금지. 한국어 독자 비공개 평가 및 허용 채널의 실증 경로 조사 우선.
+- 문서만 수정. DESIGN_HOLD / PRODUCT_CODING_FROZEN / COMPETITIVE_ALPHA_NOT_PROVEN / AUDIENCE_VALIDATION_NOT_RUN / REMEDIATION_REQUIRED 유지. D0–D5 전체 OK 이전 코딩 금지.
+
 ## 2026-11-24 — 최우선 설계 HOLD 및 제품 코드 동결
 
 - 사용자 요구: 모든 단위기술의 생성 역량/업계 최상위 기준/실제 Alpha/평가 타당성/실현 가능성 선행 검증, 전체 설계 OK 이전 코딩 금지. [D0–D5 설계 심사](MURIM_PRECODE_DESIGN_GATE.md) 및 [시나리오 생산 설계 심사](skills/screenplay-master/references/production-design-review.md) 반영. AGENTS 및 기존 3개 설계 문서에 동결 우선순위 반영.
