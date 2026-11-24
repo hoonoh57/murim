@@ -6,7 +6,7 @@ import pathlib
 import re
 import unittest
 
-ROOT = pathlib.Path(__file__).resolve().parent
+ROOT = pathlib.Path(__file__).resolve().parents[1] / 'scripts' / 'scail2'
 PS1 = (ROOT / 'install-scail2.ps1').read_text(encoding='utf-8')
 CMD = (ROOT / 'INSTALL-SCAIL2.cmd').read_text(encoding='utf-8')
 

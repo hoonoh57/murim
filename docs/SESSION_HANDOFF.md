@@ -1,3 +1,9 @@
+## 2026-11-24 — SCAIL-2 bootstrap collection failure / recovery
+
+- Reported Windows error: pytest collection fails before tests run because `tests/test_scail2_bootstrap.py` looked for `tests/install-scail2.ps1`, whereas canonical installer is `scripts/scail2/install-scail2.ps1`.
+- `TEST_DEFECT`: changed only test fixture root, not assertions or installer. GitHub content static check of all 34 required/forbidden contract conditions PASS; Windows post-change test pending.
+- User workflow: GitHub ff-only pull → `.\windows-test.cmd`; on PASS launch `.\run-studio.cmd`. Never reset/clean user workspace or weaken safety checks.
+
 ## 2026-11-24 — Next session: Windows param default startup repair
 
 - Reported real Windows error: PowerShell 5.1 evaluates `[string]$Workspace = (Split-Path -Parent $PSScriptRoot)` with empty `$PSScriptRoot` in the `param()` block of `scripts/windows-sync-test.ps1`. This is a newly surfaced **PRODUCT_DEFECT**.

@@ -1,3 +1,11 @@
+## 2026-11-24 — SCAIL-2 bootstrap pytest collection path defect
+
+- Actual Windows evidence: `windows-test.cmd` reached pytest (Python 3.13.1, pytest 8.4.2), which collected 151 tests and stopped during import of `tests/test_scail2_bootstrap.py` with `FileNotFoundError: tests/install-scail2.ps1`.
+- Classification: **TEST_DEFECT** (wrong test fixture root); not SCAIL-2 product/install failure. Real files verified under `scripts/scail2/{install-scail2.ps1,INSTALL-SCAIL2.cmd,README-SCAIL2.txt}`.
+- Narrow fix: only change `ROOT` in `tests/test_scail2_bootstrap.py` from `Path(__file__).resolve().parent` to `Path(__file__).resolve().parents[1] / 'scripts' / 'scail2'`. All existing stringent assertions retained. 34 contract predicates reproduced against GitHub contents; all matched. **Actual post-fix Windows pytest NOT_RUN**.
+- GitHub original installer, ComfyUI, VML/Studio source, and Windows runner safety not changed. No allowlist/skips/assertion relaxation.
+- Next consumer step: `git pull --ff-only origin main` → `.\windows-test.cmd`; only after `[PASS]`, run `.\run-studio.cmd` and open `http://127.0.0.1:8080/studio/simple/`.
+
 ## 2026-11-24 — PowerShell 5.1 startup failure: empty PSScriptRoot in param
 
 - Actual user observation after prior launcher commit: `Split-Path : Cannot bind argument to parameter 'Path' because it is an empty string` on `scripts/windows-sync-test.ps1:10`.
