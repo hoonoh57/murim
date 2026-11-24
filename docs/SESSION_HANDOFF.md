@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 시장 기회 후보 풀
+
+[시장 기회 계약](MURIM_MARKET_OPPORTUNITY_CONTRACT.md), [초기 연구 후보](research/market-library/INITIAL_CANDIDATE_POOL_2026-11-24.md) 및 3개 지식 라이브러리/설계 동결 계약 필독. 국내/글로벌 분리, 실제 수요/경쟁/제작 실현성/수익화 경로·권리/비용 근거, 연구 순위 5개(수동 가설), 제작 투자 순위 EMPTY. 점수/주기는 후보 정책, 실제 정기 실행·시장 비교·수익화 미확보. 다음 시장 코호트와 사전 실물·독자/관객 비교, W009/T001 실제 분석 및 기술 실증. DESIGN_HOLD / PRODUCT_CODING_FROZEN.
+
 ## 2026-11-24 — 최우선 인계: 최신 제작기술 연구 라이브러리
 
 [기술 연구 계약](MURIM_TECHNOLOGY_INTELLIGENCE_CONTRACT.md) 및 technology-library/ 초기 카탈로그·prompt·schema를 읽는다. 별도 뉴스/강의/연구 지식, 후보 11건, 실제 Gemini 영상 분석/정기 수집/실증 0. T001 LTX-2.5 강의 및 W009 작품 분석의 실제 기존 도구 반환/검증 경로 우선. 최신성/홍보와 실제 성능 분리, 권한·비용·권리·현행 버전 보호. D0~D5 전체 OK 이전 제품 코딩 금지. DESIGN_HOLD / PRODUCT_CODING_FROZEN.

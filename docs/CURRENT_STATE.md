@@ -1,3 +1,8 @@
+## 2026-11-24 — 국내·글로벌 시장 기회 및 작품 후보 풀 설계
+
+- 사용자 확정: 수익화 가능한 시장·장르·주제의 정밀 조사/후보 풀 주기 갱신. [시장 기회 계약](MURIM_MARKET_OPPORTUNITY_CONTRACT.md), [초기 후보](research/market-library/INITIAL_CANDIDATE_POOL_2026-11-24.md) 추가. Adjust/Sensor Tower 2026 Q1, Omdia, KOFICE, KOCCA, 문피아 주/월간, Netflix/공식 YouTube 정책 조사. 일부 원문 cache miss는 검색 발췌 근거만 사용. 실제 시장 수익성/제작 실현성 미실증.
+- 초기 수동 연구 순서 5개, 제작 투자 순위 EMPTY. 100점 가중치·일일/주간/월간 주기는 설계 후보(보정 필요). 국가/언어·관객·유통·수익/품질·비용/권리 분리, 가설/관측 및 실제 순수익 시나리오·예측 회고. 실제 점수/확률/수익/정기 자동화/계정·데이터 연결 NOT_RUN/NOT_CONNECTED. 신규 제품 코드 없음. MARKET_INTELLIGENCE_HOLD / DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — 최신 제작기술 연구 라이브러리 설계
 
 - 사용자 확정: 최첨단 제작기술 뉴스·강의·소개를 별도로 수집하고 Gemini 등으로 분석·자료화하여 품질/시간/비용의 경쟁우위를 유지. [기술 연구 계약](MURIM_TECHNOLOGY_INTELLIGENCE_CONTRACT.md), [초기 자료원](research/technology-library/INITIAL_SOURCE_CATALOG_2026-11-24.md), [기술 분석 프롬프트](research/technology-library/TECHNOLOGY_ANALYSIS_PROMPT_V1.md), 후보 JSON schema 추가. 실제 공식 자료 및 연구 후보 11건 등록. 날짜/버전/주장·실측/재현·채택 분리, 매일 발견/주간 비교는 설계 정책. 작품 라이브러리와 별도.
