@@ -4,6 +4,10 @@
 **Windows 목표 경로:** `E:\gpt\projects\comfyui\murim`  
 **제정:** 2026-11-21
 
+## 2026-11-24 — 영상 분석 전문 Add-on 후보 및 표준 데이터 계약
+
+- [Gemini 사전 실증](docs/research/works-library/GEMINI_VIDEO_ANALYSIS_PILOT.md): 공개 YouTube 영상의 실제 시청각 분석 및 JSON 구조화 출력 활용. 공통 프롬프트/공급자 무관 후보 schema, 전체 맥락→정밀 구간→독립 증거 확인. 실제 분석/시장 데이터/감정 가설 분리. JSON 유효성은 사실 검증 아님. 권리·비용·연결 확인 후 기존 도구로 실증; 대량 수집/작가 pack 승격 전 독립 검증. 제품 코딩 동결 유지.
+
 ## 2026-11-24 — 경쟁작 분석 지식 라이브러리 및 집필 선행 공급
 
 - [경쟁작 지식 라이브러리 계약](docs/MURIM_COMPETITIVE_WORKS_LIBRARY.md): 상·중·하위 및 예외 작품의 실제 분해/강약점/특이점/시장 언어/인간 공명/실패 원리/반례를 권리와 근거에 따라 축적. 전문 스킬과 함께 작가·감독에게 해당 장르별 검증된 Knowledge Pack을 제공한다. 단순 순위/줄거리/자기평가로 대체 금지.

@@ -1,3 +1,8 @@
+## 2026-11-24 — Gemini 영상 분석 사전 실증 준비
+
+- 공식 영상 이해/YouTube URL/JSON 구조화 출력 확인. W009 Spring 공식 영상 URL 및 CC BY 4.0 안내 확인. 공통 분석 프롬프트 v1, 공급자 무관 선언적 JSON Schema 후보, 전편/정밀/독립 검증 계획 작성. 시간축·근거 ID·감정 가설/시장 관측 분리. [실증 계획](research/works-library/GEMINI_VIDEO_ANALYSIS_PILOT.md).
+- 실제 Gemini 계정/권한/호출/응답/영상 관측/스키마 validator 실행/DB 저장 NOT_RUN. 제품 코드 변경 없음. 다음 기존 도구를 이용한 W009 1건의 실제 반환·근거 검증과 포맷 개선. KNOWLEDGE_HOLD / DESIGN_HOLD / PRODUCT_CODING_FROZEN 유지.
+
 ## 2026-11-24 — 경쟁작 분석 라이브러리 및 작가 지식 공급 설계
 
 - 사용자 확정: 최상위/중위/하위·예외 작품의 강약점·특이점·시장 언어·인간 공명 및 실패 원인을 분석한 지식 라이브러리를 작가에게 공급. [라이브러리 설계](MURIM_COMPETITIVE_WORKS_LIBRARY.md), [초기 후보 카탈로그](research/works-library/INITIAL_SOURCE_CATALOG_2026-11-24.md) 추가. 공식 문피아 순위/Academy/Netflix/Blender/KOFIC/KPIPA 및 감정 궤적/서사 몰입 연구 확인. 후보 10건 등록(전편 관측 0). 실제 상중하 매칭/분해/관객 감정/분석 원리/데이터베이스 구현 NOT_RUN. Netflix 공식 검색 결과는 확인했으나 직접 페이지 cache miss.

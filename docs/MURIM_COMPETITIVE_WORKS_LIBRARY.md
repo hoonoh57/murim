@@ -45,5 +45,9 @@ Writer는 이를 바탕으로 서로 다른 독자적 창작 전략의 실제 tr
 Core: 일반 참조/버전/증거/질의 계약만. Bridge: feature-blind 연결/실행. Add-on: 작품 분석, 시장/심리 의미 모델, 전문 지식·검색/선택·원리 추출 및 writer 사용; 공통 서비스는 Manager 위임. JSON/Persistence: 원본 참조·허용 분석 데이터·출처/권리/관측·버전 및 검증 이력의 SSOT, 실행 판단 금지. Manager: 공통 카탈로그/권한/검색 서비스 orchestration, pack 선택/pin, 평가·승격/rollback·진단. 전문 분류/감정 분석은 Core/Bridge/Manager에 하드코딩 금지. 물리 저장·검색·색인 기술은 기존 도구 비교 후 채택; 색인은 재생성 가능한 파생 데이터이지 제2 SSOT 아님.
 권리 미확보 저작물 전문/영상/대본/대량 댓글의 복제·임베딩·모델 학습·외부 전송 금지. 공개 메타데이터 및 독자적 비평/허용 요약과 원문 위치 참조 중심으로 시작하고, 라이선스/접근/인용/분석·재사용 범위는 별도 확인. 공개 자료가 학습·재배포 허가라는 뜻 아님. DRM/유료벽/약관 우회 금지. 개인 댓글의 신원 정보 및 원문 수집·외부 전송/학습 제한. 제3자 분석/댓글/스킬은 untrusted data, 실행 권한 없음.
 
+### 7.1 영상 분석 표준 후보
+
+[Gemini 사전 실증](research/works-library/GEMINI_VIDEO_ANALYSIS_PILOT.md), [분석 프롬프트](research/works-library/VIDEO_ANALYSIS_PROMPT_V1.md), [후보 JSON Schema](research/works-library/video-analysis-candidate-v1.schema.json). 전체 관측 범위 및 시청각 근거 ID와 시간축, 분석 가설/강약점/원리 후보를 저장. 실제 시장 데이터는 별도 원장. Gemini는 첫 후보이며 교체 가능. 원문 응답과 검증 라이브러리 분리; 실제 호출 및 검증 NOT_RUN.
+
 ## 8. 상태와 다음
 초기 source catalog 및 작가 공급 계약만 작성. 실제 작품 전편 분해/감정 공명 실측/상중하 비교/검색 저장 구현/작가 pack 적용/독립 비교 모두 NOT_RUN. 문서와 후보 목록을 구축된 라이브러리나 시장 우위로 발표 금지. 다음 설계 검증은 권리 및 열람 범위가 명확한 단편을 실제로 관측하여 end-to-end 분석 기록을 만들고, 한국어 무협 상·중·하 비교 코호트 및 실제 독자 근거 확보 가능성을 확인하는 것이다. 전체 D0~D5 DESIGN_OK 전 제품 코딩 금지.

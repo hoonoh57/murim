@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: Gemini 영상 분석 후보
+
+[Gemini 사전 실증](research/works-library/GEMINI_VIDEO_ANALYSIS_PILOT.md) 및 공통 prompt/schema 후보 확인. 공식 기능과 W009 URL 확인만 완료. 실제 호출/응답/영상 관측/검증 NOT_RUN. 기존 도구로 1건부터 실증, 대량 수집 전 품질 확인. 권한/비용 및 5축/설계 동결 유지. 사용자에게 루틴 구현 결정 요구 금지.
+
 ## 2026-11-24 — 최우선 인계: 경쟁작 분석 지식 라이브러리
 
 [경쟁작 라이브러리 계약](MURIM_COMPETITIVE_WORKS_LIBRARY.md) 및 [초기 카탈로그](research/works-library/INITIAL_SOURCE_CATALOG_2026-11-24.md), D0~D5 설계 동결 계약을 읽는다. 상중하/예외 실제 비교작, 감정/관객/시장 관측과 전문 분석 분리, pattern/반례 및 작가용 Knowledge Pack 선행. Screenplay Master v1.1 후보(미실증). 공개 근거/후보 10건, 실제 전편 분석 0, 중하위 코호트/독립 검증 미확보. 다음은 접근·권리 확인된 단편의 실제 분석 및 한국어 무협 비교 표본/pack 효과 검증. KNOWLEDGE_HOLD / DESIGN_HOLD, 제품 코딩 금지.

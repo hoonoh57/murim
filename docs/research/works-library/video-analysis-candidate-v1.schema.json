@@ -1,0 +1,451 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Murim video analysis candidate v1 (unverified provider output)",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "work_id": {
+      "type": "string"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "analysis_status": {
+      "type": "string",
+      "enum": [
+        "CANDIDATE",
+        "PARTIAL",
+        "NOT_OBSERVED"
+      ]
+    },
+    "duration_ms": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "coverage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OBSERVED_SAMPLED",
+              "PARTIAL",
+              "NOT_OBSERVED"
+            ]
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "start_ms",
+          "end_ms",
+          "status",
+          "limitations"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "work_summary": {
+      "type": "object",
+      "properties": {
+        "premise": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "theme": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "audience_promise_hypothesis": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "overall_structure": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "distinctive_approach": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "premise",
+        "theme",
+        "audience_promise_hypothesis",
+        "overall_structure",
+        "distinctive_approach"
+      ],
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "start_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "modality": {
+            "type": "string",
+            "enum": [
+              "VISUAL",
+              "AUDIO",
+              "BOTH"
+            ]
+          },
+          "observation": {
+            "type": "string"
+          },
+          "precision": {
+            "type": "string",
+            "enum": [
+              "APPROXIMATE",
+              "FRAME_VERIFIED"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "start_ms",
+          "end_ms",
+          "modality",
+          "observation",
+          "precision"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "start_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "narrative_function": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "character_goal": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "obstacle": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "choice_and_consequence": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "information_change": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "visual_design": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "camera_and_motion": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "audio_and_dialogue": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "editing": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "emotion_hypotheses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "emotion": {
+                  "type": "string"
+                },
+                "trigger": {
+                  "type": "string"
+                },
+                "evidence_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "alternative": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "emotion",
+                "trigger",
+                "evidence_ids",
+                "alternative"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "open_questions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "start_ms",
+          "end_ms",
+          "evidence_ids",
+          "narrative_function",
+          "character_goal",
+          "obstacle",
+          "choice_and_consequence",
+          "information_change",
+          "visual_design",
+          "camera_and_motion",
+          "audio_and_dialogue",
+          "editing",
+          "emotion_hypotheses",
+          "open_questions"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "STORY",
+              "CHARACTER",
+              "DIALOGUE",
+              "EMOTION",
+              "VISUAL",
+              "MOTION",
+              "CAMERA",
+              "SOUND",
+              "EDITING",
+              "ORIGINALITY",
+              "OTHER"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "STRENGTH",
+              "WEAKNESS",
+              "DISTINCTIVE",
+              "PATTERN_CANDIDATE",
+              "COUNTEREXAMPLE_CANDIDATE"
+            ]
+          },
+          "claim": {
+            "type": "string"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "interpretation": {
+            "type": "string"
+          },
+          "alternative_explanations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "transferable_principle": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "applicability": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "verification_needed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "dimension",
+          "kind",
+          "claim",
+          "evidence_ids",
+          "interpretation",
+          "alternative_explanations",
+          "transferable_principle",
+          "applicability",
+          "limitations",
+          "verification_needed"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "market_evidence_needed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "followup_ranges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reason": {
+            "type": "string"
+          },
+          "required_modality": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_ms",
+          "end_ms",
+          "reason",
+          "required_modality"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "originality_constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "work_id",
+    "source_url",
+    "analysis_status",
+    "duration_ms",
+    "coverage",
+    "limitations",
+    "work_summary",
+    "evidence",
+    "scenes",
+    "findings",
+    "market_evidence_needed",
+    "followup_ranges",
+    "originality_constraints"
+  ],
+  "additionalProperties": false
+}
