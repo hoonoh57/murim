@@ -1,3 +1,9 @@
+## 2026-11-24 — Q2 / A02 W009 원저자 제작 기록 분석 (부분 증거 추가)
+
+- [W009 실제 제작 기록 원장](research/works-library/Q2_W009_SPRING_SOURCE_EVIDENCE_2026-11-24.md): David Revoy 2017 사전 제작 및 2019 공개 원문 직접 대조(도입부 삭제 등), Blender Studio 제작 일지/공개 자료 검색 본문 4건. 장면 존치·프리비즈·난제 사전 시험·revision 증거 보존의 연구용 지식 후보 및 Q4 반례 R05~R08 등록. 실제 관객/기여도/독립 평가 없음.
+- Gemini 실행 연결 미발견, Commons 공개 영상 취득 curl exit 6 DNS 실패. 영상/음향 NOT_OBSERVED, Gemini NOT_CONNECTED/NOT_RUN, A02 NOT_QUALIFIED / KNOWLEDGE_HOLD. 원문 일부 직접 접근 402/cache miss 및 검색 본문 범위 구분. 제품 코드·Windows·유료 호출·게시 변경 없음.
+- 다음 실행 Q3 T001 기술 강의 및 공식 workflow/release/model card 실제 확인. Q2 재개 조건은 영상 접근/독립 시간축 관측 및 pack 기여도 비교. Q1 적격 미달 유지. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — Q1 / A01 공개 실제 시장 자료 반증 (활성 증거 추가)
 
 - [Q1 실제 증거 원장](research/market-library/Q1_A01_ACTUAL_EVIDENCE_2026-11-24.md): ICPSR 610,015 프로젝트의 공개 변수/접근 조건과 2009~2020 Film & Video 모집 성공 37.7%/실패·취소·중단 62.3% 확인; 실제 창작자 공개 결산에서 유통·상품 비용 및 노동 기회비용의 중요성 확인; 국내 텀블벅 실제 AI 애니메이션 무산, 비AI 3D 애니메이션 무산, 단편 애니메이션 펀딩 성공 원본 3건 확인. AI 표시·심사/정산 정책 확인. 모집액은 정산/이익이 아님.
