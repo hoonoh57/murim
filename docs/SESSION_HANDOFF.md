@@ -1,3 +1,9 @@
+## 활성 인계 — 2026-11-25 A09 설계 비교 반영 (최우선)
+
+[A09 D2 설계](research/assurance/A09_SOUND_DESIGN_AND_MIXING_2026-11-25.md) 및 D0~D5 연결. A91~A96 GAP와 전문 sound planning, cue/stem/동적 믹싱·전편 sample timeline·납품 계측 계약 구체화. A09 NOT_QUALIFIED; 실제/독립 검증 미실행. 사용자 확정 로직 선행 비교 및 5축 불변.
+
+**다음 실행 A10 — 편집·합성·자막 로직/기반기술 비교 및 설계 개선.** 기존 src/studio/render.py, workspace.py 및 M-VML/편집 계약을 실제 원본에서 확인하고 OTIO/NLE의 timeline, source range/transition/track/compositing, 자막/정밀 시간축/렌더 재현·교환의 공식 원저자 기술과 비교한다. GAP→Adopt/Compose/Build→입출력·시간축/검증/국소 수정·5축 상세 계약 및 권위 문서 반영. A07~A09 의존 연결. 미실측/독립 검증 HOLD, 예시 작품 반복 제작 금지. 이후 A11~A14 및 A01~A06/A15 설계 반영 역대조/통합. 제품 코드 동결 및 모든 기존 품질/권한 게이트 유지.
+
 ## 활성 인계 — 2026-11-25 A08 설계 비교 반영 (최우선)
 
 [A08 D2 상세 설계](research/assurance/A08_VOICE_PERFORMANCE_DESIGN_2026-11-25.md) 및 D0~D5 연결. A81~A86 GAP 및 전문 음성/연기/시간 정렬/립싱크 계약 구체화; A08 NOT_QUALIFIED, 실제/독립 검증 미실행. 기존 v2 원본 보존. 사용자 확정 로직·베스트 프랙티스 선행 비교 목적 및 5축 불변.
