@@ -1,3 +1,9 @@
+## 2026-11-24 — 시장 소재 선정 선행 검증 결함 수정
+
+- 사용자 지적: 막연한 시장 조사/수동 순위/합격선 없는 가중치는 선행 검증 원칙 위배. [MARKET-M0~M6](MURIM_PREPRODUCTION_MARKET_GATE.md) 설계 계약 추가. RCF/콘셉트 테스트/실제 수익화 자격/완전 원가·역손익분기/보수적 하방/독립 시점 분리 선별기 검증. 미달 원인 수정·재심사, 근거 미확보는 투자 pool 제외. 기존 100점 가중치·수동 순위 SUPERSEDED.
+- [실제 제출 증거 screening](research/market-library/PREPRODUCTION_SCREENING_2026-11-24.md): 공식 문피아 직접 AI 불허 및 YouTube 광고 자격/모듈 수락 조건 확인. 기존 C001~C005 모두 현재 revision 제외. 합격 0, 실제 수익 예측/콘셉트 시험 미실행. 가상 산식 예시와 실제 시장 증거 분리. YouTube API 파생 지표/저장 허가 제약 추가. 임의 임계값·순위 대신 보정/독립 시험 필요.
+- 문서만 변경. 90일/ROI20%/선택률 차이 신뢰하한+5%p 등 초기 검증 정책은 제안이며 시장 보정/사용자 투자 승인 아님. 다음 허용된 실제 동종 신규 제작자 정산/원가/실패 코호트 및 고정 baseline 확보, 접근 불가 시장 대체, 시점 분리 과거 검증·소재 비교. DESIGN_HOLD / PRODUCT_CODING_FROZEN / MARKET_GATE_NOT_CALIBRATED / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — 국내·글로벌 시장 기회 및 작품 후보 풀 설계
 
 - 사용자 확정: 수익화 가능한 시장·장르·주제의 정밀 조사/후보 풀 주기 갱신. [시장 기회 계약](MURIM_MARKET_OPPORTUNITY_CONTRACT.md), [초기 후보](research/market-library/INITIAL_CANDIDATE_POOL_2026-11-24.md) 추가. Adjust/Sensor Tower 2026 Q1, Omdia, KOFICE, KOCCA, 문피아 주/월간, Netflix/공식 YouTube 정책 조사. 일부 원문 cache miss는 검색 발췌 근거만 사용. 실제 시장 수익성/제작 실현성 미실증.

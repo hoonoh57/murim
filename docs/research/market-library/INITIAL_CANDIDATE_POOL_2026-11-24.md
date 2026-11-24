@@ -1,5 +1,7 @@
 # 최초 시장 기회 후보 풀 — 2026-11-24
 
+> **SUPERSEDED (2026-11-24):** 수동 연구 순위/유망 후보 표현 폐기. [현재 선행 screening](PREPRODUCTION_SCREENING_2026-11-24.md)에서 C001~C005 현재 revision 모두 투자 후보 제외. 아래 내용은 과거 입력 관측/가설의 이력 보존용, 제작 순위로 사용 금지.
+
 RESEARCH_PRIORITY_ONLY / MARKET_INTELLIGENCE_HOLD. 아래 순서는 현 단계 연구 우선순위(설계자 판단)이지 정량 수익/성공 순위가 아니다. 제작 투자 순위: EMPTY. 실제 원고/시장/수익/제작 비교는 NOT_RUN. 출처 검색 결과 기준; Sensor Tower·KOCCA BCWW 페이지 직접 열람은 cache miss, 공식 검색 발췌를 사용. 보고서 전체의 정량 데이터 추출은 미완료.
 
 ## 1. 실제 관측된 수요 신호

@@ -54,5 +54,9 @@ Central Manager: 공통 skill registry/선택/composition, 비교 실험 계획/
 
 [시장 기회 계약](MURIM_MARKET_OPPORTUNITY_CONTRACT.md)의 시장/작품/기술 라이브러리 조합으로 후보를 발견하고 시장별 순위·실증·경제성 비교. 주기적 가설 갱신 및 과거 예측과 실제 성과의 독립 비교, 순위/근거 pin. 작품성/기술 우위/시장 수요/수익성 각각 검증. 실제 우위 입증 전 제작 승인 금지.
 
+### 5.6 소재 선정 단계의 캐스케이드
+
+[시장 선행 게이트](MURIM_PREPRODUCTION_MARKET_GATE.md): 시장/관객/콘셉트/유통·경제성의 독립 선행 검증, 미달 원인 자식 보완 및 상위 재평가, 보수적 손익/실제 비교 기준. 선정기 자체는 시점 분리 실제 수익/실패와 강한 baseline으로 검증. 대체 불가한 미확인 항목은 qualified pool에서 제외. 기존 수동 순위 폐기.
+
 ## 6. 현재 및 다음
 M1-A 독립 품질 primitive 27 PASS, 전체 M0/Windows/구조 검증 미완료. 이 문서 및 시나리오 skill v1은 실제 실행이 아닌 신규 설계·출처 기반 후보. 전문 기관에 의한 Murim 검증 없음. 실물 경쟁 제품 비교 및 고객 검증 NOT_RUN. 다음 M1-B generic dependency/invalidation, skill version/reference 결속 및 이후 독립 Bridge/Manager/Persistence slice; 실물 screenplay benchmark는 해당 생성/독립 평가 capability와 승인된 실행 환경을 확보한 뒤 수행. 기존 제품 수정 없이 병행 준비 가능, 실제 비교 전 champion 교체 금지.

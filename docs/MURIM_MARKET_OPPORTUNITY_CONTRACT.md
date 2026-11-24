@@ -1,5 +1,7 @@
 # Murim 시장 기회 분석 및 작품 Candidate Pool 운영 계약 v1.0
 
+> **최신 우선 계약:** [제작 전 시장성·수익성 검증 및 보완 게이트](MURIM_PREPRODUCTION_MARKET_GATE.md). 기존 수동 순위 및 100점 가중치는 폐기(역사적 설계 초안). 실제 합격선/자료/원인 보완·독립 검증 및 비교우위 증거를 통과한 qualified pool만 제작 우선순위 산정. 기존 아래 설명과 충돌 시 최신 게이트 우선. 모든 기존 5개 제출 revision 제외.
+
 2026-11-24 KST | 설계 계약 | MARKET_INTELLIGENCE_HOLD / DESIGN_HOLD / PRODUCT_CODING_FROZEN
 권위: AGENTS.md, MURIM_PRECODE_DESIGN_GATE.md, MURIM_COMPETITIVE_EVOLUTION_CONTRACT.md.
 [초기 시장 신호 및 후보](research/market-library/INITIAL_CANDIDATE_POOL_2026-11-24.md).

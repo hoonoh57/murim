@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 시장 선행 평가/보완 게이트
+
+[MARKET-M0~M6](MURIM_PREPRODUCTION_MARKET_GATE.md) → [현재 후보 screening](research/market-library/PREPRODUCTION_SCREENING_2026-11-24.md) → D0~D5. 이전 수동 순위·100점 가중치 폐기, 5개 기존 제출 revision 투자 pool 제외. 실수익·비용·동종 base-rate·콘셉트/독립 검증·보수적 손익분기 및 원인 보완 필요. 미확인은 투자 승격 금지, 대체 시장/전략 조사 또는 제외. 실제 보정/과거 예측 검증 미실행, 예시 수치는 가상 및 정책 후보. 다음 실제 허용 자료의 신규 제작자 코호트와 검증 경로 확보, W009/T001 실증도 별도 유지. 제품 코딩 동결.
+
 ## 2026-11-24 — 최우선 인계: 시장 기회 후보 풀
 
 [시장 기회 계약](MURIM_MARKET_OPPORTUNITY_CONTRACT.md), [초기 연구 후보](research/market-library/INITIAL_CANDIDATE_POOL_2026-11-24.md) 및 3개 지식 라이브러리/설계 동결 계약 필독. 국내/글로벌 분리, 실제 수요/경쟁/제작 실현성/수익화 경로·권리/비용 근거, 연구 순위 5개(수동 가설), 제작 투자 순위 EMPTY. 점수/주기는 후보 정책, 실제 정기 실행·시장 비교·수익화 미확보. 다음 시장 코호트와 사전 실물·독자/관객 비교, W009/T001 실제 분석 및 기술 실증. DESIGN_HOLD / PRODUCT_CODING_FROZEN.
