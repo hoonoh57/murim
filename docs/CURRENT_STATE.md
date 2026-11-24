@@ -1,3 +1,9 @@
+## 2026-11-24 — 5축 주요 제품 소스 정적 감사 및 이행 순서
+
+- 기준 4ec63cf40506. [책임 경계 감사·이행안](MURIM_FIVE_AXIS_OWNERSHIP_AUDIT_2026-11-24.md): 주요 Python/Director JS 호출·저장 경계 조사, 12개 결함/후보 그룹. 전체 repo 자동 감사 미실행. Calliope HTTP jobs/workflows/agent, ComfyAgent MCP 4 tools 소스 비교; 채택/실행 미확정.
+- **우선 PRODUCT_DEFECT**: relay_automator.py:47–56 max reworks 후 force_go, relay_client.py:149–180 및 web_ui.py:208–257 별도 제작 프롬프트/자동 진행. 기존 G1/G2와 권위 충돌. 실제 GPU 생성 증거 아님. 기존 자동 제작 사용 보류.
+- 다음 한 작업: M0 레거시 강제 GO 및 미승인 제작 프롬프트 진행 fail-closed, 초안/감수/승인 보존 및 집중 회귀. 이후 독립 5축 최소 slice. 이번 변경 문서만, Windows/제품 전체 테스트·GPU/착탈/전체 준수 미검증. REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — 5축 개방형 제작 플랫폼 설계 계약 확정
 
 - 사용자 요청: Core 불변화, Bridge/Runtime, 독립 착탈 Add-on, JSON persistence-only, 반복·총괄 기능 Central Manager 위임. 미래 기술 도입 때 핵심 코드 재작성 금지. 모든 신규 기술을 capability/manifest 기반 선택·교체/격리 대상으로 설계.

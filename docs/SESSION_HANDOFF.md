@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 주요 소스 감사 및 안전 선행 경계
+
+[5축 시방서](MURIM_FIVE_AXIS_ARCHITECTURE.md)와 [감사/이행안](MURIM_FIVE_AXIS_OWNERSHIP_AUDIT_2026-11-24.md)을 먼저 읽는다. 주요 제품 Python/Director JS 경계와 외부 adapter 후보를 조사했고 전체 repo 자동 감사는 NOT_RUN. 다음 한 경계는 M0: legacy Relay force_go 및 미승인 자동 제작 프롬프트 진행 차단(실제 GPU 실행 아님), 기존 원고 작성/Studio 승인 계약 보존, 집중 회귀. 이후 M1 독립 capability/registry/lifecycle/persistence 최소 slice. 제품 원본/사용자 자산 변경 없음, 전체 REMEDIATION_REQUIRED. 이전 인계의 전수 감사 목표는 남아 있으며 본 주요 경로 조사만으로 완료 처리 금지.
+
 ## 2026-11-24 — 최우선 인계: 5축 아키텍처 계약
 
 새 세션은 AGENTS.md 최신 5축 절 → [MURIM_FIVE_AXIS_ARCHITECTURE.md](MURIM_FIVE_AXIS_ARCHITECTURE.md) → [기술 조사](AGENTIC_FILMMAKING_BENCHMARK_2026-11-24.md) → CURRENT_STATE.md 최신을 읽는다. Core/Bridge/Add-on/JSON/Central Manager의 5축만 사용, 기존 4-GATE 품질 계약 유지. 다음 한 작업은 현행 import/call/파일쓰기/공통기능 ownership 전수 감사 및 후보 기술 adapter 비교, migration map 수립. 신규 Add-on 때문에 Core/Bridge/Manager/shell에 feature-specific 코드 금지. 구현·착탈·500개 등록·실제 GPU·전체 준수 아직 미검증, 기존 사용자 원본·승인 이력 보존. 아래 기술 비교 및 Windows 재테스트 기록은 이 최상위 설계에 종속된다.
