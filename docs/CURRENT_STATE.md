@@ -1,3 +1,9 @@
+## 2026-11-24 — M0 비정상 평가·이전 상태 응답 방어 추가 (부분 실행 검증)
+
+- 기준 HEAD fe4e4180d6d8. GitHub clone DNS 오류 재확인. 원격 source에서 start_round2/process_round2_response/hold/start_round3/process_round3_response의 주석·빈 줄·행말 공백 제외 추출문 FNV64 443b73cb97770599, RelayAutomator.run_all 79c329e2aa73e35를 격리 Linux Python 3.13.5 환경 복사본과 대조. 원본 12개 집중 사례 7 FAIL/5 PASS. PRODUCT_DEFECT: list 형태 평가, 과대 정수 math.isfinite overflow, null camera plans, 잘못된 art payload, 복원된 비정상 평가, HOLD 상태의 오래된 응답.
+- 수정: 상태/round 검증, payload dict/list 타입 검증, score 범위 직접 비교, 파싱 오류 HOLD, 잘못된 평가 캐시 제거, 복원된 비정상 council/시나리오 방어. 강제 GO/자원 제작 차단 및 기존 rework 유지. 수정 후 같은 12개 PASS, 실제 run_all 추출문 4개 추가 PASS, 총 16 PASS. 수정 normalized excerpt FNV64 1a514f70f2036573와 원격 반영문 일치 확인 대상. test doubles: parser/builder/round1 및 summary 등; 실제 전체 package/import/Flask/Windows/GPU 미실행. 실제 parser 경유 malformed/restore/stale regression 3개 test method 추가(미실행).
+- 전체 M0 회귀 및 잔여 진입점 검증 NOT_RUN; 전체 REMEDIATION_REQUIRED. 다음: 전체 소스의 해시 검증 격리 실행 경로 복구 및 focused pytest, M1 착탈/캐스케이드 기반의 독립 실증 준비. 사용자에게 루틴 명령 요청 금지. 실제 로컬 UI 수용 전 제품 완료 표시 금지.
+
 ## 2026-11-24 — 자율 개발 및 다층 품질 캐스케이드 계약
 
 - 사용자 확정: 정상 개발 과정의 중간 기술 결정·승인·테스트 해석을 사용자에게 맡기지 않고 로컬 실제 UI/결과 수용 검증에서만 관측 요청. 기존 권한 및 작품 4-GATE 승인 유지.

@@ -7,7 +7,6 @@ Human-Relay 클라이언트
 import os
 import re
 import json
-import math
 from datetime import datetime
 from typing import Dict, Optional, List
 from src.relay.batch_builder import BatchBuilder, BatchRequest
@@ -105,42 +104,44 @@ class RelaySession:
 
     def process_round2_response(self, raw_response: str) -> dict:
         """Round 2 응답을 파싱합니다."""
-        results = self.parser.parse(raw_response)
-        self.round_results[2] = results
-        
-        # A new response must never inherit a previous evaluation.
+        if self.status != "round2" or self.current_round != 2:
+            return self._invalid_review()
         self.council_json = None
         self.style_guide_json = None
         self.camera_plans_json = None
-        # Council 응답
+        try:
+            results = self.parser.parse(raw_response)
+        except (TypeError, ValueError):
+            return self._invalid_review()
+        self.round_results[2] = results
         council_resp = self.parser.get_by_owner(results, "Council")
-        if council_resp and council_resp.parsed_json:
+        if not council_resp or not isinstance(council_resp.parsed_json, dict):
+            return self._invalid_review()
+        if council_resp.parsed_json:
             self.council_json = council_resp.parsed_json
             avg = self.council_json.get("average_score", 0)
             verdict = self.council_json.get("verdict", "N/A")
             self.messages.append(f"⚖️ 평가 완료: 평균 {avg}점 → {verdict}")
-        
-        # ArtDirection 응답
         art_resp = self.parser.get_by_owner(results, "ArtDirection")
+        if art_resp and not isinstance(art_resp.parsed_json, dict):
+            return self._invalid_review()
         if art_resp and art_resp.parsed_json:
             self.style_guide_json = art_resp.parsed_json
             self.messages.append(
                 f"🎨 스타일 가이드: {self.style_guide_json.get('style', 'N/A')}"
             )
-        
-        # Camera 응답
         camera_resp = self.parser.get_by_owner(results, "Camera")
+        if camera_resp and (not isinstance(camera_resp.parsed_json, dict) or
+                            not isinstance(camera_resp.parsed_json.get("camera_plans", []), list)):
+            return self._invalid_review()
         if camera_resp and camera_resp.parsed_json:
             self.camera_plans_json = camera_resp.parsed_json
             plans_count = len(self.camera_plans_json.get("camera_plans", []))
             self.messages.append(f"🎬 카메라 계획: {plans_count}개 장면")
-        
-        # Legacy scores are diagnostic only, never Studio approval.
         score = (self.council_json or {}).get("average_score")
         verdict = str((self.council_json or {}).get("verdict", "")).upper()
-        if type(score) not in (int, float) or not math.isfinite(score) or not 0 <= score <= 10 or verdict not in ("GO", "REWORK", "KILL"):
-            self.hold("유효한 평가가 없습니다. 원고와 평가를 다시 확인하세요.")
-            return {"success": False, "needs_rework": False, "killed": False, "error": "평가 확인 필요"}
+        if type(score) not in (int, float) or not 0 <= score <= 10 or verdict not in ("GO", "REWORK", "KILL"):
+            return self._invalid_review()
         if verdict == "KILL" or score < 6:
             self.status = "killed"
             self.messages.append("품질 미달: 제작 중단")
@@ -149,18 +150,27 @@ class RelaySession:
         return {"success": True, "needs_rework": needs_rework,
                 "can_rework": self.rework_count < self.max_reworks, "killed": False}
 
+    def _invalid_review(self) -> dict:
+        self.council_json = None
+        self.style_guide_json = None
+        self.camera_plans_json = None
+        self.hold("유효한 평가가 없습니다. 원고와 평가를 다시 확인하세요.")
+        return {"success": False, "needs_rework": False, "killed": False, "error": "평가 확인 필요"}
+
     def hold(self, reason: str):
         self.status = "hold"
         self.messages.append("[HOLD] " + reason)
 
     def start_round3(self, force_go: bool = False) -> Optional[str]:
         """Only a draft rewrite is permitted by this unbound legacy session."""
-        if force_go or self.status != "round2" or not self.scenario_json:
+        if (force_go or self.status != "round2" or self.current_round != 2 or
+                not isinstance(self.scenario_json, dict) or not self.scenario_json or
+                not isinstance(self.council_json, dict)):
             self.hold("승인된 Studio 제작 경로가 필요합니다.")
             return None
         score = (self.council_json or {}).get("average_score")
         verdict = str((self.council_json or {}).get("verdict", "")).upper()
-        valid = type(score) in (int, float) and math.isfinite(score) and 6 <= score <= 10
+        valid = type(score) in (int, float) and 6 <= score <= 10
         if not valid or verdict not in ("REWORK", "GO") or not (verdict == "REWORK" or score < 9.5) or self.rework_count >= self.max_reworks:
             self.hold("원고를 보존했습니다. Studio에서 독립 심사와 인간 승인을 진행하세요.")
             return None

@@ -1,4 +1,5 @@
 import unittest
+import json
 from unittest.mock import MagicMock
 from src.relay.relay_client import RelaySession
 
@@ -67,6 +68,48 @@ class TestRelaySession(unittest.TestCase):
         self.assertFalse(result["success"])
         self.assertEqual(self.session.status, "hold")
         self.assertIsNone(self.session.imaging_json)
+
+    def test_malformed_review_fails_closed(self):
+        def block(number, owner, payload):
+            return f"---[RES-{number} | {owner}]---\n```json\n{json.dumps(payload)}\n```\n---[END RES-{number}]---"
+        valid = block("002", "CouncilAgent", {"average_score": 8, "verdict": "REWORK"})
+        cases = [
+            "",
+            block("002", "CouncilAgent", [1]),
+            block("002", "CouncilAgent", {"average_score": 10**400, "verdict": "GO"}),
+            block("002", "CouncilAgent", {"average_score": float("nan"), "verdict": "GO"}),
+            valid + "\n" + block("003", "CameraAgent", {"camera_plans": None}),
+            valid + "\n" + block("004", "ArtDirectionAgent", [1]),
+        ]
+        for raw in cases:
+            with self.subTest(raw=raw[:80]):
+                session = RelaySession("T", "E")
+                session.scenario_json = {"title": "T", "script": "S", "scenes": []}
+                session.start_round2()
+                self.assertFalse(session.process_round2_response(raw)["success"])
+                self.assertEqual(session.status, "hold")
+                self.assertIsNone(session.council_json)
+                self.assertIsNone(session.start_round3())
+
+    def test_restored_invalid_evaluation_cannot_start_round3(self):
+        for council in ([1], {"average_score": 10**400, "verdict": "GO"}):
+            with self.subTest(council=council):
+                session = RelaySession("T", "E")
+                session.scenario_json = {"title": "T", "script": "S", "scenes": []}
+                session.start_round2()
+                data = session.to_dict()
+                data["council"] = council
+                restored = RelaySession.from_dict(data)
+                self.assertIsNone(restored.start_round3())
+                self.assertEqual(restored.status, "hold")
+
+    def test_stale_review_response_cannot_reopen_hold(self):
+        self.session.scenario_json = {"title": "T", "script": "S", "scenes": []}
+        self.session.start_round2()
+        self.session.hold("test hold")
+        raw = '---[RES-002 | CouncilAgent]---\n{"average_score":7,"verdict":"REWORK"}\n---[END RES-002]---'
+        self.assertFalse(self.session.process_round2_response(raw)["success"])
+        self.assertIsNone(self.session.start_round3())
 
     def test_serialization(self):
         self.session.start_round1()

@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: M0 부분 실측 및 수정
+
+GitHub HEAD fe4e4180d6d8 기준의 실제 RelaySession/RelayAutomator 함수 추출문을 FNV64 대조 후 Linux Python에서 실행. 7개 재현 실패를 수정하여 기존 12+자동화 4=16 PASS(파서/빌더 등 test doubles 사용). 수정 추출문 FNV64 1a514f70f2036573. 전체 repo/Windows/실제 parser 기반 신규 회귀는 NOT_RUN. 현재 5축/캐스케이드 시방서 유지, 사용자 중간 개입 없음. 다음 M0 전체 집중 테스트 실행 경로 확보와 잔여 경계 검증, 독립 M1 최소 실행 기반. REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — 최우선 인계: 자율 개발·다층 품질 캐스케이드
 
 AGENTS.md 최신 자율개발 절 → [캐스케이드 계약](MURIM_CASCADING_QUALITY_CONTRACT.md) → 5축 시방서/상태를 읽는다. 기술 중간 승인/로그 해석/반복 테스트를 사용자에게 위임하지 않는다. 실제 로컬 UI·결과 수용 관측만 정상 사용자 중단점. 권한 경계 및 기존 작품 승인 유지. 다음 M0 집중 회귀 실행 경로 복구 후 M1 generic cascade contract/착탈 slice, 부모-자식 품질 승격 및 targeted rework 검증. 현재 환경 GitHub clone DNS 실패, Windows 실행 미확인; 외부 실행 프레임워크 후보 조사만 완료. 사용자에게 루틴 테스트 명령을 재요청하는 것으로 개발 완료 처리 금지. 전체 REMEDIATION_REQUIRED.
