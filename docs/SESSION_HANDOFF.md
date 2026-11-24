@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 경쟁작 분석 지식 라이브러리
+
+[경쟁작 라이브러리 계약](MURIM_COMPETITIVE_WORKS_LIBRARY.md) 및 [초기 카탈로그](research/works-library/INITIAL_SOURCE_CATALOG_2026-11-24.md), D0~D5 설계 동결 계약을 읽는다. 상중하/예외 실제 비교작, 감정/관객/시장 관측과 전문 분석 분리, pattern/반례 및 작가용 Knowledge Pack 선행. Screenplay Master v1.1 후보(미실증). 공개 근거/후보 10건, 실제 전편 분석 0, 중하위 코호트/독립 검증 미확보. 다음은 접근·권리 확인된 단편의 실제 분석 및 한국어 무협 비교 표본/pack 효과 검증. KNOWLEDGE_HOLD / DESIGN_HOLD, 제품 코딩 금지.
+
 ## 2026-11-24 — 최우선 인계: 압축 실물 제작기술 시장 실증
 
 [압축 실물 계약](MURIM_SHORT_FORM_MARKET_VALIDATION.md) + 실제 관객 계약 + D0~D5 설계 동결 계약 필독. 기존 도구의 난제 장면/완결 단편/연재형 영상으로 단위 기술과 통합 작품을 비교. YouTube/TikTok 공식 정책 및 지표 조사만 완료, 실제 영상/공개/계정/관객 미실행. 타임라인/쇼트·스킬·엔진 revision 결속, 독립 대조 실험으로 실제 원인 확인, 미달 기술 개선 후 확대. 사용자에게 기술 결정 요청 금지, 게시/비용/권리 승인 유지. 전체 설계 OK 전 제품 코딩 금지. DESIGN_HOLD / PRODUCT_CODING_FROZEN.

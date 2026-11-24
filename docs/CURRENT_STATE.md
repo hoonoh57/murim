@@ -1,3 +1,8 @@
+## 2026-11-24 — 경쟁작 분석 라이브러리 및 작가 지식 공급 설계
+
+- 사용자 확정: 최상위/중위/하위·예외 작품의 강약점·특이점·시장 언어·인간 공명 및 실패 원인을 분석한 지식 라이브러리를 작가에게 공급. [라이브러리 설계](MURIM_COMPETITIVE_WORKS_LIBRARY.md), [초기 후보 카탈로그](research/works-library/INITIAL_SOURCE_CATALOG_2026-11-24.md) 추가. 공식 문피아 순위/Academy/Netflix/Blender/KOFIC/KPIPA 및 감정 궤적/서사 몰입 연구 확인. 후보 10건 등록(전편 관측 0). 실제 상중하 매칭/분해/관객 감정/분석 원리/데이터베이스 구현 NOT_RUN. Netflix 공식 검색 결과는 확인했으나 직접 페이지 cache miss.
+- Screenplay Master 후보 v1.1.0에 Knowledge Pack 선행 입력/HOLD 조건 추가. 후보 상태 유지, 기존 권위 역사 스킬/제품 변경 없음. 다음 권리 확보 단편 실제 분석 기록 및 한국어 무협 비교 코호트 확보, pack 기여도 실물 시험. 전체 D0~D5/design freeze 유지. KNOWLEDGE_HOLD / DESIGN_HOLD / PRODUCT_CODING_FROZEN / COMPETITIVE_ALPHA_NOT_PROVEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — 압축 실물 영상 제작기술 시장 검증 계약
 
 - 사용자 확정: 짧은 애니메이션/숏드라마 등 시장용 압축 실물로 제작 기술 자체를 검증·개선. [실물 시장 실증 계약](MURIM_SHORT_FORM_MARKET_VALIDATION.md) 추가. 난제 장면/완결 단편/연재형/확대는 가변적 실험 단계, 품질 하향 금지. 단위 기술과 전체 작품 각각 비교. 영상/타임라인/쇼트·엔진·스킬 버전 결속, 시청 이탈과 기술 원인의 통제 비교, 독립 신규 작품/표본 재검증.

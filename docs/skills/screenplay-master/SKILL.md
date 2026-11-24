@@ -2,7 +2,7 @@
 name: screenplay-master
 description: Develop and revise original screenplays through audience intent, genre-aware story design, professional craft review, independent comparison, and targeted revisions. Use for screenplay planning, drafting, critique, and revision before production.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   status: "CANDIDATE_UNBENCHMARKED"
   authority: "Murim"
 ---
@@ -16,6 +16,10 @@ metadata:
 - 불확실한 제작 기술은 내부 조사·선택. 사용자 의도 중 창작 방향을 좌우하는 상충사항만 쉬운 자연어로 확인. 비전문가에게 긴 설문이나 프롬프트를 요구하지 않는다. 나머지는 가역적 가설로 명시하여 실제 초안 제시.
 - Manager에 장르·사료·캐릭터·대사·스토리·시각 설계·반대심사 capability를 요청할 전문 계획을 제공. 다른 Add-on 직접 호출 금지.
 - 역사/예술이면 기존 EDITORIAL_MASTER_SKILL_V2 및 SOURCE_TRUTH_SKILL_V2, CINEMATIC_NARRATIVE_SKILL_V2, INTERNAL_RED_TEAM_SKILL_V2의 고유 계약 및 실제 자료 확인을 상속. 무협이면 해당 세계관·동작·인물 규칙을 선택. 현대/코미디/단편/비선형/다큐 등은 다른 구조 선택. 15비트나 장편 심사 양식을 보편 규칙으로 삼지 않는다.
+
+## 집필 선행 전문 지식 (후보 계약, 미실증)
+- [경쟁작 분석 라이브러리](../../MURIM_COMPETITIVE_WORKS_LIBRARY.md)의 장르/매체/관객별 Knowledge Pack을 Manager에 요청. 실제 관측된 비교작의 강·약·특이점/반례, 시장 언어, 인간 공명 및 적용 조건, 권리/근거/버전, 차별화 가설을 입력으로 사용한다. 검증된 지식 부족은 KNOWLEDGE_HOLD; 연구용 초안의 사전 실험은 가능하나 작품 승격 금지. 작품 자체의 표현/구체 사건/설정 복제 금지.
+- 선택한 원리와 실제 원고에서의 독자적인 적용·효과/한계를 증거로 연결. 지식 pack의 적용 효과를 독립 작품·관객 비교로 확인. 현재 실제 pack 및 runtime 미구현, 스킬은 CANDIDATE_UNBENCHMARKED 유지.
 
 ## 부모-자식 집필 작업
 1. **작품 계약:** 관객이 얻을 경험, 중심 사건 또는 주제, 주요 인물의 선택·제약, 결말의 보상, 금지사항, 제작 현실을 짧게 명문화. 필요한 조사/권리 검증을 먼저 수행하고 모르는 사실은 모른다고 기록.

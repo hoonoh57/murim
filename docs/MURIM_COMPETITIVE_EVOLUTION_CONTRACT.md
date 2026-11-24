@@ -42,5 +42,9 @@ Central Manager: 공통 skill registry/선택/composition, 비교 실험 계획/
 
 [압축 실물 시장 검증 계약](MURIM_SHORT_FORM_MARKET_VALIDATION.md) 적용. 짧은 완성 작품과 단위 기술의 대표 난제, 실제 관객 반응/전문 관측/통제 비교를 함께 사용. 게시 revision과 생성·편집 타임라인·engine/skill pin 연결 및 독립 비교로 원인을 확인. 반복 실증 후 challenger 채택, 권한·동결 유지.
 
+### 5.3 검증된 경쟁작 분석 지식의 진화
+
+[경쟁작 라이브러리](MURIM_COMPETITIVE_WORKS_LIBRARY.md)의 source→관측→분해→패턴/반례→통제 비교→작가 Knowledge Pack 및 skill challenger를 연결. 시장·감정/인지·작품성 지식의 적용 조건과 장르/기간별 버전 pin. 실제 기여도 입증 전 원리/스킬 승격 금지.
+
 ## 6. 현재 및 다음
 M1-A 독립 품질 primitive 27 PASS, 전체 M0/Windows/구조 검증 미완료. 이 문서 및 시나리오 skill v1은 실제 실행이 아닌 신규 설계·출처 기반 후보. 전문 기관에 의한 Murim 검증 없음. 실물 경쟁 제품 비교 및 고객 검증 NOT_RUN. 다음 M1-B generic dependency/invalidation, skill version/reference 결속 및 이후 독립 Bridge/Manager/Persistence slice; 실물 screenplay benchmark는 해당 생성/독립 평가 capability와 승인된 실행 환경을 확보한 뒤 수행. 기존 제품 수정 없이 병행 준비 가능, 실제 비교 전 champion 교체 금지.
