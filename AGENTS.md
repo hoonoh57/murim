@@ -4,6 +4,13 @@
 **Windows 목표 경로:** `E:\gpt\projects\comfyui\murim`  
 **제정:** 2026-11-21
 
+## 2026-11-24 — 자율 개발 및 다층 부모-자식 품질 캐스케이딩 계약
+
+- 개발 LLM이 기술 조사·선택·코딩·실행·오류 수정·검증을 승인된 범위에서 연속 담당한다. 사용자가 일상 기술 결정, 중간 승인, 로그 해석, 반복 테스트를 담당하지 않는다. 정상적인 사용자 개입 경계는 실제 로컬 UI/결과 수용 검증. 권한·비용·외부 전송·원본 보호 및 기존 작품 인간 승인 계약 유지. 실제 연결/권한 제약은 숨기지 않으며 세션 이후 백그라운드 개발을 주장하지 않는다.
+- 제품은 다층 parent-child 품질 캐스케이드: 부모 요구/산출물/최소 기준 및 초과 목표 → 자식 전문 실행·독립 평가·근거 기반 개선 → 모든 필수 기준과 목표 충족 증거가 있는 결과만 승격 → 부모 통합 평가. 부모 실패는 원인 자식에 반환, 영향 받은 의존성만 무효화. 무한 retry/강제 GO/기준 하향/가짜 평가 금지; 승인된 자원 범위 내 대안 소진 시 HOLD와 증거 보존.
+- 5축 유지: Core generic contract/primitive, Bridge 실행·routing, Add-on 전문 계획/생성/평가/개선 제안, JSON persistence-only, Central Manager 공용 orchestration/승격/재작업/자원/게이트/관측 SSOT. 부모-자식 계층은 Add-on 직접 호출이나 신규 축이 아니다. 기술은 언제나 착탈 가능한 계약으로 도입.
+- 세부 시방서 [MURIM_CASCADING_QUALITY_CONTRACT.md](docs/MURIM_CASCADING_QUALITY_CONTRACT.md). 새 세션 및 신규 개발은 이 계약을 읽고 적용한다.
+
 ## 2026-11-24 — 최상위 5축 개방형 제작 플랫폼 계약 (사용자 확정)
 
 - Murim의 유일한 책임 구조: **Core / Bridge·Runtime / Add-on / JSON·Persistence / Central Manager**. 기존 4-GATE는 콘텐츠 품질 계약이며 5축과 별개다. 세부 시방서 SSOT: [MURIM_FIVE_AXIS_ARCHITECTURE.md](docs/MURIM_FIVE_AXIS_ARCHITECTURE.md). 모든 신규 기술 채택·코딩·검증 전에 읽는다.

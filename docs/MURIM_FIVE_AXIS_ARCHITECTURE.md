@@ -81,6 +81,10 @@ Canonical project aggregate의 JSON revision이 프로젝트/씬/쇼트/트랙/�
 기계검증 탭은 Central Manager 관측 서비스의 소비 화면으로, 등록된 Add-on/capability/contract/schema/version, 선택 근거, dependency graph, job/attempt/correlation ID, events, 상태/실패 분류, 품질 근거/승인, 입력/출력 hash 및 provenance, GPU/RAM/시간/비용/queue, 로그/재현 bundle, 경계 검사 및 BUILD/TEST/실제 실행 결과를 일관된 형식으로 조회한다. Bridge는 lifecycle/실행 이벤트, Add-on은 고유 진단·evidence, Persistence는 불변 이력을 제공한다. 동적 schema 기반 필터/검색/상세·JSON export 및 read-only diagnostics API로 개발 LLM이 직접 확인할 수 있도록 한다. 운영 설정 변경/재시도/실행은 조회 권한과 분리하고 별도 정책 검증·승인·CAS를 거친다. secret/PII redaction, 권한 범위, 로그 용량·보존/rotation, 무단 외부 전송 금지, unknown 측정치 명시. 실제 개발 LLM 연결 실증 전 NOT_CONNECTED.
 자연어 요청→의도/변경 제안→검증/필요 승인→실행→증거 readback→쉬운 말 결과, 모든 단계에 동일 correlation ID. 품질 실패는 제한된 재작업/대안 검증 또는 HOLD; 승인/비용/권한을 무한 반복으로 우회하지 않는다. 원고 없는 감수와 사용자에게 JSON/프롬프트/모델 선택 강제 금지. UX 인수시험: 처음 접한 비전문가가 기술 설정 없이 실제 원고 생성·수정·감수·결과 재생; 개발 LLM이 사용자 개입 없이 승인된 진단 범위 내 실패 원인을 추적; 기본 UI/기계검증 탭 동일 작업 상태 증거 일치, 신규 Add-on에 shell 수정 없음. 최고 품질은 검증 목표이며 보장 아님.
 
+### 7.2 다층 품질 캐스케이드 및 자율 개발
+
+[캐스케이딩 품질 계약](MURIM_CASCADING_QUALITY_CONTRACT.md)이 부모-자식 업무 분해, 독립 평가, 목표 초과 승격, 원인 자식 targeted rework, bounded HOLD, 개발 자율 진행과 기계검증의 세부 권위다. 5축 소유권 및 기존 품질·권한 계약 유지. 구현 완료로 오인 금지.
+
 ## 8. 기술 재사용 조사 및 표준 후보 (참고, 채택 확정 아님)
 
 - Python Packaging Entry Points: 표준 discovery metadata. https://packaging.python.org/en/latest/specifications/entry-points/ ; https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/
