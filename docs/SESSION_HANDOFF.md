@@ -1,3 +1,11 @@
+## 2026-11-24 — Murim Windows launcher repair handoff
+
+- User encountered `[FAIL] Illegal characters in path.` on `.\windows-test.cmd` in PowerShell.
+- Changed `windows-test.cmd` only in product launcher: remove its redundant quoted root `-Workspace "%REPO_DIR%"`, which derived from trailing-slash `%~dp0`; the PS5.1 script derives workspace using `$PSScriptRoot` internally.
+- Keep `scripts/windows-sync-test.ps1` fail-closed protections untouched. GitHub change is not a Windows runtime PASS.
+- User recovery: `git pull --ff-only origin main` → `.\windows-test.cmd` → `.\run-studio.cmd` if PASS → `http://127.0.0.1:8080/studio/simple/`.
+- If failure remains, existing trace is in `$env:LOCALAPPDATA\Murim\last-task-failure.txt`; classify from actual failing line rather than weakening checks.
+
 ## 2026-11-24 — GPT형 Director UI / 승인 기준 및 후속 검증
 
 - `/studio/simple/` 신규 감독용 UI는 GitHub `hoonoh57/murim` 원본에서 개발. `/studio/`의 실물 사전 제작 G1/G2, 불변 M-VML, 에셋 등록·영상 후보·FFmpeg 경로를 재사용한다.

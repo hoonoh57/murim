@@ -1,5 +1,6 @@
 @echo off
 setlocal
-set "REPO_DIR=%~dp0"
-powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%REPO_DIR%scripts\windows-sync-test.ps1" -Workspace "%REPO_DIR%" %*
+rem The PowerShell script resolves the workspace from its own PSScriptRoot.
+rem Do not pass %%~dp0 as a quoted -Workspace argument: it ends in a backslash.
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%~dp0scripts\windows-sync-test.ps1" %*
 exit /b %ERRORLEVEL%

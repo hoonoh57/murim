@@ -1,3 +1,12 @@
+## 2026-11-24 — Windows PowerShell launcher path quoting repair
+
+- Observed Windows user output: `PS E:\gpt\projects\comfyui\murim> .\windows-test.cmd` → `[FAIL] Illegal characters in path.`
+- Classification: **PRODUCT_DEFECT (Windows CMD→PowerShell argument handoff; Windows environment exposure)**, not a ComfyUI/GPU/Studio UI failure.
+- Root cause candidate from source: `windows-test.cmd` passed `-Workspace "%REPO_DIR%"`, where `%~dp0` ends in `\`. The quoting/trailing backslash can corrupt the argument. The PowerShell script already defaults Workspace to `Split-Path -Parent $PSScriptRoot`.
+- Corrective patch: only remove the redundant `-Workspace` argument from the CMD wrapper. Keep safety checks, git clean status/CAS handling and ff-only pull in `scripts/windows-sync-test.ps1` unchanged.
+- Verification: GitHub contents/readback and static launcher contract checks; **Windows actual invocation/pytest/UI remain NOT_RUN and require consumer test**.
+- Next: from PowerShell `git pull --ff-only origin main` (does not bypass local-change protection), then `.\windows-test.cmd`, then only on PASS `.\run-studio.cmd`. No reset/clean/manual rewrite.
+
 ## 2026-11-24 — GPT형 Director UI 원격 개발 체크포인트 (실환경 별도)
 
 - 목적: 동일 브라우저에서 프로젝트 CRUD(보관/복원), 시나리오 G1/G2 감수, GPT 후보 이미지 선정, 스토리보드 M-VML 연결, 실제 영상 후보를 입력 이미지와 분리 재생.
