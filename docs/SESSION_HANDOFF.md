@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: M1-A 독립 순수 품질 계약
+
+5축 및 캐스케이드 권위 문서 유지. 신규 src/core/quality_contract.py/test_quality_contract.py의 실제 Linux 테스트 27 PASS; 실행 blob SHA를 CURRENT_STATE.md에 기록. Core evidence_issues는 조건/구조 검사이지 승격/실제 품질 승인 아님. M0 전체 package 회귀는 DNS/Windows 연결 제약으로 NOT_RUN; 기존 제품 통합하지 않음. 다음 독립 parent/dependency DAG 및 targeted invalidation 계약, 이후 5축 fixture. 실제 M0/통합/Windows 검증·전체 준수 미완료, REMEDIATION_REQUIRED. 사용자에게 루틴 테스트 명령을 넘기지 않는다.
+
 ## 2026-11-24 — 최우선 인계: M0 부분 실측 및 수정
 
 GitHub HEAD fe4e4180d6d8 기준의 실제 RelaySession/RelayAutomator 함수 추출문을 FNV64 대조 후 Linux Python에서 실행. 7개 재현 실패를 수정하여 기존 12+자동화 4=16 PASS(파서/빌더 등 test doubles 사용). 수정 추출문 FNV64 1a514f70f2036573. 전체 repo/Windows/실제 parser 기반 신규 회귀는 NOT_RUN. 현재 5축/캐스케이드 시방서 유지, 사용자 중간 개입 없음. 다음 M0 전체 집중 테스트 실행 경로 확보와 잔여 경계 검증, 독립 M1 최소 실행 기반. REMEDIATION_REQUIRED.

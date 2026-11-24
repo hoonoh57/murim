@@ -1,3 +1,10 @@
+## 2026-11-24 — M1-A 독립 Core 품질 증거 계약 (실행 검증)
+
+- 기준 1859715d8ba1. GitHub 직접 git ls-remote DNS 오류 재현. M0 원본 전체 회귀는 여전히 NOT_RUN, 이전 추출문 16 PASS 범위만 유지. 기존 제품에 통합하지 않고 독립 M1-A 순수 계약부터 개발.
+- 신규 src/core/quality_contract.py: immutable MetricTarget/QualityContract/EvidenceBinding/QualityEvidence, 선언된 정수 척도(최소 < 목표 <= 최대), 계약 SHA-256, 작업/리비전/산출물/계약/생성자 결속, 누락/중복/비정상 관측, 목표/필수 검사/미해결·미평가/자기 평가 검출. 정수 척도는 M1-A 구현 선택이며 실제 rubric의 숫자·단위를 확정하지 않음. 서로 다른 평가자 ID나 보고서 해시 형식은 독립성/진위의 증명이 아니다. evidence_issues는 순수 구조/조건 확인이며 승격 권한, 증거 인증/실물 검증, 기존 G1/G2 승인, 실행/저장/외부 호출 없음.
+- 격리 Linux Python 3.13.5 / pytest 9.0.2: 신규 전체 모듈 및 실제 test_quality_contract.py 27 PASS. 실행 소스 git blob 6b88cb3ef1465025e085ea6a4056b56f9def81c9, 테스트 bfc3e688b799be68d7ef993902995942b3c9a278. 원격 tree blob 일치 검증 후 반영. 기존 제품 소스/원장/사용자 데이터 불변. 전체 repo 자동 감사/Windows/GPU/착탈·캐스케이드 실행/실제 콘텐츠 품질 미검증.
+- 다음: 독립 parent/dependency DAG와 targeted invalidation 순수 계약, 이후 Bridge/Manager/Persistence 최소 fixture 검증. M0 전체 회귀 및 실제 통합 전 필수 경계는 보류 유지. REMEDIATION_REQUIRED. 사용자 중간 기술 결정 없음.
+
 ## 2026-11-24 — M0 비정상 평가·이전 상태 응답 방어 추가 (부분 실행 검증)
 
 - 기준 HEAD fe4e4180d6d8. GitHub clone DNS 오류 재확인. 원격 source에서 start_round2/process_round2_response/hold/start_round3/process_round3_response의 주석·빈 줄·행말 공백 제외 추출문 FNV64 443b73cb97770599, RelayAutomator.run_all 79c329e2aa73e35를 격리 Linux Python 3.13.5 환경 복사본과 대조. 원본 12개 집중 사례 7 FAIL/5 PASS. PRODUCT_DEFECT: list 형태 평가, 과대 정수 math.isfinite overflow, null camera plans, 잘못된 art payload, 복원된 비정상 평가, HOLD 상태의 오래된 응답.
