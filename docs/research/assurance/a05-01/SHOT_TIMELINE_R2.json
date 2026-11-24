@@ -1,0 +1,394 @@
+{
+  "id": "A05-01",
+  "status": "RESEARCH_ONLY_NOT_APPROVED",
+  "source_path": "docs/research/assurance/a04-01/B_MASTER_PACK_R2.md",
+  "source_git_blob": "1d29bae951a7a83085213ffc08c07303700e6edb",
+  "source_base": "a9fd71d6d3bd9c00fe46e3803c7c8f395e580401",
+  "fps": {
+    "num": 24,
+    "den": 1
+  },
+  "width": 960,
+  "height": 540,
+  "duration_frames": 1992,
+  "duration_seconds": 83,
+  "source_line_count": 20,
+  "dialogue_cue_count": 11,
+  "shot_count": 13,
+  "sampling_seconds": 1,
+  "audio": "NONE",
+  "note": "동작/인물 형태를 단순 기하 도형과 이산 상태 전환으로 표시. 실제 카메라/연기/발화/물리 검증 아님. line 45 끝 표기는 종결 대응.",
+  "shots": [
+    {
+      "id": "S01",
+      "start_frame": 0,
+      "end_frame_exclusive": 120,
+      "source_lines": [
+        7
+      ],
+      "description": "장부와 종",
+      "view": "wide",
+      "schematic_end_state": {
+        "so": "empty",
+        "book": "open_blank",
+        "door": "closed"
+      },
+      "dialogue_cues": []
+    },
+    {
+      "id": "S02",
+      "start_frame": 120,
+      "end_frame_exclusive": 216,
+      "source_lines": [
+        9
+      ],
+      "description": "소연 도착",
+      "view": "wide",
+      "schematic_end_state": {
+        "so": "right",
+        "book": "open_blank",
+        "door": "closed"
+      },
+      "dialogue_cues": []
+    },
+    {
+      "id": "S03",
+      "start_frame": 216,
+      "end_frame_exclusive": 408,
+      "source_lines": [
+        11,
+        13
+      ],
+      "description": "약의 목적",
+      "view": "two",
+      "schematic_end_state": {
+        "so": "right",
+        "book": "open_blank",
+        "door": "closed"
+      },
+      "dialogue_cues": [
+        {
+          "start_frame": 216,
+          "end_frame_exclusive": 288,
+          "source_line": 11,
+          "text": "도윤: 어디 약이냐."
+        },
+        {
+          "start_frame": 288,
+          "end_frame_exclusive": 408,
+          "source_line": 13,
+          "text": "소연: 청령문이요. 환자가 기다립니다."
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "start_frame": 408,
+      "end_frame_exclusive": 576,
+      "source_lines": [
+        15,
+        17
+      ],
+      "description": "적대 문파",
+      "view": "two",
+      "schematic_end_state": {
+        "so": "right",
+        "book": "open_blank",
+        "door": "closed"
+      },
+      "dialogue_cues": [
+        {
+          "start_frame": 408,
+          "end_frame_exclusive": 480,
+          "source_line": 15,
+          "text": "도윤: 거긴 우리 문파의 원수다."
+        },
+        {
+          "start_frame": 480,
+          "end_frame_exclusive": 576,
+          "source_line": 17,
+          "text": "소연: 약도 문파를 가립니까?"
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "start_frame": 576,
+      "end_frame_exclusive": 768,
+      "source_lines": [
+        19,
+        21
+      ],
+      "description": "장부를 닫고 마감 설명",
+      "view": "ledger",
+      "schematic_end_state": {
+        "so": "right",
+        "book": "closed_blank",
+        "door": "closed"
+      },
+      "dialogue_cues": [
+        {
+          "start_frame": 576,
+          "end_frame_exclusive": 768,
+          "source_line": 21,
+          "text": "도윤: 마지막 종이 울리면 끝이다. 문지기가 본명으로 보증하지 않으면 못 건너."
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "start_frame": 768,
+      "end_frame_exclusive": 864,
+      "source_lines": [
+        23
+      ],
+      "description": "보증 요청",
+      "view": "so",
+      "schematic_end_state": {
+        "so": "right",
+        "book": "closed_blank",
+        "door": "closed"
+      },
+      "dialogue_cues": [
+        {
+          "start_frame": 768,
+          "end_frame_exclusive": 864,
+          "source_line": 23,
+          "text": "소연: 도윤 어르신이 보증해 주시면 되잖아요."
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "start_frame": 864,
+      "end_frame_exclusive": 1104,
+      "source_lines": [
+        25
+      ],
+      "description": "가명과 추적 위험",
+      "view": "do",
+      "schematic_end_state": {
+        "so": "right",
+        "book": "closed_blank",
+        "door": "closed"
+      },
+      "dialogue_cues": [
+        {
+          "start_frame": 864,
+          "end_frame_exclusive": 1104,
+          "source_line": 25,
+          "text": "도윤: 도윤은 가명이다. 이 장부가 내일 본산으로 가면 날 쫓던 자들이 알아볼 거다."
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "start_frame": 1104,
+      "end_frame_exclusive": 1224,
+      "source_lines": [
+        27,
+        29
+      ],
+      "description": "소연 돌아섬",
+      "view": "two",
+      "schematic_end_state": {
+        "so": "turned",
+        "book": "closed_blank",
+        "door": "closed"
+      },
+      "dialogue_cues": [
+        {
+          "start_frame": 1128,
+          "end_frame_exclusive": 1224,
+          "source_line": 29,
+          "text": "소연: 그 이름은 쓰지 마세요."
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "start_frame": 1224,
+      "end_frame_exclusive": 1320,
+      "source_lines": [
+        31
+      ],
+      "description": "장부 다시 펼침",
+      "view": "ledger",
+      "schematic_end_state": {
+        "so": "turned",
+        "book": "open_blank",
+        "door": "closed"
+      },
+      "dialogue_cues": []
+    },
+    {
+      "id": "S10",
+      "start_frame": 1320,
+      "end_frame_exclusive": 1536,
+      "source_lines": [
+        33,
+        35
+      ],
+      "description": "선택의 계기",
+      "view": "two",
+      "schematic_end_state": {
+        "so": "turned",
+        "book": "open_blank",
+        "door": "closed"
+      },
+      "dialogue_cues": [
+        {
+          "start_frame": 1320,
+          "end_frame_exclusive": 1416,
+          "source_line": 33,
+          "text": "도윤: 그 환자는 네가 어느 문파인지 아느냐?"
+        },
+        {
+          "start_frame": 1416,
+          "end_frame_exclusive": 1536,
+          "source_line": 35,
+          "text": "소연: 몰라도 돼요. 약만 받으면 되니까요."
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "start_frame": 1536,
+      "end_frame_exclusive": 1656,
+      "source_lines": [
+        37,
+        39
+      ],
+      "description": "본명 서명",
+      "view": "ledger",
+      "schematic_end_state": {
+        "so": "right",
+        "book": "open_signed",
+        "door": "closed"
+      },
+      "dialogue_cues": [
+        {
+          "start_frame": 1608,
+          "end_frame_exclusive": 1656,
+          "source_line": 39,
+          "text": "도윤: 가라."
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "start_frame": 1656,
+      "end_frame_exclusive": 1800,
+      "source_lines": [
+        41
+      ],
+      "description": "문 열고 통과 · 종 시작",
+      "view": "wide",
+      "schematic_end_state": {
+        "so": "exit",
+        "book": "open_signed",
+        "door": "open"
+      },
+      "dialogue_cues": []
+    },
+    {
+      "id": "S13",
+      "start_frame": 1800,
+      "end_frame_exclusive": 1992,
+      "source_lines": [
+        43,
+        45
+      ],
+      "description": "문 닫고 이름 남김",
+      "view": "wide",
+      "schematic_end_state": {
+        "so": "absent",
+        "book": "open_signed",
+        "door": "closed"
+      },
+      "dialogue_cues": []
+    }
+  ],
+  "discrete_transitions": [
+    {
+      "sec": 24,
+      "book": "open_blank"
+    },
+    {
+      "sec": 25,
+      "book": "closed_blank"
+    },
+    {
+      "sec": 51,
+      "book": "closed_blank"
+    },
+    {
+      "sec": 52,
+      "book": "open_blank"
+    },
+    {
+      "sec": 64,
+      "book": "open_blank"
+    },
+    {
+      "sec": 67,
+      "book": "open_signed"
+    },
+    {
+      "sec": 69,
+      "door": "closed",
+      "so": "inside",
+      "doyun_x": 450
+    },
+    {
+      "sec": 70,
+      "door": "open",
+      "so_x": 745,
+      "doyun_x": 650
+    },
+    {
+      "sec": 71,
+      "so_x": 790
+    },
+    {
+      "sec": 72,
+      "so_x": 835
+    },
+    {
+      "sec": 73,
+      "so": "absent"
+    },
+    {
+      "sec": 74,
+      "bell": "start_label_only"
+    },
+    {
+      "sec": 75,
+      "door": "open",
+      "doyun_x": 650
+    },
+    {
+      "sec": 76,
+      "door": "closed",
+      "doyun_x": 650
+    },
+    {
+      "sec": 77,
+      "doyun_x": 450
+    },
+    {
+      "sec": 78,
+      "doyun_x": 225
+    }
+  ],
+  "render_r1_to_r2": {
+    "affected_shots": [
+      "S12",
+      "S13"
+    ],
+    "unchanged_decoded_prefix_frames": 1656,
+    "changed_decoded_tail_frames": 250,
+    "tail_frame_count": 336,
+    "coordinate_system": "960x540 schematic screen pixels, not 3D scene coordinates"
+  }
+}

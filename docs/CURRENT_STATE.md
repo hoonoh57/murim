@@ -1,3 +1,9 @@
+## 2026-11-24 — A05 스토리보드·도식 프리비즈 실제 렌더/동선 수정 (부분 실증)
+
+- [A05-01 원장](research/assurance/A05_01_PREVIS_EVIDENCE_2026-11-24.md), [쇼트 타임라인](research/assurance/a05-01/SHOT_TIMELINE_R2.json): A04 B r2 원고 pin, 20개 본문 줄/13컷/11 대사 cue 전수 대응, 실제 무음 도식형 MP4 r1/r2 및 contact sheet 제작. FFmpeg 83초/24fps/1992 frames/960x540 두 영상 디코딩 확인. 70초 인물 도식 겹침·75초 위치 점프 발견, S12~S13만 수정. 앞 1656 decoded frame hashes 동일, 뒤 336 중 250 변경. 실제 미디어 대화 첨부, GitHub에는 타임라인/파일 해시 및 연구 원장 저장(바이너리·정확한 렌더 스크립트 미저장).
+- 실제 연기/음향/시선·물리 및 독립 animatic/관객/전문 비교 NOT_RUN. A05 NOT_QUALIFIED. A04 및 Q1~Q4 미달 유지. 제품 코드/Windows 변경 0.
+- 다음 A06 캐릭터·미술·자산: 동일 원고/타임라인의 연구용 참조 자산·정체성 및 실제 가능한 비교. A05 재개는 실제 낭독/영상·전문 독립 비교 확보 시. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — A04 전문 집필 실제 원고 비교·표적 수정 (부분 실증)
 
 - [A04-01 실제 원고 원장](research/assurance/A04_01_SCREENPLAY_DRAFT_EVIDENCE_2026-11-24.md): 독자 무협 단편 "이름값" brief/검사조건 작성 전 Git blob 고정. 일반 전문 지시 A r1, Master+Q2 후보 지식 B r1 전체 원고 작성. B r2 대사 5줄 표적 수정, 기존 행동 지문 보존; 237→211 대사 본문 글자 수. 원본 3판 및 brief 보존. 실제 작성/수정 증거이지 독립 전문 평가/동등 조건 벤치마크 아님.
