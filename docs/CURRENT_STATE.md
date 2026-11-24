@@ -1,3 +1,9 @@
+## 2026-11-24 — Q4 / A15 기존 평가 구조의 의미 검증 경계 실증
+
+- [Q4 실제 평가 경계 원장](research/assurance/Q4_A15_EVALUATOR_BOUNDARY_EVIDENCE_2026-11-24.md): 기존 R01~R14 + 정상 6/경계 4, 24개 진단 참조 집합 실행 전 digest 고정. 실제 Core quality_contract.py 원격 blob 동일 확인 후 격리 Python 3.13.5 실행: 선언 구조 정상 24/24 빈 오류, REJECT 14 및 HOLD 4 미검출(의미 심사 오용 반증, 실제 승격/독립 평가 아님). 구조 오류 대조 5/5 검출. 공식 graph/changelog 동일 blob 원본 객관 검사 4/4 재확인.
+- Core 구조 검사 책임 유지; 의미/출처 전문 검증과 Manager 인증·승격 분리. 제품 결함으로 오인 금지. 독립 모델/전문가/관객 및 봉인 holdout·선별/개선 우위 시험 NOT_RUN. A15 NOT_QUALIFIED. 기존 27/16 PASS 범위 유지, 전체 회귀/Windows 미실행. 제품 코드 변경 0.
+- Q1~Q4 공개 자료/부분 실증 경계 기록 완료, 적격 0. 다음 A04 전문 집필 상세 dossier 및 기존 도구로 실제 독창 원고 사전 비교; 독립 평가 없으면 HOLD, Q1~Q3/A15 재개 조건 유지. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — Q3 / A03 공식 LTX-2.5 워크플로 정적 실증 (부분 증거 추가)
 
 - [Q3 기술 원장](research/technology-library/Q3_LTX25_OFFICIAL_GRAPH_EVIDENCE_2026-11-24.md): 원저자 README/CHANGELOG 및 실제 Single-stage/A2V/Union Control JSON 3개 blob 파싱, 상위 입력 연결·frame expression·동결 음성·모델 의존 및 README/실제 graph 불일치 확인. Q4 반례 R09~R14(누적 14건) 확보. 실제 강의/실행/독립 평가와 구분.
