@@ -1,3 +1,12 @@
+## 2026-11-24 — 155-test Windows run: 7 legacy test failures after bootstrap repair
+
+- **Actual Windows evidence** from user: `git pull --ff-only origin main` succeeded to HEAD `95bcaf3`; `.\windows-test.cmd` collected 155 items and finished **7 FAILED / 136 PASSED / 12 SKIPPED** on Python 3.13.1 / pytest 8.4.2. The new `tests/test_director_simple.py` **5 PASS**. No Studio browser WYSIWYG or GPU verification yet.
+- Classification: **TEST_DEFECT / authority drift** for six legacy mock self-practice tests (ArtDirection, Audio, Camera, Imaging, Marketing, Video): these wrongly demanded positive XP from `CouncilAgent(is_mock=True)`. Since the governing 2026-11-22 contract, mock Council deliberately returns all six critiques as 0 and `NOT_EVALUATED`, and `calculate_xp(0,0)=0`. Restoring synthetic points would break the hard quality gate.
+- **TEST_DEFECT** for `tests/test_editorial_quality_contract.py::test_historical_writer_uses_historical_council`: literal `assertNotIn("천마", system_prompt)` incorrectly rejected a historical skill's explicit prohibition `천마 세계관 ... 적용하지 않는다`. The verified historical prompt is built only from historical-art skill files. Replaced with exact historical-skill composition and prohibition/positive-legacy-injection checks; did not remove the prohibition.
+- Test isolation defect: affected legacy tests invoked Council critique saves in `outputs/critiques` and removed `outputs/evolution/*` on teardown. Isolated tests in temporary working directories with cleanup, including related `tests/test_base_agent.py`, to protect user's persisted artifacts. No product gate logic, quality scores, or external integration altered. All prior mock rehearsal side effects are confined to test sandboxes.
+- Pending **Windows real pytest and UI re-run NOT_VERIFIED**. Next: `git pull --ff-only origin main`; `.\windows-test.cmd` and only on PASS `.\run-studio.cmd`, then `http://127.0.0.1:8080/studio/simple/`.
+- Important: full test PASS, when obtained, is not G1/G2/G3/G4 product compliance or actual ComfyUI GPU/video quality.
+
 ## 2026-11-24 — SCAIL-2 bootstrap pytest collection path defect
 
 - Actual Windows evidence: `windows-test.cmd` reached pytest (Python 3.13.1, pytest 8.4.2), which collected 151 tests and stopped during import of `tests/test_scail2_bootstrap.py` with `FileNotFoundError: tests/install-scail2.ps1`.

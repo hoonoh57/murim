@@ -1,4 +1,5 @@
 import os
+import tempfile
 import unittest
 from src.agents.base_agent import BaseAgent
 from src.evolution.skill_tracker import EvolutionLog, DraftPractice
@@ -20,11 +21,14 @@ class MockAgent(BaseAgent):
 
 class TestBaseAgent(unittest.TestCase):
     def setUp(self):
+        # Protect persistent evolution logs and critique artifacts, even on test failure.
+        self._sandbox = tempfile.TemporaryDirectory()
+        self.addCleanup(self._sandbox.cleanup)
+        self.addCleanup(os.chdir, os.getcwd())
+        os.chdir(self._sandbox.name)
         # Use a temporary log file for testing
         self.agent = MockAgent(agent_type="test_agent", is_mock=True)
         self.agent.log_file = "outputs/evolution/test_agent_evolution.json"
-        if os.path.exists(self.agent.log_file):
-            os.remove(self.agent.log_file)
         self.agent.log = EvolutionLog(agent_id="Agent_TEST")
 
     def test_xp_calculation(self):
@@ -55,10 +59,6 @@ class TestBaseAgent(unittest.TestCase):
             class IncompleteAgent(BaseAgent):
                 pass
             IncompleteAgent(agent_type="fail", is_mock=True)
-
-    def tearDown(self):
-        if os.path.exists(self.agent.log_file):
-            os.remove(self.agent.log_file)
 
 if __name__ == "__main__":
     unittest.main()

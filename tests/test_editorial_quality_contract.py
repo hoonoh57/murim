@@ -1,6 +1,6 @@
 """Creative production authority and historical-vs-Wuxia skill isolation."""
 import unittest
-from src.core.skills import build_full_system_prompt, load_all_skills_raw
+from src.core.skills import build_full_system_prompt, build_historical_art_system_prompt, load_all_skills_raw
 from src.critics.council import CouncilAgent
 from src.core.models import Scenario
 from src.agents.director import DirectorAgent
@@ -34,7 +34,12 @@ class EditorialQualityContractTests(unittest.TestCase):
     def test_historical_writer_uses_historical_council(self):
         w=WriterAgent(is_mock=True, content_mode="historical_art")
         self.assertIn("사료",w.council.personas[0])
-        self.assertNotIn("천마",w.system_prompt)
+        # Naming a rejected legacy rule is not inheriting or enforcing it.
+        self.assertEqual(w.system_prompt, build_historical_art_system_prompt("writer"))
+        self.assertIn("기존 무협 전용 15비트/천마 세계관", w.system_prompt)
+        self.assertIn("절대 규칙으로 적용하지 않는다", w.system_prompt)
+        self.assertNotIn("천마의 귀환 — 무협 회귀물", w.system_prompt)
+        self.assertNotIn("15비트 구조를 반드시", w.system_prompt)
 
     def test_missing_skill_is_not_silently_ignored(self):
         with patch("src.core.skills.SKILLS_DIR","/nonexistent-creative-skill-source"):

@@ -1,10 +1,17 @@
 import unittest
+import os
+import tempfile
 from src.agents.camera import CameraAgent
 from src.core.models import Scene
 from src.core.skill_prompt import CAMERA_ANGLES, SHOT_SIZES, LIGHTING_PATTERNS
 
 class TestCameraAgent(unittest.TestCase):
     def setUp(self):
+        # Mock Council writes critique and evolution logs; never touch user outputs.
+        self._sandbox = tempfile.TemporaryDirectory()
+        self.addCleanup(self._sandbox.cleanup)
+        self.addCleanup(os.chdir, os.getcwd())
+        os.chdir(self._sandbox.name)
         self.agent = CameraAgent(is_mock=True)
 
     def test_plan_camera_angles(self):
@@ -76,16 +83,21 @@ class TestCameraAgent(unittest.TestCase):
         practice = self.agent.log.practice_history[-1]
         
         # Strengthened assertions
-        self.assertGreater(self.agent.log.total_xp, initial_xp)
+        # Mock Council must remain NOT_EVALUATED; no fabricated reward.
+        self.assertEqual(self.agent.log.total_xp, initial_xp)
+        self.assertEqual(self.agent.log.current_level, 1)
+        self.assertEqual(self.agent.log.total_practices, 1)
+        self.assertEqual(len(self.agent.log.practice_history), 1)
+        self.assertEqual(practice.scenario.final_score, 0.0)
+        self.assertEqual(len(practice.scenario.critiques), len(self.agent.council.personas))
+        for critique in practice.scenario.critiques:
+            self.assertEqual(critique.score, 0.0)
+            self.assertTrue(critique.comment.startswith("NOT_EVALUATED"))
+        self.assertTrue(os.path.isfile(self.agent.log_file))
         self.assertIsNotNone(practice.self_reflection)
         self.assertTrue(len(practice.self_reflection) > 10)
         self.assertGreaterEqual(practice.scenario.final_score, 0)
         self.assertLessEqual(practice.scenario.final_score, 10)
-
-    def tearDown(self):
-        import os
-        if os.path.exists(self.agent.log_file):
-            os.remove(self.agent.log_file)
 
 if __name__ == "__main__":
     unittest.main()

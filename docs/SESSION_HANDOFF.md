@@ -1,3 +1,11 @@
+## 2026-11-24 — 7 legacy failures, test-only repair
+
+- Observed: Windows pytest 155 tests = 7 FAILED, 136 PASSED, 12 SKIPPED; `tests/test_director_simple.py` 5 PASS, earlier SCAIL bootstrap collection error resolved.
+- Six `self_practice` tests assumed mock XP increases; actual `CouncilAgent(is_mock=True)` is intentionally `NOT_EVALUATED`/0 under 2026-11-22 quality hard gate. Revised tests to enforce zero-XP, 0-score, 6 NOT_EVALUATED critiques, saved rehearsal history, no false promotion.
+- One historical writer test searched substring `천마` even in explicit negative rule text; changed to verify historical-only composed prompt and absence of positive Wuxia imperative/identity.
+- Test file side effects: switched six self-practice suites plus base-agent test to temporary cwd and safe cleanup instead of deletion of real `outputs/evolution` logs and timestamp collision in `outputs/critiques`. Source product code and authority docs untouched.
+- Actual rerun pending. Consumer: `git pull --ff-only origin main` → `.\windows-test.cmd` → on PASS `.\run-studio.cmd` → new UI. Never claim LTX GPU validation from pytest alone.
+
 ## 2026-11-24 — SCAIL-2 bootstrap collection failure / recovery
 
 - Reported Windows error: pytest collection fails before tests run because `tests/test_scail2_bootstrap.py` looked for `tests/install-scail2.ps1`, whereas canonical installer is `scripts/scail2/install-scail2.ps1`.
