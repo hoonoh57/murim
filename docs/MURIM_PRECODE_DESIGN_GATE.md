@@ -96,5 +96,7 @@ Alpha 후보: 전문 수준의 실제 산출물 + 적은 사용자 기술 개입
 
 - [A09 음악·효과음·믹싱 생산 설계](research/assurance/A09_SOUND_DESIGN_AND_MIXING_2026-11-25.md): 현행 render/workspace와 FFmpeg 공식 처리, EBU/전문 납품 기준, ACE-Step/Stable Audio 후보 비교. A91~A96 GAP, SoundPlan/Cue, 독립 stem·전편 sample timeline, 대사 우선 동적 믹스, channel-specific master/계측·국소 복구의 D2 계약 보완. 실제 음향·권리·독립 검증 미완료, 기존 게이트 유지.
 
+- [A10 편집·합성·자막 생산 설계](research/assurance/A10_EDITORIAL_COMPOSITING_DESIGN_2026-11-25.md): 실제 M-VML/render와 OTIO range/track, FFmpeg, OCIO 및 전문 자막 지침 비교. E101~E106 GAP, 비파괴 편집·전편 rational timeline·합성/색상·실제 발화 cue·손실 명시 교환·렌더 의존/복구 D2 계약 보완. 실제 round-trip/렌더·독립 품질 미검증; 기존 SSOT/게이트 유지.
+
 ## 7. 다음 작업
 제품 코딩 재개 금지. [시나리오 전문 생산 상세 설계 심사](skills/screenplay-master/references/production-design-review.md)를 첫 대상 dossier로 발전. 각본 고위험 가정·평가자 보정·권리 확보 전문 원고/경쟁 앱/강한 LLM 대비 기존 도구로 실증할 수 있는 경로를 조사한다. 이어 모든 단위에 동일 절차를 적용하고 전체 설계 심사 완료 전 M1-B를 시작하지 않는다. 현 상태 DESIGN_HOLD, 전체 REMEDIATION_REQUIRED.

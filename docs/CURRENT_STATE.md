@@ -1,3 +1,8 @@
+## 2026-11-25 — A10 편집·합성·자막 로직 GAP 및 D2 상세 설계 개선
+
+- [A10 설계](research/assurance/A10_EDITORIAL_COMPOSITING_DESIGN_2026-11-25.md): 실제 render.py/workspace.py 및 5축과 OTIO time range/adapter, FFmpeg, OCIO 및 전문 자막 지침 비교. E101~E106 GAP, EditPlan/비파괴 clip·track·rational time, transition handles/retime, 합성·색상, 실제 음성 cue, OTIO loss report/CAS import, dependency-aware render 설계. A07~A09 연계 및 기존 M-VML 권위 보존.
+- A10 NOT_QUALIFIED. 실제 외부 NLE round-trip/렌더/독립 품질·목표 환경/권리/비용 NOT_RUN. 제품 코드 0. 다음 A11 통합 작품·관객 로직 및 강한 비교 설계. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-25 — A09 음악·효과음·전문 믹싱 로직 GAP 및 D2 상세 설계 개선
 
 - [A09 설계](research/assurance/A09_SOUND_DESIGN_AND_MIXING_2026-11-25.md): 실제 render.py/workspace.py의 고정 scene gain/amix/limiter/단일 트랙 및 embedded audio 미사용과 FFmpeg 공식 필터, EBU/Netflix 납품 기준, ACE-Step/Stable Audio 후보 비교. A91~A96 GAP, SoundPlan/Cue, D/M/E stem, 대사 우선 automation/ducking, sample timeline, delivery-specific loudness/true peak, 국소 수정 및 master 재계측 설계. 5축·A07/A08 연계.
