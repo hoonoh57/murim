@@ -1,3 +1,7 @@
+## 2026-11-24 — 5축 개방형 제작 플랫폼 (목표 설계)
+
+[5축 아키텍처·Add-on 개발 시방서](docs/MURIM_FIVE_AXIS_ARCHITECTURE.md)를 모든 신규 기술 채택의 공통 기준으로 한다. Core/Bridge/Add-on/JSON/Central Manager의 책임 분리, capability 기반 선택 및 착탈, 장애 격리, 기존 4-GATE 및 Adopt/Compose/Build 유지. 현재 구현과 실제 5축 준수는 미검증이며 기존 UI 증설은 보류한다.
+
 ## 2026-11-24 — GPT형 Murim Director 단일 제작 UI (초기 인간매개)
 
 `/studio/simple/`에서 프로젝트 생성·조회·이름 변경·보관/복원 → 기존 G1/G2 사전 시나리오 심사·승인 → GPT 이미지 후보 등록·선정 → 스토리보드 확정/M-VML 이미지 트랙 연결 → 장면별 영상 프롬프트·실제 영상 후보 등록을 수행한다. 미검증 GPT 이미지 자동 호출, LTX 다중 키프레임 자동 연결, 무인 품질 검증은 **차단/NOT_VERIFIED**이며 기존 `/studio/` 워크플로우를 변경하지 않았다. 설명: [Director 초도 UI 실행·검증 경계](docs/DIRECTOR_SIMPLE_UI_20261124.md).

@@ -4,6 +4,15 @@
 **Windows 목표 경로:** `E:\gpt\projects\comfyui\murim`  
 **제정:** 2026-11-21
 
+## 2026-11-24 — 최상위 5축 개방형 제작 플랫폼 계약 (사용자 확정)
+
+- Murim의 유일한 책임 구조: **Core / Bridge·Runtime / Add-on / JSON·Persistence / Central Manager**. 기존 4-GATE는 콘텐츠 품질 계약이며 5축과 별개다. 세부 시방서 SSOT: [MURIM_FIVE_AXIS_ARCHITECTURE.md](docs/MURIM_FIVE_AXIS_ARCHITECTURE.md). 모든 신규 기술 채택·코딩·검증 전에 읽는다.
+- Core는 공급자 무관 불변 계약·공통 primitive, Bridge는 feature-blind 유일한 lifecycle/routing/격리, Add-on은 고유 기능·외부 엔진 adapter·private state, JSON은 persistence-only, Central Manager는 공통 반복 기능·제작 총괄·선택/정책·자원/비용/승인 관리 SSOT.
+- 새 기술은 capability/manifest/schema/표준 실행 계약으로 장착하고 사용자 또는 중앙 정책이 선택한다. 신규 Add-on 때문에 Core/Bridge/Manager/UI shell에 모델·장르·공급자 특정 import, 분기, 화면, allowlist를 추가하지 않는다. 공용 primitive 부족만 독립 근거와 별도 버전 계약으로 확장한다.
+- 외부 모델/API/편집기/에이전트/워크플로의 직접 연결은 해당 Add-on 내부로 캡슐화. Add-on/소비자 간 호출은 Bridge를 통하며 공통 서비스는 중앙 위임. JSON에 실행/판단 금지. 기존 M-VML/원장/미디어 보존 및 검증된 단일 SSOT 전환 전 이중 쓰기 금지.
+- 0개 또는 수백 개 Add-on 등록, 독립 활성·해제·교체·격리, 미설치/실패에도 Core 및 타 프로젝트 계속 작동을 설계·검증 목표로 한다. 필요한 능력 부재는 명시 HOLD, 무단 fallback 금지. 버전/작업/승인 pin·재현·원본 보호와 실제 권한 검증 유지.
+- 기술 선행 Adopt→Compose→Build를 5축과 결합한다. 5축 변경분·repo-wide 경계검사·전체 준수·실제 제품/품질은 별개. 문서 또는 일부 테스트만으로 전체 PASS 선언 금지.
+
 ## 2026-11-24 — 업계 기술 선행·재사용 우선 (사용자 확정, 전체 영상 제작 기능에 적용)
 
 - 신규 영상 제작 기능/모델/UX를 코딩하기 전에 최신 공식 제품·논문·원저자 구현·실제 제작 사례와 경쟁 앱의 전체 제작 흐름을 조사한다. 검색/README만으로 품질을 인증하지 않으며 날짜·버전·라이선스·실제 실행 증거를 기록한다.
@@ -37,8 +46,8 @@
 
 - 이 저장소의 소스, README, ComfyUI 워크플로 JSON, 테스트, 문서 및 제품 기능 CRUD는 **GitHub에서만 수행**한다. Windows는 동기화된 파일의 **실제 실행·검증 소비 환경**이다.
 - 이전 로컬 직접 CRUD를 성공시킨 중앙 Windows runner 이력과 이번 GitHub-원본 운영 방식은 구분한다. 기존 runner가 다른 프로젝트에서 성공한 사실만으로 이 Windows 경로가 등록·작동한다고 단정하지 않는다.
-- 작업 시작 시 이 문서 → `README.md` → `docs/CURRENT_STATE.md` → `docs/SESSION_HANDOFF.md` → 변경 대상 파일을 읽고 현재 GitHub HEAD와 필요한 실제 Windows 상태를 확인한다. 기존 기능과 사용자 자산을 보존한다.
-- 콘텐츠 제작의 고유 설계는 **4-GATE + 멀티 에이전트**다. 새 기능은 기존 Director/Writer/Council/Imaging/Video/Audio/Camera/Art Direction/Marketing 경계를 우선 재사용한다. 거래 시스템의 REA 구조를 무관한 이 프로젝트에 기계적으로 강제하지 않는다.
+- 작업 시작 시 이 문서 → `docs/MURIM_FIVE_AXIS_ARCHITECTURE.md` → `README.md` → `docs/CURRENT_STATE.md` → `docs/SESSION_HANDOFF.md` → 변경 대상 파일을 읽고 현재 GitHub HEAD와 필요한 실제 Windows 상태를 확인한다. 기존 기능과 사용자 자산을 보존한다.
+- 콘텐츠 품질은 **4-GATE + 멀티 에이전트**를 유지하고, 소프트웨어는 최신 5축 설계 계약을 따른다. 기존 전문 에이전트 경계는 독립 Add-on 후보로 재사용하되 실제 소유권 감사 후 전환한다. REA 거래 도메인 세부 규칙은 이식하지 않는다.
 
 ## 2. 빠른 원격 집중 개발
 

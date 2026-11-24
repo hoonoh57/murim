@@ -1,3 +1,10 @@
+## 2026-11-24 — 5축 개방형 제작 플랫폼 설계 계약 확정
+
+- 사용자 요청: Core 불변화, Bridge/Runtime, 독립 착탈 Add-on, JSON persistence-only, 반복·총괄 기능 Central Manager 위임. 미래 기술 도입 때 핵심 코드 재작성 금지. 모든 신규 기술을 capability/manifest 기반 선택·교체/격리 대상으로 설계.
+- 권위 [5축 아키텍처 및 Add-on 개발 시방서](MURIM_FIVE_AXIS_ARCHITECTURE.md), AGENTS.md 최신 절. 기존 4-GATE·Adopt/Compose/Build·GitHub 개발/Windows 소비 계약 유지.
+- 이번 작업은 문서만. 현재 Git tree의 모듈 존재 확인, 전수 import/call/storage audit 미실행. 기존 Director UX 결함, 전체 pytest 수정 후 실행, 후보 엔진 GPU/품질, 5축 구현과 전체 준수 미검증.
+- 다음 한 단계: 기존 소유권/import/call/persistence 전수 감사 + Calliope/ComfyAgent 등 공개 adapter 계약 비교 → 목표 ownership/migration map. 이후 별도 최소 vertical slice zero-add-on/A-B 교체/장애 격리 및 실제 제작 실증. 기존 사용자 데이터 및 승인 원장 보존.
+
 ## 2026-11-24 — 실제 Director UI 사용성 실패 / 기술 우선 재설계
 
 - 사용자 화면에서 localhost /studio/simple/ 표시 및 G1/G2 잠금 확인. 신규 원고 없는 기본 장면에서 감수부터 요구, 수동 프롬프트 전달 중심 UX: PRODUCT_DEFECT. 수정 후 Windows 전체 pytest 결과, 실제 프로젝트 CRUD 및 GPU 품질은 여전히 미확인.

@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 5축 아키텍처 계약
+
+새 세션은 AGENTS.md 최신 5축 절 → [MURIM_FIVE_AXIS_ARCHITECTURE.md](MURIM_FIVE_AXIS_ARCHITECTURE.md) → [기술 조사](AGENTIC_FILMMAKING_BENCHMARK_2026-11-24.md) → CURRENT_STATE.md 최신을 읽는다. Core/Bridge/Add-on/JSON/Central Manager의 5축만 사용, 기존 4-GATE 품질 계약 유지. 다음 한 작업은 현행 import/call/파일쓰기/공통기능 ownership 전수 감사 및 후보 기술 adapter 비교, migration map 수립. 신규 Add-on 때문에 Core/Bridge/Manager/shell에 feature-specific 코드 금지. 구현·착탈·500개 등록·실제 GPU·전체 준수 아직 미검증, 기존 사용자 원본·승인 이력 보존. 아래 기술 비교 및 Windows 재테스트 기록은 이 최상위 설계에 종속된다.
+
 ## 2026-11-24 — 최우선 인계: 기술 도입 우선, 기존 Director UI 증설 보류
 
 사용자 실제 신규 UI 화면은 표시되었으나 시나리오 없이 감수를 요구하는 제작 흐름은 사용성 FAIL. 사용자 요청은 고급 최신 기술을 먼저 연구하고 기존 검증된 제작 시스템을 채택·조합하여 인간 개입 최소화 및 Murim 특화 Alpha 추가. 다음 세션은 AGENTS.md 최신 2026-11-24 계약과 [비교 조사](AGENTIC_FILMMAKING_BENCHMARK_2026-11-24.md), 기존 4070 연구를 먼저 읽는다. Calliope/ComfyAgent 소스·라이선스·호환성 조사와 격리 실물 벤치 준비가 다음 경계. 실제 후보 품질/채택 확정 및 Windows 전체 pytest 결과는 미확인. 기존 승인 이력·제품 소스·로컬 사용자 자산 보호, 미승인 설치/유료 호출 금지. 기존 아래 테스트 재실행 지시를 새로운 UX 개발의 선행 강제로 오인하지 말 것.
