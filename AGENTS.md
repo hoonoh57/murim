@@ -4,6 +4,13 @@
 **Windows 목표 경로:** `E:\gpt\projects\comfyui\murim`  
 **제정:** 2026-11-21
 
+## 2026-11-24 — 최우선: 설계 심사 OK 전 제품 코딩 금지
+
+- 사용자 확정: 단위 제작 기술 모두에서 전문 생산 방법·경쟁 기술의 기본 기능·실제 Alpha·독립 평가 신뢰성·한계/복구·실현 가능성을 검증하고 전체 설계 OK가 나기 전 제품 코딩 금지. [설계 선행 게이트 D0–D5](docs/MURIM_PRECODE_DESIGN_GATE.md)가 이전 M1-B 등 실행 인계보다 우선한다.
+- 현재 **DESIGN_HOLD / PRODUCT_CODING_FROZEN / COMPETITIVE_ALPHA_NOT_PROVEN**. 조사·설계 및 권한 내 기존 기술을 사용한 실물 사전 실증만 진행. 전체 설계 및 각 단위 심사 OK 전 신규 제품 코드/테스트 구현/실행기/UI 개발 금지. 이전 코드와 사용자 원본 보존.
+- 외부 LLM 극찬만으로 전문 작가 수준이나 시장 성공 주장 금지. 생성 역량/평가자 타당성/전문가·경쟁 결과 비교/시장 검증은 분리. 전문가 및 타깃 관객 보정, 실제 산출물, 평가 불확실성, 권한·비용·환경 한계 기록. 미실증은 HOLD; 기준 낮추기/가짜 PASS 금지.
+- 최초 상세 검토: [Screenplay Master 생산 설계 심사](docs/skills/screenplay-master/references/production-design-review.md). 기술 선택 및 보완은 개발 LLM 담당, 사용자에게 일상 중간 선택 요청하지 않음. 권한과 기존 작품 G1–G4 승인 유지.
+
 ## 2026-11-24 — 장기 경쟁우위 및 전문 스킬 진화 계약
 
 - 모든 제작 기능은 단순 동작 구현이 아니라 업계 전문 기준, 실제 경쟁 제품 및 기존 champion의 산출물 대비 측정 가능한 품질·사용성·복구 우위를 목표로 한다. [장기 경쟁우위 시방서](docs/MURIM_COMPETITIVE_EVOLUTION_CONTRACT.md) 필독.

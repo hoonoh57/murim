@@ -1,5 +1,7 @@
 # Murim 다층 부모-자식 캐스케이딩 품질 계약 v1.0
 
+> 최신 최우선 계약 (2026-11-24): [제품 코딩 선행 설계 심사](MURIM_PRECODE_DESIGN_GATE.md). DESIGN_HOLD / PRODUCT_CODING_FROZEN. 기존 다음 코딩 계획은 전체 설계 OK까지 보류. 이 문서의 설계 방향은 보존하되 실제 비교·전문 생산·평가 설계 결함을 먼저 해소한다.
+
 2026-11-24 KST | 사용자 확정 방향 | 설계 계약, 실행 엔진 미구현
 권위: AGENTS.md 및 MURIM_FIVE_AXIS_ARCHITECTURE.md. 기존 4-GATE 및 사료/권리/인간 승인·권한·원본 보호 유지.
 ## 1. 두 가지 독립 실행 루프

@@ -1,3 +1,9 @@
+## 2026-11-24 — 최우선 설계 HOLD 및 제품 코드 동결
+
+- 사용자 요구: 모든 단위기술의 생성 역량/업계 최상위 기준/실제 Alpha/평가 타당성/실현 가능성 선행 검증, 전체 설계 OK 이전 코딩 금지. [D0–D5 설계 심사](MURIM_PRECODE_DESIGN_GATE.md) 및 [시나리오 생산 설계 심사](skills/screenplay-master/references/production-design-review.md) 반영. AGENTS 및 기존 3개 설계 문서에 동결 우선순위 반영.
+- 최신 관련 연구 DOC/DOME/StoryWriter/Storyteller/CritiCS/DramaAgent/LitBench 및 실제 경쟁 제품 공식 기능 조사. 전문 생성 방식·동적 story state·평가자 보정·단위별 기술/품질 위험·사전 no-new-product-code 실증 계획. 실제 경쟁 제품/인간 전문 원고/독립 외부 LLM 평가/한국어 관객/영상/GPU 비교 미실행, 권리/비용/연결 미확보. 임의 수치/우위 판정 없음.
+- 신규 제품 코드 변경 없음. 이전 M1-A 27 PASS/M0 부분 16 PASS는 과거 국소 증거, 전체 M0/Windows/5축 검증 미완료. M1-B/C 및 기타 개발 동결. **DESIGN_HOLD / PRODUCT_CODING_FROZEN / COMPETITIVE_ALPHA_NOT_PROVEN / REMEDIATION_REQUIRED**. 다음은 시나리오 dossier의 전문 생성 가설/평가자 타당성/실물 비교 경로 및 나머지 단위 상세 설계 심사. D0–D5 전수 OK 이전 개발 재개 금지.
+
 ## 2026-11-24 — 장기 경쟁우위/전문 스킬 이중 캐스케이드 계약 및 시나리오 Master 후보
 
 - 사용자 확정: 장기 안정적 뼈대, 전문 기관/현업 스킬 및 실제 경쟁작 비교, 자연어 상호작용에서 품질 지속 상승. [장기 경쟁우위 계약](MURIM_COMPETITIVE_EVOLUTION_CONTRACT.md), [Screenplay Master 후보](skills/screenplay-master/SKILL.md), 출처 원장/독립 벤치 프로토콜 및 권위 문서 링크 반영. Academy Nicholl, Sundance 2026, BFI, Agent Skills, OpenAI/Anthropic 평가 지침, DSPy GEPA 공개 자료 조사. 공인 AI 스킬/기관 인증 아님.

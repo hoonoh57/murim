@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 설계 OK 전 모든 신규 제품 코딩 동결
+
+AGENTS 최신 설계 동결 절 → [D0–D5 설계 게이트](MURIM_PRECODE_DESIGN_GATE.md) → [Screenplay 전문 생산 상세 설계 심사](skills/screenplay-master/references/production-design-review.md) → 기존 5축/캐스케이드/경쟁우위 계약. 이전 M1-B 착수 계획은 보류. 실제 연구·경쟁 기능 조사는 시작했고 실제 생성/인간·독립 LLM 평가/경쟁 비교/시장·GPU 실증은 NOT_RUN. 모든 단위의 설계 근거, 한계/실현성, 평가자 보정, 실물 사전 검증 및 전체 반대심사 완료 전 신규 제품 코딩 금지. 사용자에게 중간 기술 선택 요구 금지. 기존 제품/원본/승인 보존. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — 최우선 인계: 장기 경쟁우위 및 전문 스킬 진화
 
 AGENTS.md 최신 경쟁우위 절 → [장기 경쟁우위 계약](MURIM_COMPETITIVE_EVOLUTION_CONTRACT.md) → 기존 5축/캐스케이드 문서. 최초 [Screenplay Master 후보](skills/screenplay-master/SKILL.md)와 references의 근거·비교 프로토콜을 확인. 실제 전문 자료 조사와 후보 문서만 작성, 기관 인증/경쟁 우위/스킬 실행 미검증. 기존 스킬/4-GATE 유지. 다음 M1-B 범용 dependency/invalidation, skill/evidence pin 및 5축 fixture. M0 전체 회귀·Windows 미검증, M1-A 독립 27 PASS 유지. 사용자 중간 기술결정 요청 금지, 전체 REMEDIATION_REQUIRED.
