@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 단순 UI / 기계검증 계약 및 M0
+
+AGENTS.md 최신 UI 계약 및 5축 시방서 §7.1 우선. 자연어 기본 UI와 별도 개발 LLM용 관측·로그·진단 권한 계약. M0 제한적 수정으로 legacy Relay 강제 GO/미승인 리소스 진행과 완료 표시 차단, 초안/수정 및 세션 보존. 실제 Studio 원고 자동 이전 미구현. 다음: 집중 회귀 및 잔여 레거시 진입점 조사, 그 뒤 M1 독립 착탈 기반. 실제 실행/전체 준수 NOT_VERIFIED. 사용자 자산과 기존 G1/G2/ComfyUI 유지.
+
 ## 2026-11-24 — 최우선 인계: 주요 소스 감사 및 안전 선행 경계
 
 [5축 시방서](MURIM_FIVE_AXIS_ARCHITECTURE.md)와 [감사/이행안](MURIM_FIVE_AXIS_OWNERSHIP_AUDIT_2026-11-24.md)을 먼저 읽는다. 주요 제품 Python/Director JS 경계와 외부 adapter 후보를 조사했고 전체 repo 자동 감사는 NOT_RUN. 다음 한 경계는 M0: legacy Relay force_go 및 미승인 자동 제작 프롬프트 진행 차단(실제 GPU 실행 아님), 기존 원고 작성/Studio 승인 계약 보존, 집중 회귀. 이후 M1 독립 capability/registry/lifecycle/persistence 최소 slice. 제품 원본/사용자 자산 변경 없음, 전체 REMEDIATION_REQUIRED. 이전 인계의 전수 감사 목표는 남아 있으며 본 주요 경로 조사만으로 완료 처리 금지.

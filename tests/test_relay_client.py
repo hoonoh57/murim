@@ -53,6 +53,21 @@ class TestRelaySession(unittest.TestCase):
         self.assertEqual(self.session.rework_count, 1)
         self.assertIn("REQ-005R", prompt)
 
+    def test_force_go_is_denied(self):
+        self.session.scenario_json = {"title": "T", "script": "S"}
+        self.session.start_round2()
+        self.session.council_json = {"average_score": 10, "verdict": "GO"}
+        self.assertIsNone(self.session.start_round3(force_go=True))
+        self.assertEqual(self.session.status, "hold")
+
+    def test_old_round3_cannot_register_resource_response(self):
+        self.session.current_round = 3
+        self.session.status = "round3"
+        result = self.session.process_round3_response('---[RES-005 | ImagingAgent]---\n{"enhanced_prompts":[]}\n---[END RES-005]---')
+        self.assertFalse(result["success"])
+        self.assertEqual(self.session.status, "hold")
+        self.assertIsNone(self.session.imaging_json)
+
     def test_serialization(self):
         self.session.start_round1()
         data = self.session.to_dict()

@@ -75,6 +75,12 @@ Canonical project aggregate의 JSON revision이 프로젝트/씬/쇼트/트랙/�
 단계별 필수 capability·입력/출력·의존성 및 gate는 versioned composition/profile로 구성하며 데이터는 선언적. Manager가 실행·승인·정책을 해석한다. 프로필과 UI 조합은 변경 가능하나 기존 hard gates를 삭제하거나 우회할 수 없다. 사람이 검토할 실제 원문/스토리보드가 없는 상태는 작성 단계이지 감수 완료 단계가 아니다. 실제 생성 후보나 최종 렌더는 해당 기존 승인 조건을 만족해야 한다. 독립 심사 및 인간 승인 증거를 synthetic score로 대체 금지. 최종 게시 별도 승인.
 공용 관리 화면: Add-on 카탈로그(발견/설치/활성/격리/해제/버전/권한/health/실측), capability별 provider 선택(전체 기본값/프로젝트/장면 override), profile CRUD, 예산/GPU/queue/retry/timeout 정책 CRUD, generic schema 기반 설정·폼·미디어 preview·타임라인·로그·상태·승인. 사용자에게 schema/JSON 수동 편집을 요구하지 않는다. 설정은 단위/범위/영향/재시작 여부를 표시하고 preview → 검증 → CAS commit → 실제 적용 확인. 비밀 원문 노출 금지. 추가 UI 표현 primitive가 필요하면 범용 contribution 확장으로 별도 검증한다.
 
+### 7.1 기본 화면과 기계검증 화면의 분리 (사용자 확정)
+
+기본 화면은 작품 목록/새 작품, 자연어 대화, 실제 작품 원고·스토리보드·후보·영상 및 중요한 감수/선택으로 제한한다. "60초 무협 작품 만들어 줘", "두 번째 장면을 더 긴장감 있게", "이 인물로 확정"처럼 자연어만으로 진행 가능하게 한다. AI는 장르 스킬·조사·원고·제작 계획·품질 개선을 자동 수행하고 비용/권리/외부 전송 및 중요한 감독 선택만 쉬운 말로 요청한다. 음성 입력은 선택적 Add-on이며 현재 연결 주장 금지. 기술 설정은 기본 화면에서 숨기되 실제 사용자 위험/결정은 숨기지 않는다.
+기계검증 탭은 Central Manager 관측 서비스의 소비 화면으로, 등록된 Add-on/capability/contract/schema/version, 선택 근거, dependency graph, job/attempt/correlation ID, events, 상태/실패 분류, 품질 근거/승인, 입력/출력 hash 및 provenance, GPU/RAM/시간/비용/queue, 로그/재현 bundle, 경계 검사 및 BUILD/TEST/실제 실행 결과를 일관된 형식으로 조회한다. Bridge는 lifecycle/실행 이벤트, Add-on은 고유 진단·evidence, Persistence는 불변 이력을 제공한다. 동적 schema 기반 필터/검색/상세·JSON export 및 read-only diagnostics API로 개발 LLM이 직접 확인할 수 있도록 한다. 운영 설정 변경/재시도/실행은 조회 권한과 분리하고 별도 정책 검증·승인·CAS를 거친다. secret/PII redaction, 권한 범위, 로그 용량·보존/rotation, 무단 외부 전송 금지, unknown 측정치 명시. 실제 개발 LLM 연결 실증 전 NOT_CONNECTED.
+자연어 요청→의도/변경 제안→검증/필요 승인→실행→증거 readback→쉬운 말 결과, 모든 단계에 동일 correlation ID. 품질 실패는 제한된 재작업/대안 검증 또는 HOLD; 승인/비용/권한을 무한 반복으로 우회하지 않는다. 원고 없는 감수와 사용자에게 JSON/프롬프트/모델 선택 강제 금지. UX 인수시험: 처음 접한 비전문가가 기술 설정 없이 실제 원고 생성·수정·감수·결과 재생; 개발 LLM이 사용자 개입 없이 승인된 진단 범위 내 실패 원인을 추적; 기본 UI/기계검증 탭 동일 작업 상태 증거 일치, 신규 Add-on에 shell 수정 없음. 최고 품질은 검증 목표이며 보장 아님.
+
 ## 8. 기술 재사용 조사 및 표준 후보 (참고, 채택 확정 아님)
 
 - Python Packaging Entry Points: 표준 discovery metadata. https://packaging.python.org/en/latest/specifications/entry-points/ ; https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/

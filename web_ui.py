@@ -168,6 +168,9 @@ def submit_response():
             }
         else:
             batch_text = relay.start_round3()
+            if batch_text is None:
+                save_session_to_file(sid, relay)
+                return jsonify({"round": -1, "status": "hold", "messages": relay.messages, "summary": relay.get_summary()})
             response_data = {
                 "round": 3,
                 "batch_prompt": batch_text,
@@ -188,16 +191,8 @@ def submit_response():
                 "reworked": True
             }
         else:
-            # ✅ [NEW] 파이프라인 완료 → outputs/ 폴더에 구조화 자동 저장
-            output_dir = relay.save_to_outputs(OUTPUTS_DIR)
-            response_data = {
-                "round": 99,
-                "status": "completed",
-                "messages": relay.messages,
-                "summary": relay.get_summary(),
-                "output_dir": output_dir  # UI에 저장 경로 전달
-            }
-    
+            response_data = {"round": -1, "status": "hold", "messages": relay.messages, "summary": relay.get_summary()}
+
     if response_data:
         save_session_to_file(sid, relay)
         return jsonify(response_data)
@@ -207,20 +202,8 @@ def submit_response():
 
 @app.route("/api/force_go", methods=["POST"])
 def force_go():
-    """REWORK 판정이지만 강제로 GO 진행"""
-    relay = get_session()
-    sid = session.get("sid")
-    if not relay:
-        return jsonify({"error": "세션이 없습니다."}), 400
-    
-    batch_text = relay.start_round3(force_go=True)
-    save_session_to_file(sid, relay)
-    
-    return jsonify({
-        "round": 3,
-        "batch_prompt": batch_text,
-        "messages": relay.messages
-    })
+    """The legacy force route cannot authorize resource production."""
+    return jsonify({"error": "승인 없는 제작은 불가능합니다. Studio에서 원고를 감수해 주세요."}), 409
 
 
 @app.route("/api/auto_run", methods=["POST"])
@@ -246,15 +229,8 @@ def auto_run():
     
     try:
         summary = automator.run_all()
-        # ✅ [NEW] 자동 제작 완료 → outputs/ 폴더에 구조화 자동 저장
-        output_dir = relay.save_to_outputs(OUTPUTS_DIR)
         save_session_to_file(sid, relay)
-        return jsonify({
-            "status": "completed",
-            "messages": relay.messages,
-            "summary": relay.get_summary(),
-            "output_dir": output_dir  # UI에 저장 경로 전달
-        })
+        return jsonify({"status": summary["status"], "messages": relay.messages, "summary": summary})
     except Exception as e:
         return jsonify({"error": f"자동화 중 오류 발생: {str(e)}"}), 500
 

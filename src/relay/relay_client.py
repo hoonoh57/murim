@@ -7,6 +7,7 @@ Human-Relay 클라이언트
 import os
 import re
 import json
+import math
 from datetime import datetime
 from typing import Dict, Optional, List
 from src.relay.batch_builder import BatchBuilder, BatchRequest
@@ -89,6 +90,9 @@ class RelaySession:
         if not self.scenario_json:
             return "오류: 시나리오가 없습니다. Round 1을 먼저 완료하세요."
         
+        self.council_json = None
+        self.style_guide_json = None
+        self.camera_plans_json = None
         self.current_round = 2
         self.status = "round2"
         self.messages.append("📝 Round 2: 평가 + 기획 요청 준비 중...")
@@ -104,6 +108,10 @@ class RelaySession:
         results = self.parser.parse(raw_response)
         self.round_results[2] = results
         
+        # A new response must never inherit a previous evaluation.
+        self.council_json = None
+        self.style_guide_json = None
+        self.camera_plans_json = None
         # Council 응답
         council_resp = self.parser.get_by_owner(results, "Council")
         if council_resp and council_resp.parsed_json:
@@ -127,102 +135,66 @@ class RelaySession:
             plans_count = len(self.camera_plans_json.get("camera_plans", []))
             self.messages.append(f"🎬 카메라 계획: {plans_count}개 장면")
         
-        # REWORK 판단
-        needs_rework = False
-        if self.council_json:
-            verdict = self.council_json.get("verdict", "").upper()
-            avg_score = self.council_json.get("average_score", 0)
-            if verdict == "REWORK" or (avg_score < 7.5 and verdict != "GO"):
-                needs_rework = True
-            if verdict == "KILL" or avg_score < 6.0:
-                self.messages.append("💀 KILL 판정: 품질 미달로 제작 중단 권고")
-                self.status = "killed"
-                return {"success": True, "needs_rework": False, "killed": True}
-        
-        return {
-            "success": True, 
-            "needs_rework": needs_rework,
-            "can_rework": self.rework_count < self.max_reworks,
-            "killed": False
-        }
+        # Legacy scores are diagnostic only, never Studio approval.
+        score = (self.council_json or {}).get("average_score")
+        verdict = str((self.council_json or {}).get("verdict", "")).upper()
+        if type(score) not in (int, float) or not math.isfinite(score) or not 0 <= score <= 10 or verdict not in ("GO", "REWORK", "KILL"):
+            self.hold("유효한 평가가 없습니다. 원고와 평가를 다시 확인하세요.")
+            return {"success": False, "needs_rework": False, "killed": False, "error": "평가 확인 필요"}
+        if verdict == "KILL" or score < 6:
+            self.status = "killed"
+            self.messages.append("품질 미달: 제작 중단")
+            return {"success": True, "needs_rework": False, "killed": True}
+        needs_rework = verdict == "REWORK" or score < 9.5
+        return {"success": True, "needs_rework": needs_rework,
+                "can_rework": self.rework_count < self.max_reworks, "killed": False}
 
-    def start_round3(self, force_go: bool = False) -> str:
-        """Round 3 배치 프롬프트를 생성합니다."""
-        self.current_round = 3
-        self.status = "round3"
-        
-        needs_rework = False
-        if not force_go and self.council_json:
-            verdict = self.council_json.get("verdict", "").upper()
-            avg_score = self.council_json.get("average_score", 0)
-            if verdict == "REWORK" or avg_score < 7.5:
-                needs_rework = True
-                self.rework_count += 1
-        
-        if needs_rework:
-            self.messages.append(
-                f"🔄 REWORK 요청 ({self.rework_count}/{self.max_reworks}): "
-                f"시나리오 수정 프롬프트 생성 중..."
-            )
-        else:
-            self.messages.append("🚀 GO 판정: 리소스 제작 프롬프트 생성 중...")
-        
+    def hold(self, reason: str):
+        self.status = "hold"
+        self.messages.append("[HOLD] " + reason)
+
+    def start_round3(self, force_go: bool = False) -> Optional[str]:
+        """Only a draft rewrite is permitted by this unbound legacy session."""
+        if force_go or self.status != "round2" or not self.scenario_json:
+            self.hold("승인된 Studio 제작 경로가 필요합니다.")
+            return None
+        score = (self.council_json or {}).get("average_score")
+        verdict = str((self.council_json or {}).get("verdict", "")).upper()
+        valid = type(score) in (int, float) and math.isfinite(score) and 6 <= score <= 10
+        if not valid or verdict not in ("REWORK", "GO") or not (verdict == "REWORK" or score < 9.5) or self.rework_count >= self.max_reworks:
+            self.hold("원고를 보존했습니다. Studio에서 독립 심사와 인간 승인을 진행하세요.")
+            return None
         requests = self.builder.build_round3(
-            scenario_json=self.scenario_json,
-            council_json=self.council_json or {},
+            scenario_json=self.scenario_json, council_json=self.council_json,
             style_guide_json=self.style_guide_json or {},
-            camera_plans_json=self.camera_plans_json or {},
-            needs_rework=needs_rework
+            camera_plans_json=self.camera_plans_json or {}, needs_rework=True
         )
         batch_text = self.builder.format_batch(requests, round_num=3)
-        
-        self.messages.append(f"✅ Round 3 배치 프롬프트 생성 완료 (요청 {len(requests)}개)")
+        self.rework_count += 1
+        self.current_round = 3
+        self.status = "round3_rework"
+        self.messages.append("시나리오 수정 요청 준비 완료")
         return batch_text
 
     def process_round3_response(self, raw_response: str) -> dict:
-        """Round 3 응답을 파싱합니다."""
+        """Accept only a requested draft revision; never collect unapproved resources."""
+        if self.status != "round3_rework" or self.current_round != 3:
+            self.hold("미승인 리소스 응답은 제작 결과로 등록할 수 없습니다.")
+            return {"success": False, "reworked": False, "error": "승인 필요"}
         results = self.parser.parse(raw_response)
         self.round_results[3] = results
-        
-        # Rework 경로인 경우: WriterAgent의 수정본 수신 확인
         writer_resp = self.parser.get_by_owner(results, "Writer")
-        if writer_resp and writer_resp.parsed_json:
-            self.scenario_json = writer_resp.parsed_json
-            self.messages.append(
-                f"📝 수정 시나리오 수신: \"{self.scenario_json.get('title', 'N/A')}\""
-            )
-            # Rework 성공 → 다시 평가(Round 2) 단계로 상태 변경
-            self.status = "round2"
-            self.current_round = 2
-            return {"success": True, "reworked": True}
-        
-        # GO 경로: 리소스 결과 수집
-        imaging_resp = self.parser.get_by_owner(results, "Imaging")
-        if imaging_resp and imaging_resp.parsed_json:
-            self.imaging_json = imaging_resp.parsed_json
-            count = len(self.imaging_json.get("enhanced_prompts", []))
-            self.messages.append(f"🖼️ 이미지 프롬프트: {count}개 장면")
-        
-        video_resp = self.parser.get_by_owner(results, "Video")
-        if video_resp and video_resp.parsed_json:
-            self.video_json = video_resp.parsed_json
-            count = len(self.video_json.get("motion_plans", []))
-            self.messages.append(f"🎥 비디오 모션 플랜: {count}개 장면")
-        
-        audio_resp = self.parser.get_by_owner(results, "Audio")
-        if audio_resp and audio_resp.parsed_json:
-            self.audio_json = audio_resp.parsed_json
-            self.messages.append(f"🔊 사운드스케이프: 수신 완료")
-        
-        marketing_resp = self.parser.get_by_owner(results, "Marketing")
-        if marketing_resp and marketing_resp.parsed_json:
-            self.marketing_json = marketing_resp.parsed_json
-            yt_title = self.marketing_json.get("youtube_title", "N/A")
-            self.messages.append(f"📢 마케팅: \"{yt_title}\"")
-        
-        self.status = "completed"
-        self.messages.append("🎉 전체 제작 파이프라인 완료!")
-        return {"success": True, "reworked": False}
+        if not writer_resp or not isinstance(writer_resp.parsed_json, dict) or not writer_resp.parsed_json:
+            self.hold("수정 원고를 확인하지 못했습니다.")
+            return {"success": False, "reworked": False, "error": "수정 원고 확인 필요"}
+        self.scenario_json = writer_resp.parsed_json
+        self.council_json = None
+        self.style_guide_json = None
+        self.camera_plans_json = None
+        self.messages.append("수정 시나리오 수신 · 재평가 필요")
+        self.status = "round2"
+        self.current_round = 2
+        return {"success": True, "reworked": True}
 
     # ──────────────────────────────────────────────────────────────────────────
     # ✅ [NEW] 파이프라인 완료 시 outputs/ 폴더에 구조화 저장

@@ -14,48 +14,26 @@ class RelayAutomator:
         self.ai_client = ai_client
 
     def run_all(self, max_reworks: int = 2) -> dict:
-        """Round 1부터 끝까지 자동 실행합니다."""
-        
-        # Round 1
-        prompt1 = self.session.start_round1()
-        res1 = self.ai_client.generate_response(prompt1)
-        self.session.process_round1_response(res1)
-        
-        # Round 2
-        prompt2 = self.session.start_round2()
-        res2 = self.ai_client.generate_response(prompt2)
-        round2_eval = self.session.process_round2_response(res2)
-        
-        if round2_eval.get("killed"):
+        """Automate draft preparation only; production belongs to approved Studio."""
+        if type(max_reworks) is not int or max_reworks < 0:
+            raise ValueError("Invalid rework limit")
+        self.session.max_reworks = min(self.session.max_reworks, max_reworks)
+        prompt = self.session.start_round1()
+        result = self.session.process_round1_response(self.ai_client.generate_response(prompt))
+        if not result.get("success"):
+            self.session.hold("초안 응답을 확인하지 못했습니다.")
             return self.session.get_summary()
-
-        # Rework handling loop
-        while round2_eval.get("needs_rework") and self.session.rework_count < max_reworks:
-            print(f"[AUTO] Rework triggered (Attempt {self.session.rework_count + 1})")
-            prompt3 = self.session.start_round3()
-            res3 = self.ai_client.generate_response(prompt3)
-            self.session.process_round3_response(res3)
-            
-            # Re-evaluate in Round 2
-            prompt2 = self.session.start_round2()
-            res2 = self.ai_client.generate_response(prompt2)
-            round2_eval = self.session.process_round2_response(res2)
-            
-            if round2_eval.get("killed"):
+        while True:
+            prompt = self.session.start_round2()
+            evaluation = self.session.process_round2_response(self.ai_client.generate_response(prompt))
+            if not evaluation.get("success") or evaluation.get("killed"):
                 return self.session.get_summary()
-
-        # If still needs rework but reached max, just force go
-        if round2_eval.get("needs_rework"):
-            print("[AUTO] Max reworks reached. Forcing GO.")
-            prompt3 = self.session.start_round3(force_go=True)
-        else:
-            prompt3 = self.session.start_round3()
-            
-        # Final Round 3 (Imaging/Video/etc.)
-        res3 = self.ai_client.generate_response(prompt3)
-        self.session.process_round3_response(res3)
-        
-        return self.session.get_summary()
+            prompt = self.session.start_round3()
+            if prompt is None:
+                return self.session.get_summary()
+            result = self.session.process_round3_response(self.ai_client.generate_response(prompt))
+            if not result.get("success") or not result.get("reworked"):
+                return self.session.get_summary()
 
 if __name__ == "__main__":
     # Example usage for manual CLI run
@@ -68,6 +46,6 @@ if __name__ == "__main__":
     automator = RelayAutomator(session, client)
     
     summary = automator.run_all()
-    print("--- AUTOMATIC RUN COMPLETE ---")
+    print("--- DRAFT PREPARATION STOPPED ---")
     print(f"Status: {summary['status']}")
     print(f"Title: {summary['scenario'].get('title') if summary['scenario'] else 'N/A'}")

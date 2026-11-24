@@ -1,3 +1,9 @@
+## 2026-11-24 — 자연어 기본 UI / 기계검증 탭 계약 + M0 제한적 안전 수정
+
+- 사용자 확정: 초등학생도 사용하는 자연어 중심 기본 UI, 기술 세부는 기계검증 탭·구조화 로그/API로 분리. AGENTS.md 및 5축 시방서 §7.1 반영. 진단 API/음성 입력/자동 고품질 제작은 목표이며 아직 구현/연결되지 않음.
+- M0: 기존 RelaySession에서 force_go 및 미승인 리소스 응답 등록을 거부, 수정 원고만 허용, 9.5 미만/REWORK는 제한 재작업 후 HOLD, 누락/비정상 평가 차단. RelayAutomator는 초안/평가까지만 진행, web /api/force_go 409, 미승인 output save/completed 표시 제거, 기본 레거시 화면의 강제 GO 제거/초안 보존 표시. 기존 Studio/G1/G2/GPU/미디어 원장 변경 없음. 기존 세션 원고 자동 Studio 이전 미구현, 직접 연결 전 별도 원고 감수 필요. 실제 외부 LLM 호출 없음.
+- 집중 회귀 코드 추가/기존 기대값 수정(미승인 completed→hold), 원격 source 검토만; Python/브라우저/Windows 실행 NOT_RUN, 전체 repo 감사 NOT_RUN, REMEDIATION_REQUIRED. 다음: M0 focused regression 실행 및 레거시 진입점 잔여 경계 확인 후 M1 공통 착탈 최소 slice. 기존 자동 제작 완성 주장 금지.
+
 ## 2026-11-24 — 5축 주요 제품 소스 정적 감사 및 이행 순서
 
 - 기준 4ec63cf40506. [책임 경계 감사·이행안](MURIM_FIVE_AXIS_OWNERSHIP_AUDIT_2026-11-24.md): 주요 Python/Director JS 호출·저장 경계 조사, 12개 결함/후보 그룹. 전체 repo 자동 감사 미실행. Calliope HTTP jobs/workflows/agent, ComfyAgent MCP 4 tools 소스 비교; 채택/실행 미확정.

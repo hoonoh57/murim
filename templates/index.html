@@ -36,10 +36,10 @@
                 <span class="num">②</span> 평가 + 기획
             </div>
             <div class="step" id="step-3">
-                <span class="num">③</span> 리소스 제작
+                <span class="num">③</span> 원고 수정
             </div>
             <div class="step" id="step-4">
-                <span class="num">🎉</span> 완료
+                <span class="num">✓</span> 감수 대기
             </div>
         </div>
 
@@ -57,10 +57,10 @@
             </div>
             <div class="btn-group">
                 <button class="btn btn-primary" id="btn-start" onclick="startEpisode()">
-                    ⚔️ 제작 시작 (Human Relay)
+                    초안 작성 (기존 수동 도구)
                 </button>
                 <button class="btn btn-submit" id="btn-auto" onclick="autoRun()">
-                    🤖 자동 제작 (Gemini)
+                    AI 초안 작성 (Gemini)
                 </button>
             </div>
         </div>
@@ -96,9 +96,6 @@
                     <button class="btn btn-copy btn-sm" onclick="pasteResponse()">
                         📋 클립보드에서 붙여넣기
                     </button>
-                    <button class="btn btn-danger btn-sm hidden" id="btn-force-go" onclick="forceGo()">
-                        ⚡ 강제 GO (REWORK 무시)
-                    </button>
                 </div>
             </div>
         </div>
@@ -106,7 +103,7 @@
         <!-- Phase: Complete -->
         <div id="phase-complete" class="hidden">
             <div class="card fade-in">
-                <h2>🎉 제작 완료 — 결과 대시보드</h2>
+                <h2>원고 및 감수 상태</h2>
                 <div id="result-dashboard" class="result-grid"></div>
             </div>
         </div>
@@ -159,10 +156,10 @@
             const topic = document.getElementById("input-topic").value.trim();
             const events = document.getElementById("input-events").value.trim();
             if (!topic) { alert("주제를 입력해 주세요."); return; }
-            if (!confirm("Gemini API를 사용하여 전체 과정을 자동으로 진행하시겠습니까? (수분 소요)")) return;
+            if (!confirm("Gemini API에 기획을 전달해 초안과 평가를 준비할까요? 영상 제작은 진행하지 않습니다.")) return;
 
             setLoading(true);
-            addLog("🤖 [자동 모드] Gemini API를 통한 자동 제작을 시작합니다...");
+            addLog("🤖 [자동 모드] Gemini API를 통한 초안 작성을 시작합니다...");
             updateSteps(1);
 
             try {
@@ -180,11 +177,7 @@
                 }
 
                 updateLog(data.messages);
-                // ✅ [NEW] 저장 경로 수신
-                if (data.output_dir) currentOutputDir = data.output_dir;
-                showComplete(data.summary, data.output_dir);
-                updateSteps(99);
-                addLog("🎉 자동 제작이 성공적으로 완료되었습니다!");
+                showDraftHold(data.summary);
             } catch (e) {
                 addLog("❌ 서버 연결 실패: " + e.message);
                 alert("서버 연결 실패: " + e.message);
@@ -217,26 +210,13 @@
                 updateLog(data.messages);
                 document.getElementById("response-input").value = "";
 
-                if (data.round === 99 || data.status === "completed") {
-                    // ✅ [NEW] 저장 경로 수신 후 완료 화면
-                    if (data.output_dir) currentOutputDir = data.output_dir;
-                    showComplete(data.summary, data.output_dir);
-                    updateSteps(99);
-                } else if (data.status === "killed") {
-                    addLog("💀 제작이 중단되었습니다.");
-                    showComplete(data.summary, null);
+                if (data.status === "hold" || data.status === "killed") {
+                    showDraftHold(data.summary);
                 } else {
-                    // 다음 라운드
                     currentRound = data.round;
                     currentBatchPrompt = data.batch_prompt;
                     showRelayPhase(data.round, data.batch_prompt);
                     updateSteps(data.round);
-
-                    if (data.needs_rework) {
-                        document.getElementById("btn-force-go").classList.remove("hidden");
-                    } else {
-                        document.getElementById("btn-force-go").classList.add("hidden");
-                    }
                 }
             } catch (e) {
                 alert("서버 오류: " + e.message);
@@ -245,22 +225,26 @@
             }
         }
 
-        async function forceGo() {
-            if (!confirm("REWORK 판정을 무시하고 현재 시나리오로 리소스 제작을 진행합니까?")) return;
-            setLoading(true);
-            try {
-                const res = await fetch("/api/force_go", { method: "POST" });
-                const data = await res.json();
-                updateLog(data.messages);
-                currentRound = data.round;
-                currentBatchPrompt = data.batch_prompt;
-                showRelayPhase(data.round, data.batch_prompt);
-                document.getElementById("btn-force-go").classList.add("hidden");
-            } catch (e) {
-                alert("오류: " + e.message);
-            } finally {
-                setLoading(false);
-            }
+        function showDraftHold(summary) {
+            document.getElementById("phase-input").classList.add("hidden");
+            document.getElementById("phase-relay").classList.add("hidden");
+            document.getElementById("phase-complete").classList.remove("hidden");
+            const grid = document.getElementById("result-dashboard");
+            grid.replaceChildren();
+            const title = document.createElement("h3");
+            title.textContent = summary?.status === "killed" ? "작품 보완 필요" : "초안 감수 대기";
+            const note = document.createElement("p");
+            note.textContent = "영상은 제작하지 않았습니다. 작성된 초안은 기존 세션에 보존됩니다. 정식 감수는 Studio에서 진행하세요.";
+            const draft = document.createElement("pre");
+            draft.style.whiteSpace = "pre-wrap";
+            draft.textContent = summary?.scenario?.script || "확인된 원고 없음";
+            const link = document.createElement("a");
+            link.href = "/studio/";
+            link.textContent = "Studio 열기 (기존 세션 자동 이전은 아직 지원하지 않음)";
+            const again = document.createElement("button");
+            again.textContent = "새 초안 시작";
+            again.onclick = () => location.reload();
+            grid.append(title, note, draft, link, again);
         }
 
         // ─── UI Helpers ───
@@ -273,7 +257,7 @@
             const titles = {
                 1: "📋 Round 1 — 시나리오 생성",
                 2: "📋 Round 2 — 평가 + 기획 (3개 병렬 요청)",
-                3: "📋 Round 3 — 리소스 제작 (4개 병렬 요청)"
+                3: "Round 3 — 원고 수정"
             };
             document.getElementById("relay-title").textContent = titles[round] || `Round ${round}`;
             document.getElementById("prompt-content").textContent = batchPrompt;
