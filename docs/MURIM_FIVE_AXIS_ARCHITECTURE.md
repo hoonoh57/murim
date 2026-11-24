@@ -85,6 +85,10 @@ Canonical project aggregate의 JSON revision이 프로젝트/씬/쇼트/트랙/�
 
 [캐스케이딩 품질 계약](MURIM_CASCADING_QUALITY_CONTRACT.md)이 부모-자식 업무 분해, 독립 평가, 목표 초과 승격, 원인 자식 targeted rework, bounded HOLD, 개발 자율 진행과 기계검증의 세부 권위다. 5축 소유권 및 기존 품질·권한 계약 유지. 구현 완료로 오인 금지.
 
+### 7.3 전문 지식 및 장기 비교우위
+
+[장기 경쟁우위 시방서](MURIM_COMPETITIVE_EVOLUTION_CONTRACT.md)의 이중 품질 캐스케이드, 전문 스킬 version pin, 독립 비교/회귀, evidence 기반 채택 및 rollback을 전 capability에 적용한다. 전문 지식은 Add-on, 비교·선택·관측은 Manager, 실행 Bridge, 일반 검증 Core, 이력 JSON. 신규 책임 축 또는 특정 산업 기준을 Core에 고정하지 않는다.
+
 ## 8. 기술 재사용 조사 및 표준 후보 (참고, 채택 확정 아님)
 
 - Python Packaging Entry Points: 표준 discovery metadata. https://packaging.python.org/en/latest/specifications/entry-points/ ; https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/

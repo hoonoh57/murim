@@ -1,3 +1,9 @@
+## 2026-11-24 — 장기 경쟁우위/전문 스킬 이중 캐스케이드 계약 및 시나리오 Master 후보
+
+- 사용자 확정: 장기 안정적 뼈대, 전문 기관/현업 스킬 및 실제 경쟁작 비교, 자연어 상호작용에서 품질 지속 상승. [장기 경쟁우위 계약](MURIM_COMPETITIVE_EVOLUTION_CONTRACT.md), [Screenplay Master 후보](skills/screenplay-master/SKILL.md), 출처 원장/독립 벤치 프로토콜 및 권위 문서 링크 반영. Academy Nicholl, Sundance 2026, BFI, Agent Skills, OpenAI/Anthropic 평가 지침, DSPy GEPA 공개 자료 조사. 공인 AI 스킬/기관 인증 아님.
+- 후보는 기존 역사/예술 4개 v2 스킬 유지, 전체 원고·독립 검수·사용자 의도 revision·표적 개선. 작품 루프와 전역 스킬 개선 루프 분리, champion/holdout/rollback, 권리·예산·인간 승인 유지. 실제 스킬 runtime/비교/한국어 전문가 보정/실물 품질 NOT_RUN. 이번 변경 문서만.
+- M1-A 27 PASS 유지(기존 독립 범위). M0 전체 회귀/Windows 미검증. 다음 M1-B parent/dependency/invalidation 계약, 이후 versioned skill/evidence 결속 및 착탈 fixture. 실제 비교 시험 전 우위/채택/완료 선언 금지. REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — M1-A 독립 Core 품질 증거 계약 (실행 검증)
 
 - 기준 1859715d8ba1. GitHub 직접 git ls-remote DNS 오류 재현. M0 원본 전체 회귀는 여전히 NOT_RUN, 이전 추출문 16 PASS 범위만 유지. 기존 제품에 통합하지 않고 독립 M1-A 순수 계약부터 개발.

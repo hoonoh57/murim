@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 장기 경쟁우위 및 전문 스킬 진화
+
+AGENTS.md 최신 경쟁우위 절 → [장기 경쟁우위 계약](MURIM_COMPETITIVE_EVOLUTION_CONTRACT.md) → 기존 5축/캐스케이드 문서. 최초 [Screenplay Master 후보](skills/screenplay-master/SKILL.md)와 references의 근거·비교 프로토콜을 확인. 실제 전문 자료 조사와 후보 문서만 작성, 기관 인증/경쟁 우위/스킬 실행 미검증. 기존 스킬/4-GATE 유지. 다음 M1-B 범용 dependency/invalidation, skill/evidence pin 및 5축 fixture. M0 전체 회귀·Windows 미검증, M1-A 독립 27 PASS 유지. 사용자 중간 기술결정 요청 금지, 전체 REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — 최우선 인계: M1-A 독립 순수 품질 계약
 
 5축 및 캐스케이드 권위 문서 유지. 신규 src/core/quality_contract.py/test_quality_contract.py의 실제 Linux 테스트 27 PASS; 실행 blob SHA를 CURRENT_STATE.md에 기록. Core evidence_issues는 조건/구조 검사이지 승격/실제 품질 승인 아님. M0 전체 package 회귀는 DNS/Windows 연결 제약으로 NOT_RUN; 기존 제품 통합하지 않음. 다음 독립 parent/dependency DAG 및 targeted invalidation 계약, 이후 5축 fixture. 실제 M0/통합/Windows 검증·전체 준수 미완료, REMEDIATION_REQUIRED. 사용자에게 루틴 테스트 명령을 넘기지 않는다.

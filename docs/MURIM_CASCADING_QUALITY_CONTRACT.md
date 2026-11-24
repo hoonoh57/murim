@@ -25,6 +25,10 @@ PLAN → EXECUTE → TECHNICAL_VERIFY → INDEPENDENT_EVALUATE → IMPROVE/REPLA
 - JSON/Persistence: pinned contract, task graph, attempt, immutable artifact refs/hash, verdict/evidence, provenance, checkpoint/event/승인, CAS. 실행/판단 없음.
 - Central Manager: 부모-자식 orchestration, 의존 DAG, capability/평가기 선택, 공용 retry/replan/promotion/invalidation, budget/lease, authority/gate, aggregate evidence/diagnostic. 전문 품질 검사 직접 구현 금지. UI는 동일 상태의 소비자. 외부 workflow runtime을 채택해도 Murim canonical 상태 및 승인 권위를 대체하지 않으며 해당 실행 Adapter/Manager 공용 서비스 뒤로 격리한다.
 
+### 4.1 작품과 전문 스킬의 이중 개선
+
+작품 캐스케이드에서 축적된 결함은 [장기 경쟁우위 시방서](MURIM_COMPETITIVE_EVOLUTION_CONTRACT.md)에 따른 별도 스킬 후보 개선 근거가 된다. 프로젝트 승인과 전역 스킬 채택을 분리하고, 격리 비교/holdout/회귀를 통과한 버전만 적용한다. 실행 중 계약 및 스킬 버전 고정, 기존 결과물 보존. 실패 시 champion 유지 또는 중대 결함 격리. 전문 최적화·평가 Add-on과 공통 Manager orchestration 분리.
+
 ## 5. 재사용할 기존 실행 기술 조사
 - Temporal Child Workflows: 다층 실행, 독립 history/lifecycle, 부모 종료/취소 정책. https://docs.temporal.io/child-workflows
 - Temporal durable execution 및 retry pattern: 재시작/실패 후 복구, 제한된 retry, 일시/비재시도 오류 분리. https://docs.temporal.io/durable-execution ; https://docs.temporal.io/design-patterns
