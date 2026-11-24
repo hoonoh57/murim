@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 전 공정 선행 입증·집중 실행
+
+[통합 심사 계약](MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md) → [공정별 심사 원장](research/assurance/STAGE_ACCEPTANCE_REGISTER.md) → D0~D5 및 시장/작품/기술/5축 계약. 모든 공정에 필수 기준·비교/독립 증거/평가기 검증·반증/보완/종료조건. 합격 baseline 유지, 유의미한 반증/조건 변경만 영향 범위 재심사. 초기 15행 전체 NOT_QUALIFIED; 실제 보정·독립 실증 없음. 기존 자료 확보와 A01/A02/A03/A15 선행 실증, 분야별 dossier. 제품 코딩 동결 유지.
+
 ## 2026-11-24 — 최우선 인계: 시장 선행 평가/보완 게이트
 
 [MARKET-M0~M6](MURIM_PREPRODUCTION_MARKET_GATE.md) → [현재 후보 screening](research/market-library/PREPRODUCTION_SCREENING_2026-11-24.md) → D0~D5. 이전 수동 순위·100점 가중치 폐기, 5개 기존 제출 revision 투자 pool 제외. 실수익·비용·동종 base-rate·콘셉트/독립 검증·보수적 손익분기 및 원인 보완 필요. 미확인은 투자 승격 금지, 대체 시장/전략 조사 또는 제외. 실제 보정/과거 예측 검증 미실행, 예시 수치는 가상 및 정책 후보. 다음 실제 허용 자료의 신규 제작자 코호트와 검증 경로 확보, W009/T001 실증도 별도 유지. 제품 코딩 동결.

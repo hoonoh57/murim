@@ -20,6 +20,10 @@ PLAN → EXECUTE → TECHNICAL_VERIFY → INDEPENDENT_EVALUATE → IMPROVE/REPLA
 부모 통합 평가에서 캐릭터/연속성/서사/음향 시간 정합 실패가 드러나면 실제 원인 자식으로 결함을 반환한다. 의존 DAG로 영향 받은 조상/후속 결과만 STALE/HOLD, 무관한 성공 작업 재제작 금지. 부모의 이전 승인/기존 결과물과 증거 보존. 승인된 원고의 구조 변경은 새 사전 승인 필요. 새 revision에 대한 평가가 구 revision 승인으로 대체될 수 없음.
 품질 목표까지 지속 개선하되 한 실행에서 무한 루프/무제한 비용 금지. 진척 없는 동일 결함, 품질 악화, 최대 깊이/기간/attempt/예산/자원 한계, unavailable/권리/승인 제약에 도달하면 원인 분석→승인된 대체 capability/전략 탐색→가능한 경우 재계획. 범위 내 대안이 없으면 HOLD+재현/원인/최선 후보 기록, 영향 없는 다른 작업 진행. 미달 결과 강제 GO/부모 승격 금지. 부모의 합산 예산에 모든 하위 attempt와 동시 실행 lease가 포함되어야 한다.
 
+### 3.1 선행 입증 및 합격 기준 잠금
+
+[통합 심사 계약](MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md) 적용. 전문 요구-증거-판정 추적, 평가기 자체 검증, non-compensatory 기준, 실제 적용범위의 accepted baseline. 신규 객관 반증/유의미한 조건 변경에서만 영향을 받은 의존성 재심사. 검증된 champion 및 승인된 원본 유지, 무의미한 방향 전환 금지.
+
 ## 4. 5축 소유권
 - Core: generic Task/Dependency/Revision/Evidence/QualityContract 및 순수 검증·전이 primitive. 도메인·모델·실행기 import 없음. 품질판정 권한은 Core가 자체 행사하지 않음.
 - Bridge: 동일 작업 envelope 및 결과/이벤트, 실행 격리/취소/재연결. 품질/재시도/자식 선택 판단 없음.

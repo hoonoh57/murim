@@ -84,5 +84,9 @@ Alpha 후보: 전문 수준의 실제 산출물 + 적은 사용자 기술 개입
 
 [시장 선행 검증 계약](MURIM_PREPRODUCTION_MARKET_GATE.md)의 MARKET-M0~M6를 D0~D4 및 D5에 연결. 실제 유사 신규 창작자/경제성·수익 자격/콘셉트 비교·검증 원가·보수적 손익·선별 모델 독립 비교를 먼저 실증. 미달 원인별 보완 또는 투자 후보 제외. 수동 연구 순위/100점 가중치 폐기. 실제 작품 pilot은 선행 검증 외부 확인이며 무계획 실패 제작의 수단 금지. 코드 동결 유지.
 
+### 5.7 공정별 엄격한 심사와 집중 실행
+
+[통합 심사 계약](MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md) 및 [공정별 원장](research/assurance/STAGE_ACCEPTANCE_REGISTER.md) 적용. 모든 D0~D5의 필수 요구-판정-실제 증거 추적, 평가기 독립 검증, 미달 보완/종료조건, 합격된 baseline 및 변경 조건을 설계에 반영. 초기 공정 15행 전체 NOT_QUALIFIED, 수치 보정/실물 독립 검증 전 설계 OK 금지.
+
 ## 7. 다음 작업
 제품 코딩 재개 금지. [시나리오 전문 생산 상세 설계 심사](skills/screenplay-master/references/production-design-review.md)를 첫 대상 dossier로 발전. 각본 고위험 가정·평가자 보정·권리 확보 전문 원고/경쟁 앱/강한 LLM 대비 기존 도구로 실증할 수 있는 경로를 조사한다. 이어 모든 단위에 동일 절차를 적용하고 전체 설계 심사 완료 전 M1-B를 시작하지 않는다. 현 상태 DESIGN_HOLD, 전체 REMEDIATION_REQUIRED.

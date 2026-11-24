@@ -58,5 +58,9 @@ Central Manager: 공통 skill registry/선택/composition, 비교 실험 계획/
 
 [시장 선행 게이트](MURIM_PREPRODUCTION_MARKET_GATE.md): 시장/관객/콘셉트/유통·경제성의 독립 선행 검증, 미달 원인 자식 보완 및 상위 재평가, 보수적 손익/실제 비교 기준. 선정기 자체는 시점 분리 실제 수익/실패와 강한 baseline으로 검증. 대체 불가한 미확인 항목은 qualified pool에서 제외. 기존 수동 순위 폐기.
 
+### 5.7 검증 후 집중 실행 및 기술 교체 통제
+
+[통합 심사 계약](MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md)의 검증된 baseline 및 변경심사 규칙을 적용. 신기술/다른 의견만으로 기존 champion을 교체하지 않고, 객관 반증·조건 변경 또는 실증된 우위에 따라 영향 범위만 재검증. 연구 루프와 진행 중 승인 작품을 분리한다.
+
 ## 6. 현재 및 다음
 M1-A 독립 품질 primitive 27 PASS, 전체 M0/Windows/구조 검증 미완료. 이 문서 및 시나리오 skill v1은 실제 실행이 아닌 신규 설계·출처 기반 후보. 전문 기관에 의한 Murim 검증 없음. 실물 경쟁 제품 비교 및 고객 검증 NOT_RUN. 다음 M1-B generic dependency/invalidation, skill version/reference 결속 및 이후 독립 Bridge/Manager/Persistence slice; 실물 screenplay benchmark는 해당 생성/독립 평가 capability와 승인된 실행 환경을 확보한 뒤 수행. 기존 제품 수정 없이 병행 준비 가능, 실제 비교 전 champion 교체 금지.

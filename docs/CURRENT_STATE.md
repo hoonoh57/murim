@@ -1,3 +1,8 @@
+## 2026-11-24 — 전 공정 선행 입증·집중 실행 통합 계약
+
+- 사용자 확정: 각 분야의 엄격한 검증을 착수 전 수행해 실패 방향의 투자/갈팡질팡을 예방하고, 합격한 방향은 신뢰 근거를 잠가 집중 실행. [통합 심사 계약](MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md), [공정별 원장](research/assurance/STAGE_ACCEPTANCE_REGISTER.md) 추가. NASA 진입/통과·요구 추적 및 NIST TEVV/독립 평가·불확실성 방법 참조. 전문 공정 15행의 반증 질문·수용 조건·보완 경계, 평가자 검증·실행/변경 승인·baseline/rollback 및 영향 범위 재심사.
+- 기존 증거 문서 대조: 시장 5개 제외, 작품/기술 분석 후보 10/11(실제 Gemini 분석 0), 전문 시나리오 미검증, 기존 M0/M1-A 일부 테스트와 Windows/전체/실물 미확인 등. 15개 공정 전체 수용 NOT_QUALIFIED. 실제 평가기 보정/수익/전문 비교·시장 실증 및 runtime 미구현. 문서만 변경. 다음은 A01/A02/A03/A15의 실제 자료·평가기 검증·대표 난제, 나머지 상세 dossier 및 전체 D0~D5 심사. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — 시장 소재 선정 선행 검증 결함 수정
 
 - 사용자 지적: 막연한 시장 조사/수동 순위/합격선 없는 가중치는 선행 검증 원칙 위배. [MARKET-M0~M6](MURIM_PREPRODUCTION_MARKET_GATE.md) 설계 계약 추가. RCF/콘셉트 테스트/실제 수익화 자격/완전 원가·역손익분기/보수적 하방/독립 시점 분리 선별기 검증. 미달 원인 수정·재심사, 근거 미확보는 투자 pool 제외. 기존 100점 가중치·수동 순위 SUPERSEDED.
