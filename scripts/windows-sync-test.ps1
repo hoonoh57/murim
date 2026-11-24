@@ -7,7 +7,7 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$Workspace = (Split-Path -Parent $PSScriptRoot),
+    [string]$Workspace = "",
     [string]$PythonExe = "python",
     [switch]$RequireComfy,
     [switch]$OnlyOnChange,
@@ -21,6 +21,20 @@ $ErrorActionPreference = "Stop"
 # Record the last failure outside the source checkout without weakening
 # fail-closed Git checks or storing credentials in the repository.
 try {
+
+# Resolve the script directory only after param binding. On Windows PowerShell
+# 5.1, $PSScriptRoot can be empty while evaluating param default expressions.
+# Keep an explicitly supplied -Workspace unchanged for approved runners.
+if ([string]::IsNullOrWhiteSpace($Workspace)) {
+    $scriptFile = $PSCommandPath
+    if ([string]::IsNullOrWhiteSpace($scriptFile)) {
+        $scriptFile = $MyInvocation.MyCommand.Path
+    }
+    if ([string]::IsNullOrWhiteSpace($scriptFile)) {
+        throw "[SCRIPT_PATH_MISSING] Cannot resolve this script path; no synchronization performed."
+    }
+    $Workspace = Split-Path -Parent (Split-Path -Parent $scriptFile)
+}
 
 function Git-Run {
     param(

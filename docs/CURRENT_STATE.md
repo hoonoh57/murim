@@ -1,3 +1,11 @@
+## 2026-11-24 — PowerShell 5.1 startup failure: empty PSScriptRoot in param
+
+- Actual user observation after prior launcher commit: `Split-Path : Cannot bind argument to parameter 'Path' because it is an empty string` on `scripts/windows-sync-test.ps1:10`.
+- Classified **PRODUCT_DEFECT** in Windows launcher (parameter default evaluation), not a user command error. The previous change removed the explicit `-Workspace` but assumed `$PSScriptRoot` was initialized inside a `param()` default expression; observed false on this runtime.
+- Targeted fix in `scripts/windows-sync-test.ps1`: make Workspace param an empty default; after param binding inside the existing try/catch, derive it from `$PSCommandPath` (fallback to `$MyInvocation.MyCommand.Path`), with a fail-closed missing-script-path guard. Explicit `-Workspace` overrides still work.
+- Existing Git safety (root, origin, branch, dirty/untracked, incoming ignored conflicts, only fast-forward) unchanged. Windows CMD wrapper unchanged. Static regression test asserts the dangerous evaluation no longer exists in the param block.
+- GitHub readback/static contract checking is not Windows runtime PASS; next consumer action: `git pull --ff-only origin main`, `.\windows-test.cmd`, then `.\run-studio.cmd` only after PASS.
+
 ## 2026-11-24 — Windows PowerShell launcher path quoting repair
 
 - Observed Windows user output: `PS E:\gpt\projects\comfyui\murim> .\windows-test.cmd` → `[FAIL] Illegal characters in path.`

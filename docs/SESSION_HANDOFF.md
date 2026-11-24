@@ -1,3 +1,10 @@
+## 2026-11-24 — Next session: Windows param default startup repair
+
+- Reported real Windows error: PowerShell 5.1 evaluates `[string]$Workspace = (Split-Path -Parent $PSScriptRoot)` with empty `$PSScriptRoot` in the `param()` block of `scripts/windows-sync-test.ps1`. This is a newly surfaced **PRODUCT_DEFECT**.
+- Patch: defer workspace derivation until after parameter binding and use `$PSCommandPath` / `$MyInvocation.MyCommand.Path`; preserve explicit authorized `-Workspace`, fail closed if script path unavailable, leave sync protections unchanged.
+- Consumer verification still required: `git pull --ff-only origin main` → `.\windows-test.cmd` → `.\run-studio.cmd` → `http://127.0.0.1:8080/studio/simple/`.
+- Do not report UI/API/GPU PASS from static launch checks; inspect actual console failure, retain original local assets and changes.
+
 ## 2026-11-24 — Murim Windows launcher repair handoff
 
 - User encountered `[FAIL] Illegal characters in path.` on `.\windows-test.cmd` in PowerShell.
