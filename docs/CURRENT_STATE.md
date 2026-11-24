@@ -1,3 +1,10 @@
+## 2026-11-24 — 실제 Director UI 사용성 실패 / 기술 우선 재설계
+
+- 사용자 화면에서 localhost /studio/simple/ 표시 및 G1/G2 잠금 확인. 신규 원고 없는 기본 장면에서 감수부터 요구, 수동 프롬프트 전달 중심 UX: PRODUCT_DEFECT. 수정 후 Windows 전체 pytest 결과, 실제 프로젝트 CRUD 및 GPU 품질은 여전히 미확인.
+- 사용자 최우선 방향: 최신 업계 기술·실제 사례 조사 후 검증된 기존 시스템 재사용, 인간 최소 개입, 우리만의 Alpha. 사용자 요구 순서와 Adopt/Compose/Build 계약을 AGENTS.md에 기록.
+- [기술 조사 및 비교 계획](AGENTIC_FILMMAKING_BENCHMARK_2026-11-24.md): 상용 InVideo Agent Two, Runway Agent, Higgsfield, LTX Studio, Flow 및 Calliope/ComfyAgent/NodeTool 등 후보 조사. GitHub 메타데이터/README와 8GB LTX-2.5 커뮤니티 사례 확인. 설치·영상 시청·실제 벤치 및 채택 결정은 미실행.
+- 이번 변경은 권위/상태/인계 및 연구 문서만. 기존 제품 소스, 테스트, 사용자 산출물, 게이트 변경 없음. 다음: 격리된 Calliope/ComfyAgent 통합·라이선스/실행 가능성 조사 및 동일 30~60초 실물 벤치마크 준비; 기존 UI 증설 보류.
+
 ## 2026-11-24 — 155-test Windows run: 7 legacy test failures after bootstrap repair
 
 - **Actual Windows evidence** from user: `git pull --ff-only origin main` succeeded to HEAD `95bcaf3`; `.\windows-test.cmd` collected 155 items and finished **7 FAILED / 136 PASSED / 12 SKIPPED** on Python 3.13.1 / pytest 8.4.2. The new `tests/test_director_simple.py` **5 PASS**. No Studio browser WYSIWYG or GPU verification yet.

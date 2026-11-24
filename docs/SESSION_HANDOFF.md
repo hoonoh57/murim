@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 기술 도입 우선, 기존 Director UI 증설 보류
+
+사용자 실제 신규 UI 화면은 표시되었으나 시나리오 없이 감수를 요구하는 제작 흐름은 사용성 FAIL. 사용자 요청은 고급 최신 기술을 먼저 연구하고 기존 검증된 제작 시스템을 채택·조합하여 인간 개입 최소화 및 Murim 특화 Alpha 추가. 다음 세션은 AGENTS.md 최신 2026-11-24 계약과 [비교 조사](AGENTIC_FILMMAKING_BENCHMARK_2026-11-24.md), 기존 4070 연구를 먼저 읽는다. Calliope/ComfyAgent 소스·라이선스·호환성 조사와 격리 실물 벤치 준비가 다음 경계. 실제 후보 품질/채택 확정 및 Windows 전체 pytest 결과는 미확인. 기존 승인 이력·제품 소스·로컬 사용자 자산 보호, 미승인 설치/유료 호출 금지. 기존 아래 테스트 재실행 지시를 새로운 UX 개발의 선행 강제로 오인하지 말 것.
+
 ## 2026-11-24 — 7 legacy failures, test-only repair
 
 - Observed: Windows pytest 155 tests = 7 FAILED, 136 PASSED, 12 SKIPPED; `tests/test_director_simple.py` 5 PASS, earlier SCAIL bootstrap collection error resolved.
