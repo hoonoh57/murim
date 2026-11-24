@@ -1,3 +1,9 @@
+## 2026-11-24 — A04 전문 집필 실제 원고 비교·표적 수정 (부분 실증)
+
+- [A04-01 실제 원고 원장](research/assurance/A04_01_SCREENPLAY_DRAFT_EVIDENCE_2026-11-24.md): 독자 무협 단편 "이름값" brief/검사조건 작성 전 Git blob 고정. 일반 전문 지시 A r1, Master+Q2 후보 지식 B r1 전체 원고 작성. B r2 대사 5줄 표적 수정, 기존 행동 지문 보존; 237→211 대사 본문 글자 수. 원본 3판 및 brief 보존. 실제 작성/수정 증거이지 독립 전문 평가/동등 조건 벤치마크 아님.
+- 순차 동일 생성자·A context 오염 가능·동등 시간/토큰/비용 미확보, 실제 낭독/관객/독립 평가 및 경쟁 앱 비교 NOT_RUN. A04 NOT_QUALIFIED / KNOWLEDGE_HOLD. 기존 A01~A03/A15 적격 미달 유지. 15개 공정 최종 적격 0. 제품 코드/Windows 변경 없음.
+- 다음 A05 스토리보드·프리비즈 상세 실증: A04-01 B r2를 미승인 연구 입력으로 pin하고 scene/shot 추적·시각/시간 정합성 및 가능한 실물 비교. A04 재개는 독립 비교/낭독/평가·지식 효과 확인 가능 시. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — Q4 / A15 기존 평가 구조의 의미 검증 경계 실증
 
 - [Q4 실제 평가 경계 원장](research/assurance/Q4_A15_EVALUATOR_BOUNDARY_EVIDENCE_2026-11-24.md): 기존 R01~R14 + 정상 6/경계 4, 24개 진단 참조 집합 실행 전 digest 고정. 실제 Core quality_contract.py 원격 blob 동일 확인 후 격리 Python 3.13.5 실행: 선언 구조 정상 24/24 빈 오류, REJECT 14 및 HOLD 4 미검출(의미 심사 오용 반증, 실제 승격/독립 평가 아님). 구조 오류 대조 5/5 검출. 공식 graph/changelog 동일 blob 원본 객관 검사 4/4 재확인.
