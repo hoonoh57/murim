@@ -1,3 +1,26 @@
+## 활성 상태 — 2026-11-24 세션 통합 체크포인트
+
+기준: 직전 설계 계약 커밋 `064e99bcaac338ce148990d6fe21a689e1fc0d47`. 이 기록을 포함한 문서 체크포인트의 실제 HEAD는 main에서 조회한다. 아래는 과거 로그보다 우선하는 현재 상태이며, 최신 커밋 자체의 SHA를 문서 안에 고정하는 순환 기록은 금지.
+
+**DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED / COMPETITIVE_ALPHA_NOT_PROVEN**
+시장 MARKET_GATE_NOT_CALIBRATED, KNOWLEDGE_HOLD, TECHNOLOGY_INTELLIGENCE_HOLD, AUDIENCE_VALIDATION_NOT_RUN. 전체 15개 전문 공정 NOT_QUALIFIED. 검증된 투자 후보 0. D0~D5 전체 DESIGN_OK 전 신규 제품 코드·테스트 구현·UI·실행기·DB 개발 금지. 과거 M0/M1-B 실행 계획은 보류. 기존 자료와 승인된 기존 도구를 활용한 조사·독립 평가·비실행 설계·사전 실물 비교만 허용.
+
+### 이번 세션의 결과 및 증거 경계
+
+| 영역 | 실제 확보한 결과 | 아직 충족하지 못한 조건 |
+|---|---|---|
+| 통합 심사 | [통합 계약](MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md), [15개 공정 원장](research/assurance/STAGE_ACCEPTANCE_REGISTER.md), baseline 잠금/변경심사·원인별 재작업 규칙 | 각 전문 기준의 보정, 실제 독립 평가, 통합 설계 반대심사 |
+| 시장/소재 | [MARKET-M0~M6](MURIM_PREPRODUCTION_MARKET_GATE.md), [기존 5개 후보 screening](research/market-library/PREPRODUCTION_SCREENING_2026-11-24.md) | 동종 신규 제작자의 실제 수익·완전원가·실패 분포, concept 비교 및 시점 분리 예측 검증. 수동 순위/100점 가중치 폐기 |
+| 경쟁작 지식 | [작품 라이브러리](MURIM_COMPETITIVE_WORKS_LIBRARY.md), 후보 10건 및 [Gemini 실증](research/works-library/GEMINI_VIDEO_ANALYSIS_PILOT.md), 공통 prompt/schema | 실제 전편 분석 0, 상중하·반례 표본 및 독립 관객 증거, 작가 Knowledge Pack의 실제 기여도 |
+| 기술 지식 | [기술 라이브러리](MURIM_TECHNOLOGY_INTELLIGENCE_CONTRACT.md), 후보 11건 및 별도 강의 prompt/schema | 실제 Gemini 강의 분석 0, 재현 가능한 recipe와 목표 환경 품질·시간·원가 실측 |
+| 전문 집필/제작 | Screenplay Master v1.1 후보, [전문 집필 상세 설계](skills/screenplay-master/references/production-design-review.md), [압축 실물 검증](MURIM_SHORT_FORM_MARKET_VALIDATION.md) | 강한 동일조건 원고/영상 비교, 한국어 전문가·실제 관객 보정, 검/손 및 정체성 등 핵심 난제 해결 |
+| 제품/구조 | 과거 M1-A 독립 27 PASS, M0 추출·test doubles 16 PASS. 기존 코드 보존 | 전체 repo 회귀, Windows 실제 BUILD/TEST/UI, 5축 구현 및 repo-wide 준수 검사, 실제 제작 품질. 국소 PASS를 전체 PASS로 전용 금지 |
+| 실제 연결 | GitHub main 문서 CRUD 및 CAS 가능 확인 | Gemini 직접 호출 연결 미확보, 현 Windows HEAD/branch/dirty 상태·실행/작업공간 연결 미확인. 이전 로컬 실증과 다른 프로젝트 결과는 현재 Murim 검증 아님 |
+
+### 활성 미완료 작업
+
+다음 세션의 실행 순서는 [SESSION_HANDOFF.md 활성 인계](SESSION_HANDOFF.md) 하나로 관리한다. 다음 작업은 추가 원칙 선언이 아니라 A01/A02/A03/A15의 실제 근거 확보 및 평가 방법 반증. 문서/후보 개수보다 실제 관측·재현·독립 평가·반례를 우선한다. 사용자에게 루틴 기술 선택 및 수동 테스트를 넘기지 않는다. 승인 없는 비용·게시·외부 전송·설치 금지. 실제 접근 장애에 대해서는 가능한 대체 경로를 탐색하고, 확보 불가한 핵심 조건은 해당 후보 제외 또는 명시적 blocker로 남긴다.
+
 ## 2026-11-24 — 전 공정 선행 입증·집중 실행 통합 계약
 
 - 사용자 확정: 각 분야의 엄격한 검증을 착수 전 수행해 실패 방향의 투자/갈팡질팡을 예방하고, 합격한 방향은 신뢰 근거를 잠가 집중 실행. [통합 심사 계약](MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md), [공정별 원장](research/assurance/STAGE_ACCEPTANCE_REGISTER.md) 추가. NASA 진입/통과·요구 추적 및 NIST TEVV/독립 평가·불확실성 방법 참조. 전문 공정 15행의 반증 질문·수용 조건·보완 경계, 평가자 검증·실행/변경 승인·baseline/rollback 및 영향 범위 재심사.

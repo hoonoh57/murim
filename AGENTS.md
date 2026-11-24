@@ -4,6 +4,10 @@
 **Windows 목표 경로:** `E:\gpt\projects\comfyui\murim`  
 **제정:** 2026-11-21
 
+## 세션 복구 진입점 (불변 운영 규칙)
+
+새 세션은 중앙 [agent/AGENTS.md](https://github.com/hoonoh57/agent/blob/main/AGENTS.md) 및 중앙 LOCAL_CRUD_PORTABILITY_GUIDE.md, EXECUTION_RUNBOOK.md, CURRENT_STATE.md, SESSION_HANDOFF.md의 해당 프로젝트 실행 계약을 확인하고 이 저장소의 [CURRENT_STATE.md](docs/CURRENT_STATE.md), [SESSION_HANDOFF.md](docs/SESSION_HANDOFF.md) 최상단의 활성 인계부터 읽는다. Murim은 GitHub 원본/Windows 소비 계약을 유지한다. 현재 작업 상태와 다음 작업은 해당 두 문서만 갱신하며 이곳에 중복 저장하지 않는다. 과거 기록의 다음 단계가 최신 활성 인계/설계 동결과 충돌하면 과거 단계는 실행하지 않는다. 사용자에게 연속성을 다시 설명하도록 요구하지 않는다. 실제 HEAD/branch/작업공간/권한/검증 증거를 확인하고 목적·현재 위치·금지사항·다음 실제 작업을 요약한 뒤 진행한다. 미연결 Windows 상태를 추정하지 않는다.
+
 ## 2026-11-24 — 최우선: 선행 입증·엄격한 심사·검증 후 집중 실행
 
 - [통합 심사 및 집중 실행 계약](docs/MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md), [공정별 심사 원장](docs/research/assurance/STAGE_ACCEPTANCE_REGISTER.md): 전 공정의 요구/실물/강한 비교군/검증 방법·필수 하한과 초과 목표/독립 증거/반례/보완 경로/종료 조건을 사전 확정하고 평가기 자체 검증. 모든 필수 조건과 부모 통합 평가 통과 전 승격 금지. 미달은 능동 보완 또는 후보 제외; 임의 점수/기준 하향 금지.

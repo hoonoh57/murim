@@ -1,3 +1,40 @@
+## 활성 인계 — 2026-11-24 | 다음 세션은 여기서 시작
+
+**이 절이 모든 과거 인계의 실행 순서보다 우선한다.** 직전 설계 기준 `064e99bcaac338ce148990d6fe21a689e1fc0d47`; 실제 main HEAD는 시작 시 다시 확인한다. 현재는 제품 개발이 아닌 선행 설계 입증 단계다. 사용자가 "계속", "다음" 또는 유사 표현으로 요청하면 아래 미완료 작업을 복구하여 진행한다. 채팅 기억이나 사용자 재설명에 의존하지 않는다.
+
+### 1. 복구 순서
+
+1. 중앙 [agent](https://github.com/hoonoh57/agent)의 AGENTS.md, docs/LOCAL_CRUD_PORTABILITY_GUIDE.md, docs/EXECUTION_RUNBOOK.md, docs/CURRENT_STATE.md, docs/SESSION_HANDOFF.md에서 프로젝트별 실행 경로와 권한·연결 상태 확인. Murim은 GitHub 원본/Windows 실행형이며 Windows 직접 수정형 일반 규칙을 기계적으로 적용하지 않는다.
+2. Murim main의 실제 HEAD/branch 및 작업 대상 변경 확인, 로컬 작업공간/사용자 변경은 실제 연결 시에만 확인. [AGENTS](../AGENTS.md) → [CURRENT_STATE](CURRENT_STATE.md) 활성 상태 → 이 활성 인계.
+3. [D0~D5 제품 코딩 선행 게이트](MURIM_PRECODE_DESIGN_GATE.md) → [통합 심사/집중 실행 계약](MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md) → [15개 공정 원장](research/assurance/STAGE_ACCEPTANCE_REGISTER.md) → [5축](MURIM_FIVE_AXIS_ARCHITECTURE.md) / [캐스케이드](MURIM_CASCADING_QUALITY_CONTRACT.md) / [경쟁우위](MURIM_COMPETITIVE_EVOLUTION_CONTRACT.md).
+4. 분야별 실제 다음 작업의 문서와 원본 증거를 읽는다. 시장: [선행 MARKET-M0~M6](MURIM_PREPRODUCTION_MARKET_GATE.md), [5개 후보 탈락 근거](research/market-library/PREPRODUCTION_SCREENING_2026-11-24.md). 작품: [라이브러리](MURIM_COMPETITIVE_WORKS_LIBRARY.md), [W009 Gemini 실증](research/works-library/GEMINI_VIDEO_ANALYSIS_PILOT.md). 기술: [라이브러리](MURIM_TECHNOLOGY_INTELLIGENCE_CONTRACT.md), [T001 초기 자료원](research/technology-library/INITIAL_SOURCE_CATALOG_2026-11-24.md). 전문 집필: [상세 설계](skills/screenplay-master/references/production-design-review.md). 실제 시장 검증: [독자·시청자](MURIM_AUDIENCE_VALIDATION_CONTRACT.md), [압축 단편](MURIM_SHORT_FORM_MARKET_VALIDATION.md).
+5. 목적, 현재 증거 수준, 최우선 미해결 가정, 금지사항, 다음 실제 작업을 짧게 요약한 뒤 진행. 이전 원칙을 새로 작성하기보다 기존 원장에 실증 결과를 추가한다.
+
+### 2. 절대 지켜야 할 세션 연속성
+
+- 최종 목표: 단순 동작이 아니라 수익 가능한 시장·소재를 사전 선별하고, 전문 제작기술과 검증된 창작 지식으로 경쟁작 대비 높은 실제 품질·속도·사용성을 달성. 실제 관객과 수익으로 시장 성과 검증.
+- 3개 라이브러리(시장/작품/기술)와 전문 스킬, 독립 평가자. Gemini는 영상·강의 분석의 교체 가능한 후보이며 미실측 분석을 사실로 채택하지 않는다.
+- 전 분야 필수 기준의 AND 통과, 심사관 자체의 독립 검증, 미달 원인별 대안 및 재심사. 기존 유망 후보 5개는 현재 revision 제외, 과거 수동 순위·100점 가중치 부활 금지. 검증된 결과만 immutable baseline으로 확정, 새 반증·유의미한 조건 변경에 한해 영향 범위만 재심사.
+- **전체 D0~D5 DESIGN_OK 전 모든 신규 제품 코드 동결.** 과거 M1-B 착수/구조 마이그레이션/UI 구현 계획은 실행 금지. 문서 작성·검색·후보 등록을 실증이나 합격으로 표시 금지. 실제 공개/투자/권리 및 기존 G1~G4 인간 승인 유지.
+- 5축 책임 유지. 원본 보존, CAS/비강제 Git 변경, Windows 사용자 파일·인코딩·인증정보 보호. GitHub 원격 문서 변경과 실제 Windows 실행 검증을 분리.
+- 미확인 항목을 이유로 반복적인 원칙 문서만 작성하지 않는다. 실제 가능한 근거 확보/대체 전략/작은 사전 비교를 수행하고 실패 원인 및 다음 반증을 기록. 권한을 우회하거나 가짜 외부 평가/비용/시장 수치를 만들지 않는다.
+
+### 3. 다음 실행 큐 (이번 인계의 우선순위 제안, 제품 코드 변경 없음)
+
+**Q1 — A01 시장 선별기의 실제 자료 실현성 및 반증 (첫 작업).** 기존 MARKET-M0~M6, 5개 후보 제외 사유를 입력으로, 적법한 공개 실제 정산/계약·비용·실패 자료 또는 동의된 창작자 자료원 중 동종 신규 제작자의 결과 분포를 확보할 수 있는 경로를 조사한다. 가능한 공개 자료는 직접 열람하여 지표 정의·기간·모집단·실제 수취/총비용·접근 조건을 기록. 실제 필요한 변수가 빠진 자료는 매출 proxy로 대체하지 않는다. 하나의 구체적인 세그먼트에서 기존 gate에 적용 가능한 실제 증거를 만들거나, 불가하면 접근 가능한 다른 수익 경로/시장으로 대체 검토하여 반증 결과를 남긴다. 완료 조건: 실제 출처와 근거로 해당 후보의 수익/실현성 판단이 어디까지 가능한지, 무엇이 탈락·보완되는지 명시. 자료 미확보 상태에서 순위/성공률/수익 추정 생성 금지.
+
+**Q2 — A02 W009 작품 분석 실증.** Spring 공식 영상/제작 자료의 접근·권리 재확인, 기존 Gemini 연결/권한과 실제 영상 입력 가능 여부 확인. 이미 작성한 [prompt](research/works-library/VIDEO_ANALYSIS_PROMPT_V1.md) 및 schema를 사용해 실제 결과 확보 가능한 경우 원문·시간축·근거·미관측 범위를 검증. Gemini 접근 불가 시 적법하게 접근할 수 있는 제작 원자료 또는 기존 영상 분석 방법을 사용해 관측 가능한 범위의 실제 분석 기록 작성(전편 관측으로 승격 금지). 독립 평가/관객 반응 가설과 관측 구분. 작품 후보를 더 나열하는 것으로 완료 처리 금지.
+
+**Q3 — A03 T001 기술 강의 실증.** [기술 prompt](research/technology-library/TECHNOLOGY_ANALYSIS_PROMPT_V1.md), schema 및 T001/T002/T003 원출처 활용. 실제 영상 입력이 가능하면 강의에서 관측된 설정/노드/버전·시간 위치·한계를 추출. 불가하면 공식 workflow/release/model card의 확인 가능한 실제 설정/의존/제약과 재현 조건부터 기록. 사용자 RTX4070 Laptop 8GB의 현재 장비·버전은 재확인 전 추정 금지. 기존 엔진 실제 실험은 권한·연결 확보 시에만, 무단 설치/유료 요청 금지. 재현·품질·시간·비용 미실측은 분리.
+
+**Q4 — A15 평가기 타당성.** Q1~Q3에서 실제 확보한 자료의 좋은/나쁜/경계/누락·허위 근거 반례를 분리하여 독립 평가기의 기준과 참조 답안을 고정하고 실제 접근 가능한 기존 평가 도구로 비교. 독립 전문가/관객/다른 모델 미확보 상태에서 자기 평가를 독립 합격으로 표시 금지. 후보의 기준·평가자의 false accept·근거 추적·불확실성 및 실제 선별 효과를 검증. 실제 실증 이전에 합격선/표본을 고정하며 결과에 맞춰 낮추지 않는다.
+
+Q1~Q4는 접근 가능성에 따라 상호 보완하여 진행 가능. 차단된 작업의 같은 시도를 반복하지 말고, 다음 가능한 독립 실제 근거 작업을 수행한다. 이후 A04~A14 상세 dossier와 대표 난제, D0~D5 전체 반대심사. 제품 코딩 동결 해제는 전체 실제 설계 증거 충족 시에만 가능. 현재 투자 후보 0, 15개 공정 전체 NOT_QUALIFIED.
+
+### 4. 세션 종료 체크포인트
+
+실제 변경/출처·입력·결과/실행 환경·검증 범위/판정/실패 분류 및 원인/권한 또는 접근 장애/다음 작업을 CURRENT_STATE 최신 절에 기록. SESSION_HANDOFF의 활성 큐에는 완료 항목과 다음 실행 항목만 갱신하고 기존 역사 로그를 보존. AGENTS는 불변 원칙과 복구 포인터만 유지한다. 원격 GitHub 문서 변경은 CAS 및 변경 경로/UTF-8/원문 보존 readback으로 확인. 실물 검증과 문서 검증을 혼동하지 않는다. 실제 Windows 연결·Gemini·정기 수집·외부 평가·실제 시장 데이터가 없는 상태에서 완료를 선언하지 않는다. 세션 밖 자동 실행/백그라운드 진행을 주장하지 않는다.
+
 ## 2026-11-24 — 최우선 인계: 전 공정 선행 입증·집중 실행
 
 [통합 심사 계약](MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md) → [공정별 심사 원장](research/assurance/STAGE_ACCEPTANCE_REGISTER.md) → D0~D5 및 시장/작품/기술/5축 계약. 모든 공정에 필수 기준·비교/독립 증거/평가기 검증·반증/보완/종료조건. 합격 baseline 유지, 유의미한 반증/조건 변경만 영향 범위 재심사. 초기 15행 전체 NOT_QUALIFIED; 실제 보정·독립 실증 없음. 기존 자료 확보와 A01/A02/A03/A15 선행 실증, 분야별 dossier. 제품 코딩 동결 유지.
