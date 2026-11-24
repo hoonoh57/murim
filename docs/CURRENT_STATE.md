@@ -1,3 +1,9 @@
+## 2026-11-24 — Q3 / A03 공식 LTX-2.5 워크플로 정적 실증 (부분 증거 추가)
+
+- [Q3 기술 원장](research/technology-library/Q3_LTX25_OFFICIAL_GRAPH_EVIDENCE_2026-11-24.md): 원저자 README/CHANGELOG 및 실제 Single-stage/A2V/Union Control JSON 3개 blob 파싱, 상위 입력 연결·frame expression·동결 음성·모델 의존 및 README/실제 graph 불일치 확인. Q4 반례 R09~R14(누적 14건) 확보. 실제 강의/실행/독립 평가와 구분.
+- 공식 일반 32GB+ VRAM 조건과 과거 8GB 목표 비교; 현 장비·설치·권리·가중치·실행·한국어/검술 품질/시간/원가 미확인. Gemini/영상 NOT_RUN/NOT_OBSERVED, A03 NOT_QUALIFIED / TECHNOLOGY_INTELLIGENCE_HOLD. 제품 코드 및 Windows 변경 0. Q1/Q2 미달 유지.
+- 다음 Q4 A15 평가자 기준/고정 참조 답안과 실제 접근 가능한 평가 경로 비교. Q3는 승인된 실제 환경과 동등 비교 증거 확보 시 재개. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — Q2 / A02 W009 원저자 제작 기록 분석 (부분 증거 추가)
 
 - [W009 실제 제작 기록 원장](research/works-library/Q2_W009_SPRING_SOURCE_EVIDENCE_2026-11-24.md): David Revoy 2017 사전 제작 및 2019 공개 원문 직접 대조(도입부 삭제 등), Blender Studio 제작 일지/공개 자료 검색 본문 4건. 장면 존치·프리비즈·난제 사전 시험·revision 증거 보존의 연구용 지식 후보 및 Q4 반례 R05~R08 등록. 실제 관객/기여도/독립 평가 없음.
