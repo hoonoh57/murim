@@ -1,3 +1,7 @@
+## 2026-11-24 — 최우선 인계: 최신 제작기술 연구 라이브러리
+
+[기술 연구 계약](MURIM_TECHNOLOGY_INTELLIGENCE_CONTRACT.md) 및 technology-library/ 초기 카탈로그·prompt·schema를 읽는다. 별도 뉴스/강의/연구 지식, 후보 11건, 실제 Gemini 영상 분석/정기 수집/실증 0. T001 LTX-2.5 강의 및 W009 작품 분석의 실제 기존 도구 반환/검증 경로 우선. 최신성/홍보와 실제 성능 분리, 권한·비용·권리·현행 버전 보호. D0~D5 전체 OK 이전 제품 코딩 금지. DESIGN_HOLD / PRODUCT_CODING_FROZEN.
+
 ## 2026-11-24 — 최우선 인계: Gemini 영상 분석 후보
 
 [Gemini 사전 실증](research/works-library/GEMINI_VIDEO_ANALYSIS_PILOT.md) 및 공통 prompt/schema 후보 확인. 공식 기능과 W009 URL 확인만 완료. 실제 호출/응답/영상 관측/검증 NOT_RUN. 기존 도구로 1건부터 실증, 대량 수집 전 품질 확인. 권한/비용 및 5축/설계 동결 유지. 사용자에게 루틴 구현 결정 요구 금지.

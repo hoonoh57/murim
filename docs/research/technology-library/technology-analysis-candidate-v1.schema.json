@@ -1,0 +1,586 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Murim technology analysis candidate v1 (unverified provider output)",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "source_kind": {
+      "type": "string",
+      "enum": [
+        "VIDEO_TUTORIAL",
+        "RELEASE",
+        "PAPER",
+        "DOCS",
+        "MODEL_CARD",
+        "PRODUCTION_BREAKDOWN",
+        "OTHER"
+      ]
+    },
+    "analysis_status": {
+      "type": "string",
+      "enum": [
+        "CANDIDATE",
+        "PARTIAL",
+        "NOT_OBSERVED"
+      ]
+    },
+    "observed_modalities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "VISUAL",
+          "AUDIO",
+          "TEXT",
+          "CODE",
+          "METADATA"
+        ]
+      }
+    },
+    "coverage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "end_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "locator": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OBSERVED_SAMPLED",
+              "OBSERVED_TEXT",
+              "PARTIAL",
+              "NOT_OBSERVED"
+            ]
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "start_ms",
+          "end_ms",
+          "locator",
+          "status",
+          "limitations"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "technology_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "capability": {
+            "type": "string"
+          },
+          "production_problem": {
+            "type": "string"
+          },
+          "method_summary": {
+            "type": "string"
+          },
+          "source_claim_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "prerequisites": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "role": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "version",
+                "role"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "input_contract_candidate": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "output_contract_candidate": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "settings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "unit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "evidence_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "name",
+                "value",
+                "unit",
+                "evidence_ids"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "recipe_steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "order": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "action": {
+                  "type": "string"
+                },
+                "expected_result": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "evidence_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "unknowns": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "order",
+                "action",
+                "expected_result",
+                "evidence_ids",
+                "unknowns"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "rights_questions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "failure_modes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "applicability": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "integration_questions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "benchmark_questions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "version",
+          "capability",
+          "production_problem",
+          "method_summary",
+          "source_claim_ids",
+          "prerequisites",
+          "dependencies",
+          "input_contract_candidate",
+          "output_contract_candidate",
+          "settings",
+          "recipe_steps",
+          "rights_questions",
+          "limitations",
+          "failure_modes",
+          "applicability",
+          "integration_questions",
+          "benchmark_questions"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "start_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "end_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "locator": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "modality": {
+            "type": "string",
+            "enum": [
+              "VISUAL",
+              "AUDIO",
+              "TEXT",
+              "CODE",
+              "METADATA"
+            ]
+          },
+          "observation": {
+            "type": "string"
+          },
+          "precision": {
+            "type": "string",
+            "enum": [
+              "APPROXIMATE",
+              "EXACT_TEXT_LOCATOR",
+              "FRAME_VERIFIED",
+              "UNKNOWN"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "source_url",
+          "start_ms",
+          "end_ms",
+          "locator",
+          "modality",
+          "observation",
+          "precision"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "PUBLISHER_CLAIM",
+              "DEMO_OBSERVATION",
+              "THIRD_PARTY_CLAIM",
+              "ANALYST_HYPOTHESIS"
+            ]
+          },
+          "statement": {
+            "type": "string"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "verification_needed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "statement",
+          "evidence_ids",
+          "verification_needed"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "reported_measurements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "metric": {
+            "type": "string"
+          },
+          "value": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "PUBLISHER_REPORTED",
+              "DEMO_REPORTED",
+              "THIRD_PARTY_REPORTED",
+              "UNKNOWN"
+            ]
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "metric",
+          "value",
+          "unit",
+          "conditions",
+          "origin",
+          "evidence_ids"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "recommended_comparisons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "candidate_id": {
+            "type": "string"
+          },
+          "baseline": {
+            "type": "string"
+          },
+          "controlled_inputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unknowns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "candidate_id",
+          "baseline",
+          "controlled_inputs",
+          "metrics",
+          "unknowns"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "followup_ranges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "end_ms": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "locator": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_ms",
+          "end_ms",
+          "locator",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "missing_information": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "source_id",
+    "source_url",
+    "source_kind",
+    "analysis_status",
+    "observed_modalities",
+    "coverage",
+    "limitations",
+    "technology_candidates",
+    "evidence",
+    "claims",
+    "reported_measurements",
+    "recommended_comparisons",
+    "followup_ranges",
+    "missing_information"
+  ],
+  "additionalProperties": false
+}

@@ -72,5 +72,9 @@ Alpha 후보: 전문 수준의 실제 산출물 + 적은 사용자 기술 개입
 
 [경쟁작 라이브러리](MURIM_COMPETITIVE_WORKS_LIBRARY.md)는 D0의 비교 모집단/시장 언어, D2의 전문 제작 입력, D3의 평가 기준/반례, D4의 실제 지식 적용 효과 검증에 필수. 상·중·하의 실제 작품과 관측 및 근거를 비교하고 해당 작가 pack을 사전 확정. 원천 후보만 확보한 상태에서는 KNOWLEDGE_HOLD. 제품 코드 동결 유지.
 
+### 5.4 최신 기술 정보의 설계 선행 입력
+
+[기술 연구 라이브러리](MURIM_TECHNOLOGY_INTELLIGENCE_CONTRACT.md)에서 최신 공식 릴리스/교육·실제 워크플로·원저자 연구/실패 근거를 확인하고 D0~D4에 활용한다. 기술 후보의 출처/실제 재현/목표 환경 비교 및 최신성/권리/호환 검증 분리. Gemini 강의 분석 후보 및 표준 데이터 준비, 실증 미실행. 전체 D0~D5 OK 전 제품 코딩 금지.
+
 ## 7. 다음 작업
 제품 코딩 재개 금지. [시나리오 전문 생산 상세 설계 심사](skills/screenplay-master/references/production-design-review.md)를 첫 대상 dossier로 발전. 각본 고위험 가정·평가자 보정·권리 확보 전문 원고/경쟁 앱/강한 LLM 대비 기존 도구로 실증할 수 있는 경로를 조사한다. 이어 모든 단위에 동일 절차를 적용하고 전체 설계 심사 완료 전 M1-B를 시작하지 않는다. 현 상태 DESIGN_HOLD, 전체 REMEDIATION_REQUIRED.

@@ -1,3 +1,8 @@
+## 2026-11-24 — 최신 제작기술 연구 라이브러리 설계
+
+- 사용자 확정: 최첨단 제작기술 뉴스·강의·소개를 별도로 수집하고 Gemini 등으로 분석·자료화하여 품질/시간/비용의 경쟁우위를 유지. [기술 연구 계약](MURIM_TECHNOLOGY_INTELLIGENCE_CONTRACT.md), [초기 자료원](research/technology-library/INITIAL_SOURCE_CATALOG_2026-11-24.md), [기술 분석 프롬프트](research/technology-library/TECHNOLOGY_ANALYSIS_PROMPT_V1.md), 후보 JSON schema 추가. 실제 공식 자료 및 연구 후보 11건 등록. 날짜/버전/주장·실측/재현·채택 분리, 매일 발견/주간 비교는 설계 정책. 작품 라이브러리와 별도.
+- T001 LTX-2.5 강의 실증 후보, T002/T003 공식 release/워크플로 교차 확인. 실제 Gemini 호출/전편 분석/정기 수집/API/DB/실물 비교 NOT_RUN/NOT_CONNECTED. 신규 제품 코드 없음. 다음 W009 작품 및 T001 기술 강의의 실제 분석 반환·검증 및 재현 조건 확인. TECHNOLOGY_INTELLIGENCE_HOLD / KNOWLEDGE_HOLD / DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — Gemini 영상 분석 사전 실증 준비
 
 - 공식 영상 이해/YouTube URL/JSON 구조화 출력 확인. W009 Spring 공식 영상 URL 및 CC BY 4.0 안내 확인. 공통 분석 프롬프트 v1, 공급자 무관 선언적 JSON Schema 후보, 전편/정밀/독립 검증 계획 작성. 시간축·근거 ID·감정 가설/시장 관측 분리. [실증 계획](research/works-library/GEMINI_VIDEO_ANALYSIS_PILOT.md).
