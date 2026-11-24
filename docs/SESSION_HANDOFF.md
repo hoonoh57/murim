@@ -1,3 +1,9 @@
+## 활성 인계 — 2026-11-25 A08 설계 비교 반영 (최우선)
+
+[A08 D2 상세 설계](research/assurance/A08_VOICE_PERFORMANCE_DESIGN_2026-11-25.md) 및 D0~D5 연결. A81~A86 GAP 및 전문 음성/연기/시간 정렬/립싱크 계약 구체화; A08 NOT_QUALIFIED, 실제/독립 검증 미실행. 기존 v2 원본 보존. 사용자 확정 로직·베스트 프랙티스 선행 비교 목적 및 5축 불변.
+
+**다음 실행 A09 — 음악·효과·믹싱 로직/기반기술 비교 및 설계 개선.** 실제 src/studio/render.py, workspace.py 및 현재 음향 연결/믹싱의 처리 흐름을 확인하고 공식 FFmpeg/EBU loudness, 전문 stem/ducking/효과·권리/채널별 납품 기준과 대조. GAP→Adopt/Compose/Build→입출력/시간/검증/복구/5축 상세 설계 반영. 예시 콘텐츠 제작 반복 금지, 미실측/독립 검증 HOLD. 이후 A10~A14, 선행 A01~A06/A15 설계 반영 역대조 및 통합. 코드 동결과 모든 품질 게이트 유지. A07/A08 재개는 실제 목표환경·독립 비교 증거 확보 시.
+
 ## 활성 인계 — 2026-11-25 A07 설계 비교 반영 (최우선)
 
 AGENTS 2026-11-25 목적 유지: 코딩 전 로직·기반기술을 베스트 프랙티스와 비교하여 설계 보완. [A07 D2 상세 설계](research/assurance/A07_VIDEO_PRODUCTION_DESIGN_2026-11-25.md) 및 [D0~D5](MURIM_PRECODE_DESIGN_GATE.md) 연결. V1~V6 GAP 비교/설계 반영, A07 NOT_QUALIFIED; 실제 영상/목표 GPU/독립 심사 미실행.

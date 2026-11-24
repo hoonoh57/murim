@@ -1,3 +1,8 @@
+## 2026-11-25 — A08 음성·연기·립싱크 로직 GAP 및 D2 상세 설계 개선
+
+- [A08 설계](research/assurance/A08_VOICE_PERFORMANCE_DESIGN_2026-11-25.md): 현재 voice.py/worker/workspace와 공식 GPT-SoVITS 한국어 G2P/API, Qwen3-TTS variant, Whisper, 한국어 MFA, MuseTalk 및 기존 LTX G02 비교. A81~A86 GAP, VoiceProfile/UtterancePlan/immutable take, 발음·독립 ASR/정렬·화자별 A/V sync·국소 무효화와 5축 책임 설계. 기존 v2 원본 및 운영 계약 보존; Qwen은 비교 후보, 교체 아님.
+- 실제 한국어 발음·성우 연기·정체성·립싱크·권리/비용/Windows 실측 및 독립 평가 미확보. A08 NOT_QUALIFIED, D2 보완안; 전체 게이트/코드 동결 유지. 다음 A09 음악·효과·믹싱 설계 비교. 신규 제품 코드 0. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-25 — A07 영상 제작 로직·기반기술 GAP 및 D2 상세 설계 개선
 
 - [A07 설계](research/assurance/A07_VIDEO_PRODUCTION_DESIGN_2026-11-25.md): 실제 comfy.py/web.py/director_simple.py 및 WAN/LTX graph 원본과 LTX sampler/공식 workflow/ComfyUI server 원저자 소스 비교. V1~V6 GAP. 다중 조건 shot plan, typed recipe, preview/refine, targeted repair, 비동기 attempt/reconcile, 독립 품질 검증의 목표 로직 및 5축 책임 구체화. D0~D5 권위 문서에 연결. 신규 제품 코드 0.
