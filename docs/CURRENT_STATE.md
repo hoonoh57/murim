@@ -1,3 +1,9 @@
+## 2026-11-24 — A06 캐릭터·미술·자산 생성/일관성 반증 (부분 실증)
+
+- [A06 원장](research/assurance/A06_01_ASSET_EVIDENCE_2026-11-24.md), [자산 매핑](research/assurance/a06-01/ASSET_MANIFEST.json): 원고/타임라인/사전 자산 조건 pin, 8자산/13쇼트 선언 참조 매핑, 실제 이미지 3회 및 PNG/해시 검증. I01 다각도 상반신 및 소품 후보, 정확한 장부/붓/전신 등 미달. I02/I03 요청과 다른 생성 보고서, 의상·화풍·소품 drift, 본명 서명 오류 및 허위 PASS/유사도 수치 발견하여 격리. R15/R16 추가 반례 후보(기존 Q4 고정 집합 불변). 미디어는 대화 첨부/원장 해시, 원격 바이너리 없음.
+- 독립 정체성/조명/연속 쇼트/전문 미술 비교/실제 권리·ComfyUI 미검증. A06 NOT_QUALIFIED. I01 연구 후보만, I02/I03 증거/자산 채택 금지. 선행 미달 유지. 제품 코드/Windows 변경 없음.
+- 다음 A07 동작·영상·연기: 연구 원고/타임라인의 손-붓-장부/문/약상자 난제와 실제 접근 가능한 기존 실행, 독립 정체성·물리·연속성·비용 비교. A06 재개는 실제 일관성/권리/독립 검증 확보 시. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-24 — A05 스토리보드·도식 프리비즈 실제 렌더/동선 수정 (부분 실증)
 
 - [A05-01 원장](research/assurance/A05_01_PREVIS_EVIDENCE_2026-11-24.md), [쇼트 타임라인](research/assurance/a05-01/SHOT_TIMELINE_R2.json): A04 B r2 원고 pin, 20개 본문 줄/13컷/11 대사 cue 전수 대응, 실제 무음 도식형 MP4 r1/r2 및 contact sheet 제작. FFmpeg 83초/24fps/1992 frames/960x540 두 영상 디코딩 확인. 70초 인물 도식 겹침·75초 위치 점프 발견, S12~S13만 수정. 앞 1656 decoded frame hashes 동일, 뒤 336 중 250 변경. 실제 미디어 대화 첨부, GitHub에는 타임라인/파일 해시 및 연구 원장 저장(바이너리·정확한 렌더 스크립트 미저장).

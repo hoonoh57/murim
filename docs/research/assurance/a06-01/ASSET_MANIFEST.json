@@ -1,0 +1,436 @@
+{
+  "id": "A06-01",
+  "status": "RESEARCH_ONLY_NOT_APPROVED",
+  "screenplay_blob": "1d29bae951a7a83085213ffc08c07303700e6edb",
+  "timeline_blob": "7cf100923aa018dbdf5183a1be82f8dcf98ee478",
+  "predefined_design_blob": "b363ac9f1c595ab0fde32997057da227074771b6",
+  "assets": [
+    {
+      "id": "C01",
+      "name": "도윤",
+      "status": "REFERENCE_CANDIDATE_PARTIAL",
+      "missing": [
+        "full_body",
+        "brown_belt",
+        "independent_view",
+        "independent_light_expression"
+      ]
+    },
+    {
+      "id": "C02",
+      "name": "소연",
+      "status": "REFERENCE_CANDIDATE_PARTIAL",
+      "missing": [
+        "full_body",
+        "independent_view",
+        "independent_light_expression",
+        "carrying_chest"
+      ]
+    },
+    {
+      "id": "P01",
+      "name": "약상자",
+      "status": "REFERENCE_CANDIDATE_PARTIAL",
+      "missing": [
+        "hand_contact",
+        "carry_continuity"
+      ]
+    },
+    {
+      "id": "P02",
+      "name": "장부",
+      "status": "REWORK",
+      "missing": [
+        "exact_header_보증인 본명",
+        "blank_closed_signed_states",
+        "exact_signature_백무진"
+      ]
+    },
+    {
+      "id": "P03",
+      "name": "붓",
+      "status": "REWORK",
+      "missing": [
+        "black_bristles",
+        "hand_contact"
+      ]
+    },
+    {
+      "id": "P04",
+      "name": "종",
+      "status": "REFERENCE_CANDIDATE_PARTIAL",
+      "missing": [
+        "fixed_mount_verification",
+        "actual_motion_and_audio"
+      ]
+    },
+    {
+      "id": "P05",
+      "name": "관문",
+      "status": "REFERENCE_CANDIDATE_PARTIAL",
+      "missing": [
+        "matched_open_closed",
+        "hand_contact"
+      ]
+    },
+    {
+      "id": "E01",
+      "name": "관문 내부",
+      "status": "REFERENCE_CANDIDATE_PARTIAL",
+      "missing": [
+        "matching_layout_across_shots",
+        "chest_location_by_shot"
+      ]
+    }
+  ],
+  "shots": [
+    {
+      "id": "S01",
+      "start_frame": 0,
+      "end_frame_exclusive": 120,
+      "required_scene_assets": [
+        "C01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "장면 공간 내 존재/의상·소유 상태, 모든 자산이 항상 화면에 보인다는 뜻 아님",
+      "source_lines": [
+        7
+      ],
+      "declared_end_state": {
+        "so": "empty",
+        "book": "open_blank",
+        "door": "closed"
+      }
+    },
+    {
+      "id": "S02",
+      "start_frame": 120,
+      "end_frame_exclusive": 216,
+      "required_scene_assets": [
+        "C01",
+        "C02",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "장면 공간 내 존재/의상·소유 상태, 모든 자산이 항상 화면에 보인다는 뜻 아님",
+      "source_lines": [
+        9
+      ],
+      "declared_end_state": {
+        "so": "right",
+        "book": "open_blank",
+        "door": "closed"
+      }
+    },
+    {
+      "id": "S03",
+      "start_frame": 216,
+      "end_frame_exclusive": 408,
+      "required_scene_assets": [
+        "C01",
+        "C02",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "장면 공간 내 존재/의상·소유 상태, 모든 자산이 항상 화면에 보인다는 뜻 아님",
+      "source_lines": [
+        11,
+        13
+      ],
+      "declared_end_state": {
+        "so": "right",
+        "book": "open_blank",
+        "door": "closed"
+      }
+    },
+    {
+      "id": "S04",
+      "start_frame": 408,
+      "end_frame_exclusive": 576,
+      "required_scene_assets": [
+        "C01",
+        "C02",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "장면 공간 내 존재/의상·소유 상태, 모든 자산이 항상 화면에 보인다는 뜻 아님",
+      "source_lines": [
+        15,
+        17
+      ],
+      "declared_end_state": {
+        "so": "right",
+        "book": "open_blank",
+        "door": "closed"
+      }
+    },
+    {
+      "id": "S05",
+      "start_frame": 576,
+      "end_frame_exclusive": 768,
+      "required_scene_assets": [
+        "C01",
+        "C02",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "장면 공간 내 존재/의상·소유 상태, 모든 자산이 항상 화면에 보인다는 뜻 아님",
+      "source_lines": [
+        19,
+        21
+      ],
+      "declared_end_state": {
+        "so": "right",
+        "book": "closed_blank",
+        "door": "closed"
+      }
+    },
+    {
+      "id": "S06",
+      "start_frame": 768,
+      "end_frame_exclusive": 864,
+      "required_scene_assets": [
+        "C01",
+        "C02",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "장면 공간 내 존재/의상·소유 상태, 모든 자산이 항상 화면에 보인다는 뜻 아님",
+      "source_lines": [
+        23
+      ],
+      "declared_end_state": {
+        "so": "right",
+        "book": "closed_blank",
+        "door": "closed"
+      }
+    },
+    {
+      "id": "S07",
+      "start_frame": 864,
+      "end_frame_exclusive": 1104,
+      "required_scene_assets": [
+        "C01",
+        "C02",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "장면 공간 내 존재/의상·소유 상태, 모든 자산이 항상 화면에 보인다는 뜻 아님",
+      "source_lines": [
+        25
+      ],
+      "declared_end_state": {
+        "so": "right",
+        "book": "closed_blank",
+        "door": "closed"
+      }
+    },
+    {
+      "id": "S08",
+      "start_frame": 1104,
+      "end_frame_exclusive": 1224,
+      "required_scene_assets": [
+        "C01",
+        "C02",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "장면 공간 내 존재/의상·소유 상태, 모든 자산이 항상 화면에 보인다는 뜻 아님",
+      "source_lines": [
+        27,
+        29
+      ],
+      "declared_end_state": {
+        "so": "turned",
+        "book": "closed_blank",
+        "door": "closed"
+      }
+    },
+    {
+      "id": "S09",
+      "start_frame": 1224,
+      "end_frame_exclusive": 1320,
+      "required_scene_assets": [
+        "C01",
+        "C02",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "장면 공간 내 존재/의상·소유 상태, 모든 자산이 항상 화면에 보인다는 뜻 아님",
+      "source_lines": [
+        31
+      ],
+      "declared_end_state": {
+        "so": "turned",
+        "book": "open_blank",
+        "door": "closed"
+      }
+    },
+    {
+      "id": "S10",
+      "start_frame": 1320,
+      "end_frame_exclusive": 1536,
+      "required_scene_assets": [
+        "C01",
+        "C02",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "장면 공간 내 존재/의상·소유 상태, 모든 자산이 항상 화면에 보인다는 뜻 아님",
+      "source_lines": [
+        33,
+        35
+      ],
+      "declared_end_state": {
+        "so": "turned",
+        "book": "open_blank",
+        "door": "closed"
+      }
+    },
+    {
+      "id": "S11",
+      "start_frame": 1536,
+      "end_frame_exclusive": 1656,
+      "required_scene_assets": [
+        "C01",
+        "C02",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "장면 공간 내 존재/의상·소유 상태, 모든 자산이 항상 화면에 보인다는 뜻 아님",
+      "source_lines": [
+        37,
+        39
+      ],
+      "declared_end_state": {
+        "so": "right",
+        "book": "open_signed",
+        "door": "closed"
+      }
+    },
+    {
+      "id": "S12",
+      "start_frame": 1656,
+      "end_frame_exclusive": 1800,
+      "required_scene_assets": [
+        "C01",
+        "C02",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "소연 및 약상자는 통과 후 화면 밖; 장면 존재 여부와 가시성 구분",
+      "source_lines": [
+        41
+      ],
+      "declared_end_state": {
+        "so": "exit",
+        "book": "open_signed",
+        "door": "open"
+      }
+    },
+    {
+      "id": "S13",
+      "start_frame": 1800,
+      "end_frame_exclusive": 1992,
+      "required_scene_assets": [
+        "C01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "E01"
+      ],
+      "presence_note": "소연/약상자 화면 밖; 해당 shot에 재등장 금지",
+      "source_lines": [
+        43,
+        45
+      ],
+      "declared_end_state": {
+        "so": "absent",
+        "book": "open_signed",
+        "door": "closed"
+      }
+    }
+  ],
+  "media": [
+    {
+      "id": "I01",
+      "status": "PARTIAL_REFERENCE_NOT_APPROVED",
+      "gen_id": "1414ad84-1e10-4678-a2ad-f2daabb3c268",
+      "filename": "a_highly_detailed_polished_3d_character_asset_ref.png",
+      "sha256": "dd55540f026495a407199a0b1a47a71e3a3e819bfb7c97d6b6dfd7915cf4b44c",
+      "bytes": 2316829,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "I02",
+      "status": "QUARANTINED_GENERATED_REPORT_NOT_EVIDENCE",
+      "gen_id": "6667e50d-7791-4ac4-ac83-27a2a4cdfff3",
+      "filename": "a_detailed_polished_infographic_design_sheet_in.png",
+      "sha256": "8ec4ef09bd49fff3d9c8015fecb81edaa8661b69ee7eec3bf422364aea70d1d9",
+      "bytes": 2490552,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "I03",
+      "status": "QUARANTINED_GENERATED_REPORT_NOT_EVIDENCE",
+      "gen_id": "e10eee3b-f35d-4dff-a4e9-34ff39212184",
+      "filename": "a_detailed_infographic_presentation_board_image.png",
+      "sha256": "1cb173ac5c00519de2372d186c14dee99a255b86880f227600b7a6c85f9eefcf",
+      "bytes": 2569641,
+      "width": 1536,
+      "height": 1024
+    }
+  ],
+  "limits": "manifest links declared assets to all 13 timeline shots, not image visibility verification; images generated in ChatGPT, no ComfyUI, actual independent identity/face metrics/lighting/continuity test NOT_RUN. Two rejected images contain fabricated QA results; never ingest their labels or metrics as evidence."
+}
