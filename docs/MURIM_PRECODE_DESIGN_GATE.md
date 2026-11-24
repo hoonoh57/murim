@@ -88,5 +88,9 @@ Alpha 후보: 전문 수준의 실제 산출물 + 적은 사용자 기술 개입
 
 [통합 심사 계약](MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md) 및 [공정별 원장](research/assurance/STAGE_ACCEPTANCE_REGISTER.md) 적용. 모든 D0~D5의 필수 요구-판정-실제 증거 추적, 평가기 독립 검증, 미달 보완/종료조건, 합격된 baseline 및 변경 조건을 설계에 반영. 초기 공정 15행 전체 NOT_QUALIFIED, 수치 보정/실물 독립 검증 전 설계 OK 금지.
 
+## 6.1 분야별 상세 생산 설계 보완 (2026-11-25)
+
+- [A07 영상 제작 로직·기반기술 비교 및 목표 설계](research/assurance/A07_VIDEO_PRODUCTION_DESIGN_2026-11-25.md): 실제 현재 adapter와 원저자 소스의 V1~V6 GAP, 다중 조건/시간축, typed recipe, preview/refine, 국소 수정, 비동기 실행 및 불확실 상태 복구, 5축 책임의 D2 상세 설계 입력. 이후 구현 설계 시 적용하며 D1/D3/D4/D5 검증 및 전체 승인 전 코딩 금지. 기존 계약 및 품질 하한 불변.
+
 ## 7. 다음 작업
 제품 코딩 재개 금지. [시나리오 전문 생산 상세 설계 심사](skills/screenplay-master/references/production-design-review.md)를 첫 대상 dossier로 발전. 각본 고위험 가정·평가자 보정·권리 확보 전문 원고/경쟁 앱/강한 LLM 대비 기존 도구로 실증할 수 있는 경로를 조사한다. 이어 모든 단위에 동일 절차를 적용하고 전체 설계 심사 완료 전 M1-B를 시작하지 않는다. 현 상태 DESIGN_HOLD, 전체 REMEDIATION_REQUIRED.

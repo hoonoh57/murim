@@ -1,3 +1,8 @@
+## 2026-11-25 — A07 영상 제작 로직·기반기술 GAP 및 D2 상세 설계 개선
+
+- [A07 설계](research/assurance/A07_VIDEO_PRODUCTION_DESIGN_2026-11-25.md): 실제 comfy.py/web.py/director_simple.py 및 WAN/LTX graph 원본과 LTX sampler/공식 workflow/ComfyUI server 원저자 소스 비교. V1~V6 GAP. 다중 조건 shot plan, typed recipe, preview/refine, targeted repair, 비동기 attempt/reconcile, 독립 품질 검증의 목표 로직 및 5축 책임 구체화. D0~D5 권위 문서에 연결. 신규 제품 코드 0.
+- A07 실제 영상/목표 GPU/권리·비용/독립 비교 미확보, A07 NOT_QUALIFIED, D2 보완안이지 설계 승인 아님. 기존 품질 기준과 모든 선행 미달 보존. 다음 A08 기존 음성 로직 및 한국어 TTS/연기/립싱크 우수 기반 비교·설계 반영. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-25 — 사용자 목적 재확인: 선행 로직·베스트 프랙티스 비교 및 설계 수렴
 
 - 선행 단계의 목적은 코딩 이전에 현재 로직/설계와 우수 실무·기반기술을 비교하여 설계에 반영하고 대규모 재작업을 예방하는 것. 개별 작품 제작 중심의 진행은 중단하고 실험은 설계 의사결정에 필요한 범위로 제한한다. 장기 원칙은 AGENTS.md의 2026-11-25 절에 반영.
