@@ -1,3 +1,11 @@
+## 2026-11-24 — GPT형 Director UI / 승인 기준 및 후속 검증
+
+- `/studio/simple/` 신규 감독용 UI는 GitHub `hoonoh57/murim` 원본에서 개발. `/studio/`의 실물 사전 제작 G1/G2, 불변 M-VML, 에셋 등록·영상 후보·FFmpeg 경로를 재사용한다.
+- 사용자의 개입 원칙: 시나리오 감수 및 이미지 스토리보드 선정/교환. 검증 전 단계에서만 GPT/ComfyUI 사람매개 프롬프트·실제 파일 업로드. 앱의 완전 자동 제작 버튼은 미검증이라 비활성화.
+- 단계: 프로젝트 생성/열기/이름 변경/보관 → 기존 사전 제작 대화상자에서 독립 심사·승인 → GPT 캐릭터·화풍·장면 후보 업로드/선정 → 확정 시 image 트랙에 asset ID 결속 → 실제 영상 후보 등록·실물 렌더 열람. 자산/승인 이력 원본 보존.
+- 테스트 경계: GitHub 코드 체크포인트 ≠ Windows UI/ComfyUI GPU 제품 PASS. `tests/test_director_simple.py` 및 전체 회귀, 8080 화면 WYSIWYG·실제 LTX 멀티 이미지 검증을 별도로 실행해야 한다.
+- 권위: `AGENTS.md`, `docs/CURRENT_STATE.md`, `docs/DIRECTOR_SIMPLE_UI_20261124.md`.
+
 ## 2026-11-23 — GPT-SoVITS v2 요청/반환 재사용 안내문서
 
 - 목적: 다른 세션에서도 GPT-SoVITS v2의 실제 JSON 인수, 실행 명령, 저장 WAV, Studio API 응답/자산 경로를 추측하지 않고 재현. `docs/GPT_SOVITS_V2_TTS_OPERATIONS.md`를 TTS 호출 SSOT로 추가.

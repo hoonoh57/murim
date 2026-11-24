@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Murim Director · 프롬프트 제작실</title>
+<link rel="stylesheet" href="/static/director_simple.css">
+</head>
+<body data-token="{{ studio_token }}">
+<header class="top"><a class="brand" href="/studio/simple/">MURIM <strong>Director</strong></a><span class="sub">시나리오 → 스토리보드 → 제작</span><a href="/studio/" class="advanced">기존 Studio</a></header>
+<main>
+<div class="projectbar">
+  <select id="projects" aria-label="프로젝트 선택"><option value="">작품 선택</option></select>
+  <button id="reload">열기</button>
+  <input id="newTitle" placeholder="새 작품 제목" maxlength="120" aria-label="새 프로젝트 이름">
+  <button id="create" class="primary">+ 프로젝트</button>
+  <button id="rename">이름 변경</button>
+  <button id="archive">보관</button>
+  <label class="tiny"><input type="checkbox" id="showArchived"> 보관 프로젝트 보기</label>
+</div>
+<p id="message" class="notice" role="status">프로젝트를 선택하거나 새로 만드세요.</p>
+<section id="workspace" hidden>
+<nav class="steps"><button id="stepScenario" data-stage="scenario" class="active">01 · 시나리오 감수</button><button id="stepBoard" data-stage="board">02 · 이미지 스토리보드</button><button id="stepProduction" data-stage="production">03 · 자동 제작</button></nav>
+<div class="layout">
+<div class="left">
+<section class="panel" id="scenarioPanel">
+  <h2>시나리오 감수</h2><p id="editorialStatus" class="status"></p>
+  <div id="scenarioScenes" class="scene-list"></div>
+  <p class="hint">기존 G1/G2 독립 심사 및 명시적 인간 승인 없이는 스토리보드 확정과 제작이 열리지 않습니다.</p>
+  <button id="openEditorial" class="primary">시나리오 검토·승인 열기</button>
+</section>
+<section class="panel" id="boardPanel" hidden>
+  <h2>승인 에셋 · 스토리보드</h2><p class="hint">GPT에서 만든 이미지를 후보로 등록합니다. 시나리오당 하나의 스토리보드를 고른 후 확정합니다.</p>
+  <div class="input-row"><label>이미지 역할<select id="role"><option value="character">주인공·등장인물</option><option value="style">화풍</option><option value="prop">소품</option><option value="location">장소</option><option value="scene">장면 스토리보드</option></select></label>
+  <label id="scenePickLabel" hidden>장면<select id="scenePick"></select></label></div>
+  <form id="imageForm" class="form"><label>GPT 생성 이미지<input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp" required></label>
+  <label>이미지 설명<input id="imageLabel" maxlength="160" placeholder="검을 든 청명 · 시작 자세"></label>
+  <label>생성 출처<input id="imageSource" required placeholder="예: GPT 이미지 / 수동 생성"></label>
+  <label>이용 권한<input id="imageRights" required placeholder="실제로 확인한 사용권"></label>
+  <button class="primary" type="submit">후보 등록</button></form>
+  <div id="candidateGallery"></div>
+  <div class="approve"><p id="boardStatus" class="status"></p><button id="confirmBoard" class="primary">선택한 이미지 스토리보드 확정</button></div>
+</section>
+<section class="panel" id="productionPanel" hidden>
+  <h2>제작 지시 · 진행 상태</h2>
+  <p class="hint">승인된 VML 참조 이미지는 고정됩니다. 검증 전에는 장면별 제작 프롬프트를 사람을 통해 전달하고 실제 결과 파일을 등록합니다.</p>
+  <div id="productionList" class="scene-list"></div>
+  <form id="videoForm" class="form"><h3>실제 생성 영상 등록 (검증 전 임시 경로)</h3>
+    <label>장면<select id="productionScene"></select></label>
+    <label>실제 MP4/WebM/MOV<input id="videoFile" type="file" accept="video/mp4,video/webm,video/quicktime" required></label>
+    <label>출처<input id="videoSource" required placeholder="실제 생성한 모델과 작업 이력"></label>
+    <label>사용권<input id="videoRights" required placeholder="권리 확인 내용"></label>
+    <button type="submit">후보 영상 등록</button>
+  </form>
+  <button id="autoRender" disabled title="멀티 이미지 API 그래프 및 자동 품질 게이트의 실환경 검증 후 활성화">완전 자동 제작 · 실증 후 활성화</button>
+  <p class="hint">기존 ComfyUI 워크플로는 변경하지 않았습니다. <a href="/studio/" target="_blank" rel="noopener">기존 Studio의 신뢰된 ComfyUI 실행 환경</a>을 계속 사용할 수 있습니다.</p>
+</section>
+</div>
+<div class="right">
+<section class="panel prompt">
+  <h2>GPT처럼 장면을 주문하세요</h2>
+  <textarea id="instruction" rows="4" placeholder="예: 청명이 매화36식 마지막 초식으로 마교 교주와 대결한다. 복장과 검은 그대로 유지하고 매화꽃이 화면 전체로 퍼진다."></textarea>
+  <div class="actions"><button id="buildPrompt" class="primary">현재 단계 프롬프트 만들기</button><button id="copyPrompt">프롬프트 복사</button></div>
+  <textarea id="relayText" rows="9" readonly placeholder="GPT와 인간매개 제작 도구에 전달할 프롬프트가 여기에 표시됩니다."></textarea>
+  <p class="hint">이 단계에서 GPT나 ComfyUI를 실제로 호출한 것으로 표시하지 않습니다.</p>
+</section>
+<section class="panel output">
+  <h2>최종 결과물 <small>참조 이미지와 분리</small></h2>
+  <p id="resultStatus" class="hint">최종 영상 없음 · 검증 전</p>
+  <video id="resultVideo" controls playsinline hidden></video>
+  <div id="resultEmpty" class="empty">생성된 실제 영상 후보를 선택하면 재생됩니다.</div>
+  <div id="renderList"></div>
+</section>
+</div>
+</div>
+</section>
+</main>
+<dialog id="editorialDialog"><div class="dialogbar"><strong>기존 G1/G2 시나리오 감수 · 승인</strong><button id="closeEditorial">닫기 및 상태 새로고침</button></div><p class="hint">기존 Studio에서 같은 프로젝트를 선택해 정식 원문 검토와 독립 심사 증거를 기록하세요.</p><iframe id="editorialFrame" title="Murim 시나리오 승인" src="about:blank"></iframe></dialog>
+<script src="/static/director_simple.js" defer></script>
+</body></html>

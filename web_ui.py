@@ -15,6 +15,8 @@ load_dotenv()
 app = Flask(__name__)
 from src.studio.web import BP as studio_blueprint
 app.register_blueprint(studio_blueprint)
+from src.studio.director_simple import BP as director_simple_blueprint
+app.register_blueprint(director_simple_blueprint)
 # Use a fixed key from .env for session persistence across restarts
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "murim_factory_stable_secret_dev_key")
 

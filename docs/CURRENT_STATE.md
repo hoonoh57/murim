@@ -1,3 +1,10 @@
+## 2026-11-24 — GPT형 Director UI 원격 개발 체크포인트 (실환경 별도)
+
+- 목적: 동일 브라우저에서 프로젝트 CRUD(보관/복원), 시나리오 G1/G2 감수, GPT 후보 이미지 선정, 스토리보드 M-VML 연결, 실제 영상 후보를 입력 이미지와 분리 재생.
+- 소스: `src/studio/director_simple.py`, `templates/director_simple.html`, `static/director_simple.js/css`, `tests/test_director_simple.py`, 기존 `web_ui.py` Blueprint 등록 및 Studio 진입 링크. 기존 preproduction·Store·ComfyUI 원본은 유지.
+- 소스 반영과 런타임 검증은 별개. 신규 테스트 실행, Windows ff-only 동기화, 브라우저 WYSIWYG, ComfyUI GPU 다중 키프레임, TTS/SFX, 자동 완성·품질은 본 체크포인트에서 **NOT_RUN / NOT_VERIFIED**. 기존 G1/G2 gate 우회 금지. 검증 전 인간매개 프롬프트/결과 등록만 활성화.
+- 다음 한 단계: 원격 단위·통합 테스트와 실제 Windows 8080 UI에서 같은 작품으로 프로젝트 CRUD→후보 선택→VML 확인, 이후 검증된 LTX 그래프의 멀티 이미지 자동 바인딩.
+
 ## 2026-11-23 — GPT-SoVITS v2 요청/반환 재사용 안내문서
 
 - 목적: 다른 세션에서도 GPT-SoVITS v2의 실제 JSON 인수, 실행 명령, 저장 WAV, Studio API 응답/자산 경로를 추측하지 않고 재현. `docs/GPT_SOVITS_V2_TTS_OPERATIONS.md`를 TTS 호출 SSOT로 추가.

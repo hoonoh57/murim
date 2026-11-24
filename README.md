@@ -1,3 +1,7 @@
+## 2026-11-24 — GPT형 Murim Director 단일 제작 UI (초기 인간매개)
+
+`/studio/simple/`에서 프로젝트 생성·조회·이름 변경·보관/복원 → 기존 G1/G2 사전 시나리오 심사·승인 → GPT 이미지 후보 등록·선정 → 스토리보드 확정/M-VML 이미지 트랙 연결 → 장면별 영상 프롬프트·실제 영상 후보 등록을 수행한다. 미검증 GPT 이미지 자동 호출, LTX 다중 키프레임 자동 연결, 무인 품질 검증은 **차단/NOT_VERIFIED**이며 기존 `/studio/` 워크플로우를 변경하지 않았다. 설명: [Director 초도 UI 실행·검증 경계](docs/DIRECTOR_SIMPLE_UI_20261124.md).
+
 ## GPT-SoVITS v2 한국어 TTS 요청/반환 — 세션 간 공용 문서 (2026-11-23)
 
 기존 로컬 GPT-SoVITS에 한국어 텍스트·속도·Temperature를 전달하여 WAV를 **직접 생성**하거나 Studio **장면 음성으로 등록**하는 정확한 명령/JSON/모델/파일/오류 경로: [GPT-SoVITS v2 TTS 요청·실행·반환 운영 설명서](docs/GPT_SOVITS_V2_TTS_OPERATIONS.md). 이 문서를 다른 세션의 TTS 작업 SSOT로 읽는다. 기존 모델/참조 WAV와 소스는 변경하지 않는다.
