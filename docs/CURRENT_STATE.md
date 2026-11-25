@@ -1,3 +1,9 @@
+## 2026-11-25 — 현재 로컬 기존 실물·레시피 목록 확인 PASS
+
+- murim-existing-evidence-20261125-a 실제 receipt Drive ID 1l-sGnlvprckSJ_gRRYCDil51Ou_3k-n-, 8069 bytes SHA256 35adcd129ad3ceef03290d3ade02eae86c729030f26bea541139244167de342a, request SHA 일치, 8/8 PASS, 13ms, side_effects_possible=false. LTX/WAN 두 raw chunk SHA 일치. 사용자 추가 조작 없이 왕복.
+- 로컬 workflows/ltx2_i2v_api.json 실제 0 bytes(empty SHA e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855). Murim에 실행 가능한 LTX API recipe 없음(해당 파일 범위). WAN 3811 bytes SHA 3654eb413afb1e076b0fcbd629849cc6fe842905299cebe21c6202daf8e300df, 12 nodes, 512x320/41 requested frames/24fps/20 steps/CFG5. 실제 SCAIL identity/sword workflow 2개 존재, 내용·실행 미확인. outputs/p1_comfyui 두 MP4와 source PNG, outputs/studio 3개 project dirs, outputs/voice-tests 2개 run dirs, outputs/sehando/intro, experiments/mvml_intro_lab 존재. 목록 존재만으로 현재 품질/실행 합격 아님.
+- 다음: 기존 실제 산출물의 receipt/metadata와 SCAIL recipe를 현재 root 내에서 read-only 대조; 영상/음성 자체 관측 가능한 범위 확인. LTX 외부 engine workflow/현재 GPU/모델은 별도 승인된 로컬 root/기존 실행 경로에서 확인. 현재 root를 벗어나는 조회/명령 실행 금지. 원격/로컬 HEAD 동기화 미확인. D0~D5 HOLD 및 코드 동결 유지.
+
 ## 2026-11-25 — Windows Murim READ 연결 복구 PASS
 
 - 사용자 CMD 화면: [RECOVERED] 이전 PID 종료/잠금 보관, [READY] active workspace E:\gpt\projects\comfyui\murim. 사용자 [PASS] murim-reconnect-inventory-20261125-a 22ms. Drive 원본 요청 ID 1cz4QQHHYod53N9wYy4oyo2oAWBpHk6vF, 실제 응답 ID 1PtjzYUJlTVac2FQMySinTADmo_oIfAEL. 격리 Python에서 raw JSON 요청 453 bytes SHA256 2797a2b4260edeba87775638ab72d89913540466ade82af9db315e5550f4e7a7 = receipt request_sha256, receipt 5102 bytes SHA256 90e5692aa3130b9bbdb86fcc58c01a4f7c08aca72aec3639a85476acae962858, 2026-11-25T01:12:12.639Z~.663Z, 22ms, 5/5 PASS, side_effects_possible=false, README 512-byte chunk hash 일치. receipt git_head_after는 중앙 REA root이므로 Murim local HEAD로 해석 금지.

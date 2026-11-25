@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 READ 복구 후 기존 파일 실측 (최우선)
+
+연속 read-only 5/5, 8/8 PASS, 요청/데이터 SHA 일치. 현재 Murim LTX API 파일 0 bytes, WAN API 3811 bytes, SCAIL workflow 2개, 과거 영상/음성 후보 폴더 존재 확인. **다음:** 기존 결과 영수증 및 SCAIL graph 원본 대조, 실제 관측 가능한 증거 확보 후 별도 승인된 엔진 경로의 LTX/설치 환경 확인. 현재 GPU 및 품질 NOT_RUN; 새 설치/제품 코드 금지. D0~D5 HOLD. CURRENT_STATE 최상단 참조.
+
 ## 활성 인계 — 2026-11-25 Windows Murim READ 복구 PASS (최우선)
 
 실제 READY 화면, read-only 왕복 응답 5/5 PASS(22ms), raw request/README chunk SHA 일치. CURRENT_STATE 최상단 참조. 새 read-only murim-existing-evidence-20261125-a 제출, 다음은 해당 receipt를 검증하고 기존 영상/음성·workflow 실제 근거를 확인. 현 root 밖 엔진·GPU 실행 불가, 별도 승인된 경로 필요. 기존 제품 파일 변경 및 코딩 금지; 전체 D0~D5 HOLD 유지. 사용자에게 반복 설치/소스 수동 수정 요구 금지.
