@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 15공정 후속 통합 재심사 (최우선)
+
+기준 dc2bf1fcd1bfecf935cd70fa775acdfca7fff5a8, 이전 통합 이후 12 commits/docs8 only/delete0. 통합 심사 최상단 15행 실제 근거/미결 조건, D0~D5 및 선행/구현 인수 구분. **다음:** 기존 Deno MP4/audio 1개 size/stream/PTS/decode 가능한 승인 read-only 경로 확인(마지막 root E:/ComfyUI_New, queue80 unmatched0). CRUD는 shell/GPU 제어 아님. 새 runner/원본 수정/전체 출력 전송/동일 예시 제작 금지. 평가 독립성/시장 cohort/권리 등 별도 blocker. D0~D5 HOLD, 전 공정 NOT_QUALIFIED, 코드 동결 유지. CURRENT_STATE 및 INTEGRATED_DESIGN_REVIEW 최상단 참조.
+
 ## 활성 인계 — 2026-11-25 A11/A15 실제 관측·품질 개선 계약 (최우선)
 
 실제 Core 구조 검사/UNADJUDICATED 리뷰 및 과거 Q4 경계 재확인. A11 실제 근거 8종 범위, 전문 평가/관측 modality/coverage, 경쟁 원인·국소 repair 6종 정책. A15 qualification/독립 holdout/비열화·선택효과 계약 상세화. 독립 semantic test/실제 관객·repair uplift NOT_RUN. **다음:** A12~A14 및 D0~D5 통합 원장에 이번 실제 설치/native API/DSP 증거와 잔여 시장·실행·독립 평가 gate를 대조, 다음 실질 blocker 해결 우선순위 결정. 중복 Deno 조사/예시 제작 금지. D0~D5 HOLD, 전 공정 NOT_QUALIFIED 및 코드 동결 유지.

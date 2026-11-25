@@ -37,3 +37,7 @@
 ## 2026-11-25 전 공정 설계 반영 및 판정 (현재)
 
 [통합 설계 심사 및 15공정 연결](INTEGRATED_DESIGN_REVIEW_2026-11-25.md)에서 A01~A06/A15 역대조 및 A07~A14 상세 설계 연결. 기존 원장의 모든 수용 기준 유지. 각 행의 현재 전체 수용은 NOT_QUALIFIED, D0~D5 HOLD. 설계 보완은 실제 실물/독립/환경 및 시장 검증 완료가 아님. 다음 실제 blocker 및 재개 조건은 통합 문서와 활성 SESSION_HANDOFF 참조.
+
+## 2026-11-25 후속 실제 근거 대조 (최신)
+
+[통합 재심사 최상단](INTEGRATED_DESIGN_REVIEW_2026-11-25.md)에 15공정별 실제 관측/설계 성과/잔여 요구와 D0~D5, P0/P1 우선순위 연결. 기존 수용 기준 및 초기 시점 기록 보존. Deno native API/공개 입력, WAV header, 격리 DSP, A11/A15 관측 범위는 부분 근거. 전 공정 NOT_QUALIFIED, 전 gate HOLD. 기존 D5 원계약대로 실제 신규 host hash/registry/최종 WYSIWYG는 구현 인수로 분리. 기준 하향 및 코드 허가 아님.

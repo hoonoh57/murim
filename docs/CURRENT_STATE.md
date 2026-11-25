@@ -1,3 +1,9 @@
+## 2026-11-25 — 15공정 후속 통합 재심사 / 실제 blocker 우선순위
+
+- 기준 dc2bf1fcd1bfecf935cd70fa775acdfca7fff5a8, 이전 통합 5e3a5c6adff9b7047e50335c9347cd24c242437a 대비 실제 compare ahead12 commits, docs8 modified/delete0/product/test0. A01~A15 및 D0~D5/A12~A14 권위 대조. 전체 repo 감사 아님. Drive queue80, unmatched0, 마지막 승인 root E:/ComfyUI_New. 현 worker/server/GPU 및 Murim local git 상태 미실측.
+- 통합 재심사에 15행 실제 근거/미결 조건, D0~D5/선행 vs 구현 인수 및 P0/P1 순서 추가. Deno 원형 Adopt 유지, 독립 평가/시장/비용/권리 부족, 연결 도구 목록에서 독립 AV 의미 평가/Windows shell 직접 실행 수단 미확인. 이번 신규 실물 실행 없음. D1/D4 부분 근거, D2 설계안 수렴; 모든 gate HOLD, 전 공정 NOT_QUALIFIED. DESIGN_HOLD / PRODUCT_CODING_FROZEN / COMPETITIVE_ALPHA_NOT_PROVEN / REMEDIATION_REQUIRED.
+- 다음: 기존 Deno MP4/audio 1개 실물의 size/stream/PTS/decode 관측 가능 경로 확인. read-only 한도 및 승인 기존 기능만, 전체 출력 전송/새 runner/원본 수정/반복 graph 조사 금지. 독립 평가 및 시장 cohort 별도 blocker. 독립 심사 전 코드 동결 해제 금지.
+
 ## 2026-11-25 — A11/A15 실제 증거 범위 및 국소 품질 개선 계약
 
 - 실제 Core quality_contract.py 6b88cb3ef1465025e085ea6a4056b56f9def81c9 전체, web.py c3f6002887235c9661f84f024a012cc12daa7c49 review 경로, 기존 Q4 d0efb0d5c76d008606b43ace9c071de2219281d6 및 캐스케이드 d762ae7c6fdcf2d9069a0e3f6c7582ce64c59523 재대조. 선언 evidence 구조 검사/UNADJUDICATED raw review는 실제 독립 평가·승격 엔진 아님. 과거 Q4 24/24 structural empty(14 REJECT/4 HOLD 포함)는 재실행하지 않음.
