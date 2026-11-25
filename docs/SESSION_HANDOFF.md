@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 P133 media size / hash-only capability HOLD
+
+실제 Murim current length1 17/17 PASS, all media size13701748B, request/receipt SHA CURRENT_STATE. 기존 중앙 runner current allowlist list/read/find/apply, chunk hash only, whole-file hash/Git status 미지원. 전체 전송 216 slices/54 batches 추정, 미실행. **다음:** 중앙 기존 agent에 범용 read-only local streaming hash 기능 보완에 대한 명시적 사용자 승인 필요(새 runner/제품 코드 아님); 승인 전 HOLD, 쉘/다른 scope 우회/대용량 전송 금지. 실제 전체 media SHA/Windows restore/rights/latest anchor/Git status 미검증. XML SSOT 유지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 P133 actual metadata roundtrip
 
 실제 수신본12/79087B, XML semantic6/6 JSON semantic6/6 raw12/12, 재직렬화 원본 byte match XML5/6 JSON4/6. 기존 Store/Editorial/Director read-only 판정 full equality3/3, all HOLD/ready false, shared17 refs, receipt2/2. Stale prefix self-digest accepted but original test anchor rejects; changed projection/raw rejects; 17 media absent in metadata-only copy. Anchor simulated not independent production evidence, temporary package not durable backup. **다음:** 기존 current read-only API에서 shared17 media 크기/조회 비용을 최소 length1로 확인하고 실제 승인된 local checksum-only 경로 존재 여부 판단(없으면 HOLD; 신규 runner/쉘 우회/무차별 대용량 전송 금지). Windows media/restore/rights/actual latest anchor/Git status 미검증. XML SSOT 유지, cutover 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
