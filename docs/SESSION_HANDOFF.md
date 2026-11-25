@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 A13 P133 SQLite 격리 검증
+
+SQLite3.46.1 Linux fixture DELETE/WAL 각 5 보호 PASS(UTF8, cross-process CAS, SIGKILL pre/post commit, backup full rows/digest), 반례5(old valid backup x2, external missing media x2, WAL raw main copy head3 vs4). 실제 Windows/원본/전원차단/commit 중 crash/부하 미시험. 공식 WAL-reset fix 3.51.3/3.44.6/3.50.7, 현재 빌드 영향 가능; WAL 채택 BLOCK, single DB rollback DELETE 우선 비교 후보/EXTRA 실제 검증 필요, 독립 최신 anchor+media inventory+backup restore 및 단일 SSOT 유지. **다음:** A13 P134 Add-on discovery/manifest/version/lifecycle/retire/isolated runtime 기반 비교, 기존 설치 custom-node loader 및 Murim routing 최소 읽기 분석. P133 실제 Windows/원본 복구 승인·검증 환경 확보 후 재개. 신규 제품 코드/runner/GPU/live 변경 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 A13 P133 기존 저장/복구 반례
 
 실제 workspace/editorial/director source 확인. 발췌 함수 3개 원문 길이/FNV 대조 후 임시 root 격리 9 probes: 보호6, Director 과거 손상 미검출/최신 tail 유실 silent fallback/Editorial 마지막 event 유실 유효 prefix로 수용 3개 재현. XML→승인 event/book 순차 저장 crash 위험은 source-derived, 실제 crash 미시험. state projection은 원문/자산 경로/일부 provenance 누락, migration SSOT 아님. CURRENT_STATE 최상단 상세. **다음:** A13 P133 aggregate commit 및 cross-process CAS 기존 기반기술(예: SQLite transaction/backup) 최소 격리 위험 실증, 엔진 확정 아님. 실제 Murim Windows 원본/승인 전체 inventory 및 복구는 접근 확보 후. 신규 제품 코드/runner/원본 수정 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
