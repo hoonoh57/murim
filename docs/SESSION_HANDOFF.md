@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 P133 실제 원본/이력 inventory
+
+Murim current read-only 21/21 ops PASS (4 receipts); actual XML4/JSON4 raw SHA match, original workspace/Editorial + Director AST state: all3 editorial HOLD, 7fb archived, shared Sehando17 media refs all listed, recorded hash conflicts0. Prior render rev1 only, rev2 scene effect changed; 2 source receipt binds valid; media bytes/rights/actual latest anchor/Windows restore/Murim git HEAD/status NOT_RUN. **다음:** isolated actual 8 originals + 4 recovery metadata lossless projection/roundtrip/restore proof (raw preservation, full fields and approval semantics, shared refs, no production migration). Reuse existing receipts in Drive, do not reread identical source/large media unnecessarily. No new product code/runner/live mutation. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 실제 Murim current 연결
 
 사용자 READY E:/gpt/projects/comfyui/murim, read-only 1+7+3 ops PASS, request/receipt hashes CURRENT_STATE. 원본 3 source CRLF-normalized Git blob match. outputs/studio 3 dirs 및 기존 p1 artifacts 확인. local docs older inventory; agent receipt git_head_after is reaRoot, Murim HEAD/status 미확인. **다음:** 이미 전송한 murim-revisions-20261125-a (Drive req 1mPntqcZ9AdDn2osUaLbtRj7gt_TReUVZ) receipt 확인 후 실제 3개 project 원본 revision/approval/director/media inventory를 bounded read-only 검증. 재전송/신규 runner/원본 수정/무단 pull/GPU 금지. 복구 실행은 별도 승인·격리 및 원본 보호 전 HOLD. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
