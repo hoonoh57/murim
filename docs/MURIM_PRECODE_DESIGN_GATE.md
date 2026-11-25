@@ -98,5 +98,7 @@ Alpha 후보: 전문 수준의 실제 산출물 + 적은 사용자 기술 개입
 
 - [A10 편집·합성·자막 생산 설계](research/assurance/A10_EDITORIAL_COMPOSITING_DESIGN_2026-11-25.md): 실제 M-VML/render와 OTIO range/track, FFmpeg, OCIO 및 전문 자막 지침 비교. E101~E106 GAP, 비파괴 편집·전편 rational timeline·합성/색상·실제 발화 cue·손실 명시 교환·렌더 의존/복구 D2 계약 보완. 실제 round-trip/렌더·독립 품질 미검증; 기존 SSOT/게이트 유지.
 
+- [A11 통합 작품·관객 평가 설계](research/assurance/A11_INTEGRATED_WORK_AUDIENCE_EVALUATION_DESIGN_2026-11-25.md): Core 구조검사/Studio raw review 및 기존 계약과 P.910/NES/Microsoft 통제실험/YouTube 지표 비교. I111~I116 GAP, 객관·전문·관객·공개시장 증거 분리, 통제 비교/표본·불확실성, 원인별 실험/캐스케이드·전역 개선 분리의 D2 상세 계약. 실제 독립 심사·관객/시장·평가 보정 미검증, 기존 게이트 유지.
+
 ## 7. 다음 작업
 제품 코딩 재개 금지. [시나리오 전문 생산 상세 설계 심사](skills/screenplay-master/references/production-design-review.md)를 첫 대상 dossier로 발전. 각본 고위험 가정·평가자 보정·권리 확보 전문 원고/경쟁 앱/강한 LLM 대비 기존 도구로 실증할 수 있는 경로를 조사한다. 이어 모든 단위에 동일 절차를 적용하고 전체 설계 심사 완료 전 M1-B를 시작하지 않는다. 현 상태 DESIGN_HOLD, 전체 REMEDIATION_REQUIRED.

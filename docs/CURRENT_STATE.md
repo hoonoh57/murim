@@ -1,3 +1,8 @@
+## 2026-11-25 — A11 통합 작품·관객 평가 로직 GAP 및 D2 상세 설계 개선
+
+- [A11 설계](research/assurance/A11_INTEGRATED_WORK_AUDIENCE_EVALUATION_DESIGN_2026-11-25.md): 실제 quality_contract.py/web.py review 및 기존 통합·관객 계약, Q4 구조 검사 경계와 ITU P.910/NES, Microsoft 통제 실험/YouTube 공식 지표 비교. I111~I116 GAP, 전편 독립 감상 및 기술/전문/관객/시장 증거 분리, 사전 protocol·표본/편향/불확실성, retention 원인 가설과 국소 재검증/전역 스킬 holdout, 5축 D2 설계.
+- A11 NOT_QUALIFIED. 실제 작품/독립 관객·전문 평가·비교/공개·수익 NOT_RUN, 최신 P.910 원문 및 NES 원문 일부 접근 제한, 한국어 척도 보정 미완료. 제품 코드 0. 다음 A12 공개·확장·수익 로직/기반기술 비교. DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-25 — A10 편집·합성·자막 로직 GAP 및 D2 상세 설계 개선
 
 - [A10 설계](research/assurance/A10_EDITORIAL_COMPOSITING_DESIGN_2026-11-25.md): 실제 render.py/workspace.py 및 5축과 OTIO time range/adapter, FFmpeg, OCIO 및 전문 자막 지침 비교. E101~E106 GAP, EditPlan/비파괴 clip·track·rational time, transition handles/retime, 합성·색상, 실제 음성 cue, OTIO loss report/CAS import, dependency-aware render 설계. A07~A09 연계 및 기존 M-VML 권위 보존.
