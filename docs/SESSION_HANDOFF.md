@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 기존 Deno drama_bench 실물/실제 실패·AV metadata 확보
+
+별도 기존 E:/ComfyUI_New/drama_bench/outputs의 11 쇼트+PILOT_1MIN.mp4 및 원본 로그·graph·스크립트 확보. 12x5초 계획, 11 DONE/1 ERROR p02_05, 실제 배치 4527초. DenoLTXSequencer의 0/72/168 frame 고정 guide를 5초로 변경하면서 재배치하지 않아 latent 범위 초과, merge missing WARN 후 11개만 합성. 별도 벤치 orchestration PRODUCT_DEFECT이며 Murim 제품/Deno 원형 결함으로 확대 금지. p01_03 실제 metadata 121 frames/5.041667s H264+AAC, PILOT1331frames/55.458333s video, audio55.472667s 및 video start PTS41.016ms. 실제 moov/헤더 기반 metadata-only이며 전체 decode/semantic/권리/원가 미검증. CURRENT_STATE 최상단 실제 req/res/hash. **다음:** 기존 p01_03 1개만 안전한 기존 전송/실행 경로에서 packet PTS/전체 decode 확인 가능 여부 검토. 신규 생성·원본/제품 수정·전체 pilot 전송·새 runner 금지. A07 typed guide/preflight 및 A10/A11 mandatory coverage/PTS 실측 조건 유지, 독립 평가/시장 근거 별도 blocker. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 P0 기존 Deno 출력 파일 접근 차단
 
 기존 Drive Windows 에이전트 왕복·작업공간 목록 조회 PASS, 그러나 대표 MP4 읽기 WORKSPACE_PARENT_NOT_FOUND. 현재 `ComfyUI/output`의 기존 두 작업 ID 검색은 2/2 PASS(각 858항목, denied0/incomplete=false), 파일 결과 모두0. 마지막 receipt ID 1fLV1801kITBEaCSruvLwrQZjHtrGNegN, 현재 상태 원장 최상단에 요청/응답 SHA 및 세부 증거. 연결 자체는 동작하며 실물 접근 차단 원인 ENVIRONMENT_ISSUE, 이동·삭제 등 세부 원인 UNKNOWN. 다음 단일 작업은 승인 범위에서 기존 Deno 영상/음성의 실제 현존 경로 또는 사용자 제공 기존 파일 확보 후 size/stream/PTS/decode 실측 가능성 확인. 동일 출력 경로 반복 검색/새 영상 제작/새 runner/원본 수정/제품 코딩 금지. 독립 평가 및 시장 근거 별도 blocker, D0~D5 HOLD / A01~A15 NOT_QUALIFIED / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED 유지.
