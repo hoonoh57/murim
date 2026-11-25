@@ -23,4 +23,17 @@
 ## A15 평가기 및 스킬
 [Q4](Q4_A15_EVALUATOR_BOUNDARY_EVIDENCE_2026-11-24.md) d0efb0d5c76d008606b43ace9c071de2219281d6: 구조 검사 24/24 empty, 14 known-invalid 포함, 5 control mutation 감지, 의미 평가 아님. [Zheng et al. MT-Bench/Chatbot Arena](https://arxiv.org/abs/2306.05685) 공개 초록: 위치·장황함·자기 선호 편향과 추론 한계. A11의 독립/순서·표본 계약 적용. 평가 pipeline: evidence preflight(실제 artifact/coverage/hash/권리/도구)→객관 probe/원본 사실→분야별 independent semantic judgment→충돌 adjudication→Manager validity/promotion. evaluator manifest에 version/model/prompt/observed modalities/independence/qualification 및 calibration scope, 허용 불확실성과 stale criteria. 원저자/모델 변경 시 재보정; 생성자와 evaluator ID가 다르다는 사실만으로 독립성 인정 금지. 기존 24개는 공개 개발용, 새 blind holdout은 별도 실제 독립 reference/adjudicator 확보 후 봉인. A06 가짜 이미지 QA와 A07~A14 반례는 추가 후보, 고정 Q4 집합 수정 금지. pairwise AB/BA 및 tie/uncertain, 편향·false accept/reject/HOLD 비용·selection lift·재현성, 사전 사람 보정 및 실제 효과 비교. known critical false accept 관측 0, 그 자체가 모집단 오류율 0 아님. 선택된 결과의 품질/시간/비용을 강한 기존 선정 기준과 비교. skill revision은 project 개선과 분리, source knowledge/capability/recipe/criteria pin, independent holdout/기존 강점 비열화 및 Manager 승인. 외부 모델/전문가/실제 selection 시험 미확보, 채택 확정 금지.
 
+### 2026-11-25 추가 — 평가기의 실제 관측 능력·보정·승격 경계
+
+[A11 최신 계약](A11_INTEGRATED_WORK_AUDIENCE_EVALUATION_DESIGN_2026-11-25.md) 및 A07~A10의 실제 설치/graph/격리 FFmpeg 근거를 적용. 현재 Core evidence_issues는 선언된 binding/ID/metric/check/defect/unassessed 검사만 하고, web review는 raw review UNADJUDICATED 저장. 기존 Q4 결과(24/24 structural empty, 14 REJECT 포함)를 다시 실행한 것이 아니다. 구조 validation 강화만으로 실제 콘텐츠 의미 판단을 구현하는 방향은 배제.
+
+Qualification manifest는 evaluator capability/variant/version/model weights 또는 provider revision, preprocessing/prompt/rubric version, 지원 modality/time coverage/언어/장르·평가 범위, 관측 source/실제 tool invocation/환경, 독립성 근거·제한, calibration evidence refs 및 expiry/invalidation rule을 결속. 동일 evaluator도 사용 범위에 따라 qualified/unknown을 구분한다. 실제 전체 AV를 관측할 능력이 없는 평가기를 통합 영화 평가에 할당하지 않는다. 모델 version/prompt/clip sampling/분석 도구/적용 범위가 변경되면 영향받은 qualification 재검토. Manager는 등록된 공통 증거/정책 조건을 검증하며 domain-specific 채점은 Add-on이 소유. JSON은 기록만. 평가 raw response에 지시문/자기 PASS 문구가 있어도 실행 권한/승격 권한으로 취급하지 않는다.
+
+시험 준비: 기존 공개 Q4 24건은 개발용 그대로 보존. A11의 실제 증거 범위 8건과 source-derived 반례는 새 공개 진단 후보로만 등록(holdout 아님). 독립 참조 제작자/adjudicator가 실제 새 자료에서 critical failure, 정상, 판단 불가능 사례를 선고정하고 평가자에게 정답·제작자 라벨·다른 평가 결과를 숨긴다. 짧은 clip/전편/실제 음성/스크립트의 대응과 권리·coverage를 검사; 비교 조건/평가 비용/모델 지원 범위를 맞춘다. 결함 유형별 REJECT/SUPPORTED/HOLD 혼동표, critical false accept, false reject, HOLD coverage, uncertainty calibration, 반복·순서 영향, 실제 선택 품질 개선과 수리 비용/시간 및 비열화 측정. HOLD를 맞는 정답으로 평가할 수 있으나 미관측 결함을 정상으로 합격시키면 critical false accept. 결함별 독립 샘플 단위 및 사전 통계 기준을 고정한다. 0건 관측 오류를 모집단 0% 보장으로 해석 금지.
+
+평가 분쟁: 기술 probe나 원본 사실과 의미 평가가 충돌하면 관측 범위/원천·버전 확인 및 증거 재확보. 서로 다른 전문 판단은 독립 adjudication에 전달; 해소되지 않은 필수 결함/평가 범위 불충분은 HOLD. 생성자 자체 critique는 진단/repair 후보용, 최종 승격 증거가 아니다. 기존 champion과 비교 없이 평가기/스킬 전역 변경 금지. 실제 한 작품의 repair 성공도 새 independent holdout/회귀/비용·강점 비열화 검증 없이 skill promotion 근거로 충분하지 않음.
+
+현재 독립 평가자 및 봉인 holdout 미확보(ENVIRONMENT_ISSUE), 새 semantic test/selection uplift/실제 관객 평가 NOT_RUN. D3 HOLD/A15 NOT_QUALIFIED. 설계 보완을 구현 완료로 간주하지 않는다.
+
+
 전체 5축: A01~A06/A15 전문 의미와 분석/생성/검증은 Add-on, Core generic refs/range/contract, Bridge route, JSON persistence, Manager capability/policy/approval/DAG/evidence promotion. 위 상세 설계는 기존 원장과 상호 보완, 기존 권리·승인/quality 기준 하향 없음. 실제 비교·독립 검증/환경 미확보 조건 유지.

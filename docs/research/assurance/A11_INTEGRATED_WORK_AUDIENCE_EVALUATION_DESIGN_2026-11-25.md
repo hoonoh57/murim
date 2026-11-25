@@ -3,6 +3,51 @@
 2026-11-25 KST | 기준 a2fdb166d2e0ae92499ebe433e0095860b21ed1b | D2 상세 설계 보완안 / A11 NOT_QUALIFIED / DESIGN_HOLD.
 권위: [통합 심사](../../MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md), [캐스케이드](../../MURIM_CASCADING_QUALITY_CONTRACT.md), [관객 검증](../../MURIM_AUDIENCE_VALIDATION_CONTRACT.md), [압축 실물 계약](../../MURIM_SHORT_FORM_MARKET_VALIDATION.md), [5축](../../MURIM_FIVE_AXIS_ARCHITECTURE.md), [공정 원장](STAGE_ACCEPTANCE_REGISTER.md). G1~G4, D0~D5, MARKET-M0~M6 및 기존 독립 평가/권리/인간 승인 불변. 본 연구는 코딩 전 비교 및 개선이지 관객 실험/작품 제작/게시/승격 아님.
 
+## 2026-11-25 — 실제 제작 증거의 범위·결함 위치·수정 책임 연결
+
+기준 0b4f0f46a84d680f48732a017338587af0b847bb. A07~A10에서 확인한 기존 실제 Deno recipe, 공개 입력 계약 및 격리 FFmpeg 반례를 평가 설계에 결속한다. 기존 Q4의 고정 24개/5 control 및 실제 Core 모듈 실험은 재실행하지 않았다. 현재 quality_contract.py 6b88cb3ef1465025e085ea6a4056b56f9def81c9 전체와 web.py c3f6002887235c9661f84f024a012cc12daa7c49 review 경로 재확인: 전자는 선언 evidence 정합, 후자는 render SHA 일치 후 human-relayed UNADJUDICATED raw review 저장이다. 어느 쪽도 독립 영상 평가기/승격 엔진이 아니다. 이 차이는 정상 책임 경계이며 Core에 콘텐츠 검사나 도메인 예외를 추가하지 않는다.
+
+### 실제 근거를 잘못 승격하는 반례와 다음 검사
+
+아래는 이미 확보한 원장에 대한 작성자 설계 검토다. 새 semantic evaluator 실행/독립 adjudication 또는 새 품질 시험 결과 아님. CURRENT_STATE 및 A06~A10의 원본 관측을 그대로 참조한다.
+
+| 직접 확보한 근거 | 인정 가능한 범위 | 금지된 확대 해석 / 필요한 다음 증거 |
+|---|---|---|
+| Deno native PNG prompt CRC/JSON 46 nodes/79 links | 해당 저장 API graph 구조 | 전체 영상 품질/현재 GPU 성공 아님. actual attempt, output decode, 전편 감상 필요 |
+| 설치 Deno num_images max50, LF 입력, per-slot strength | 공개 소스 입력 규격 | 50장 품질/VRAM·실효 guide index 아님. 실제 batch/order/guide range 및 장면 검수 |
+| Deno loader skip/black fallback | 실패 처리 소스 관측 | 기존 실제 영상에 해당 오류가 발생했다고 단정 금지. 실행별 input/loader/output evidence 필요 |
+| GPT-SoVITS WAV header 4개 | 선언 PCM rate/size/duration | 원문·발음·감정·동일 모델 비교 아님. full decode/ASR/정렬/독립 청취 및 weight binding |
+| FFmpeg impulse/mapping 실험 | 격리 버전의 sample peak·delay·합산 반례 | Windows 최종 음질·true peak·AV drift 아님. 실제 납품 profile 및 decoded master 측정 |
+| A05 도식 animatic | 배치/계획상의 시간·공간 진단 | 실제 인물 연기·검술 물리·음향 작품성 아님 |
+| A06 이미지에 생성된 평가 문구 | 이미지에 포함된 텍스트 | 독립 QA 아님. 원본 픽셀 및 별도 evaluator 필요 |
+| Q4 24/24 structural empty | 선언 구조 정합 | 14 known-invalid 의미 통과 아님. 독립 사실·semantic 검증 필요 |
+
+### 실제 관측 계약과 평가 순서
+
+1. 각 요구별 EvidenceRequirement에 artifact/revision, 필요한 modality, 시간 범위/coverage, 평가 방법/qualifier, criticality, 기준/target/comparator를 사전 고정. 원본 영상과 proxy의 frame/PTS 대응, 오디오 decode, 자막/원고/asset digest를 실제 입력으로 기록. 해시 확인은 내용 검증이나 출처 인증과 별개. 사전 정의된 관측 범위 미충족은 NOT_EVALUATED/HOLD, 근거와 모순된 주장은 REJECT. 미지의 결과를 0점 또는 PASS로 대체 금지.
+2. 기술 probe에서 file/stream/frame/sample/PTS/권리/요구 누락·중복 검증. A07 guide/asset order, A08 실제 대사·화자·alignment, A09 source routing 및 loudness, A10 edit range/transition/자막을 각 전문 Add-on의 실제 artifact 검사로 담당. generic Manager는 요구 및 인증 여부/실제 평가 완료/승격 조건만 처리. 영상 metadata나 정지 프레임만 관측한 평가기는 시간적 동작·lip-sync·대사 평가 자격 없음; 오디오만 관측한 평가기는 입모양과 시각 품질 평가 금지.
+3. 전문 의미 평가: 정상 재생 속도 전체 감상으로 먼저 작품의 인과·인물 목표/감정·리듬/흥미·전편 AV 조화 평가. 그 후 구간 진단에서 actual frame/sample evidence를 통해 identity/의상/소품 상태, 접촉·동작·카메라 연속성, 원문 발화/화자/입모양, 대사 마스킹/무음·중복, 자막과 편집 연결을 조사한다. 샘플 프레임 검사는 후보 탐지에 활용할 수 있으나 관측하지 않은 구간의 결함 부재를 보장하지 않는다. 자동 객관 지표는 검증된 적용범위에서만 사용하고, 서로 다른 모델이 동일 입력을 평가한다는 사실만으로 독립성을 확정하지 않는다.
+4. 관객 및 시장의 실제 관측은 기존 A11 protocol을 유지. 기술 불량이 없어도 작품의 재미/몰입/수익성을 보장하지 않으며, 실험이나 공개 없이 이를 합격 처리하지 않는다. 기존 non-compensatory gate 및 인간 승인·권리·비용 승인 불변.
+
+### 결함에서 국소 개선까지의 실행 계약 (설계, 미구현)
+
+Finding은 observed symptom, requirement ref, artifact/revision, observation interval, modality/coverage, 실제 frame/sample/source evidence refs, severity, evaluator qualification, uncertainty를 포함한다. 원인 가설은 Finding과 분리한다. CandidateCause에는 담당 capability ref, upstream dependency, 근거/반증, 예상 영향, test plan, 비용을 저장한다. 한 결함에 여러 원인이 가능하면 경쟁 가설을 유지하며 확인 전 책임 Add-on을 실패로 단정하지 않는다.
+
+| 증상 | 첫 확인과 원인 구분 | 수정 및 재검증 범위 후보 |
+|---|---|---|
+| 얼굴/의상 변화 | 승인 reference와 실제 연속 frame, 입력 순서/구도/guide 강도 | A06 asset 또는 A07 guide/shot만; 인접 shot continuity 및 전편 재평가 |
+| 손/소품의 접촉 불량 | 원고상 요구, 가시 keyframe, 접촉 전후 실제 motion | A05 blocking/A06 ref/A07 plan 중 원인 확인된 항목만; Deno 내부 수정 기본 제외 |
+| 대사 누락/중복 | 원문, decoded source, ASR/청취, actual mix routing | source 자체 누락이면 A07 joint AV 또는 A08 take, source 정상·최종 누락이면 A09/A10 routing; 동일 대사 ownership 재검증 |
+| 입모양 불일치 | 동일 화자/실제 발화·video PTS, audio transform, cut/retime | A08/A07 sync 또는 A10 time mapping 원인 검증; 승인 WAV 무단 교체 금지 |
+| 대사 불명료 | clean take와 master 비교, 음악·효과 마스킹 및 발음 판단 | take 정상이라면 A09 envelope/mix만; 음질/원문/전편 loudness 재계측 |
+| 감정/서사 몰입 저하 | 독립 전편 감상 및 대상 관객, 원고/연기/편집 경쟁 가설 | 고정 baseline 대비 한 요소 대조, 창작 의도 변경은 승인; 단일 점수/이탈로 원인 확정 금지 |
+
+위 표는 조건부 repair 정책이며 실제 해당 영상의 결함 판정이 아니다. RepairProposal에 immutable baseline, 최소 변경 revision, 목표·고정 검증 계약, dependency closure, expected effect, attempt/budget cap, rollback, approval refs 명시. 실행 오류 retry와 의미 개선 attempt 분리. 새 결과는 동일한 사전 고정 조건에서 필요한 기술/독립 의미/인접 경계 및 상위 전편을 재평가한다. 독립 증거를 갖춘 목표 달성 및 강점 비열화가 없으면 baseline 교체 금지. 정체 시 대안 또는 HOLD, 무한 자동 재생성 금지. 변경되지 않은 artifact 보존; 해당 효과 범위가 바뀐 기존 evaluation evidence는 stale. 전편 재검수·최종 mux와 모든 장면 재생성은 구분.
+
+### 인수 범위 및 다음 작업
+
+현재는 실제 기존 코드·실물 원장·격리 기술 반례를 요구와 연결한 설계 검토만 수행. 새로운 전문가/독립 모델/관객/전편 실제 평가/repair uplift NOT_RUN. A15의 평가기별 qualification 및 D3 gate가 없으면 전문 자동 승격 금지. A11/A15 NOT_QUALIFIED, 전체 설계/코딩 동결 유지. 다음은 A12~A14 및 D0~D5 통합 원장에 이번 실제 설치·native API·음향 근거 및 여전히 열린 독립 평가/시장/실행 조건을 대조해 우선순위를 재설정. 기존 Deno/FFmpeg 엔진 반복 조사와 동일 예시 작품 제작은 제외.
+
 ## 1. 실제 현재 구현 및 기존 설계
 - src/core/quality_contract.py blob 6b88cb3ef1465025e085ea6a4056b56f9def81c9: immutable MetricTarget/QualityContract/EvidenceBinding/QualityEvidence 및 evidence_issues. 선언된 정수 metric/check, 계약과 artifact/revision SHA 결속, 선언 producer/evaluator ID 구분. 함수 docstring이 명시하듯 빈 tuple은 승격/독립 심사/콘텐츠 PASS 아님.
 - src/studio/web.py blob c3f6002887235c9661f84f024a012cc12daa7c49 L214~221: 실제 render receipt와 media digest를 확인한 후 사용자 전달 raw review를 reviewer=human-relayed/status=UNADJUDICATED로 저장. 리뷰 작성자의 독립성, 관측 coverage, 전문 판단, 비교 조건/실험/통계 검증 구현으로 오인 금지. 기존 실제 원장과 보존 계약 재사용.

@@ -1,3 +1,9 @@
+## 2026-11-25 — A11/A15 실제 증거 범위 및 국소 품질 개선 계약
+
+- 실제 Core quality_contract.py 6b88cb3ef1465025e085ea6a4056b56f9def81c9 전체, web.py c3f6002887235c9661f84f024a012cc12daa7c49 review 경로, 기존 Q4 d0efb0d5c76d008606b43ace9c071de2219281d6 및 캐스케이드 d762ae7c6fdcf2d9069a0e3f6c7582ce64c59523 재대조. 선언 evidence 구조 검사/UNADJUDICATED raw review는 실제 독립 평가·승격 엔진 아님. 과거 Q4 24/24 structural empty(14 REJECT/4 HOLD 포함)는 재실행하지 않음.
+- A11 최상단에 실제 이전 원장 증거 범위 8종, modality/coverage/requirement pin, 전편 감상→구간 진단, competing causes/Finding/RepairProposal 및 6개 조건부 수정 책임 연결 설계 추가. A15에 evaluator qualification scope·stale rules·독립 reference/holdout·critical false accept 및 HOLD/repair uplift 검증 계약 추가. 작성자 설계 검토이며 새 평가 결과 아님. 기존 Q4 집합/품질 기준/5축 계약 불변.
+- 독립 모델/전문가/봉인 holdout/실제 관객·semantic/repair uplift 평가 NOT_RUN; 기존 Deno 재개발/원본 변경/추가 Windows 실행/제품 코드/게시/비용 0. D0~D5 HOLD, A01~A15 NOT_QUALIFIED, PRODUCT_CODING_FROZEN, REMEDIATION_REQUIRED. 다음 A12~A14 및 D0~D5 통합 원장에 실제 설치·native API·DSP 근거와 열린 독립 평가/시장/실행 조건 반영, 중복 조사 대신 gate별 실제 해소 경로 우선순위 재설정.
+
 ## 2026-11-25 — A09/A10 공동 AV 보존 및 실제 격리 FFmpeg 반례 검증
 
 - 원격 실제 render.py 24ab7cf85576d84d3d42d05bab2724e5b8e80d67 재확인: embedded video audio 미사용, scene voice/bgm/sfx 독립 48k stereo gain/round(ms) adelay/amix normalize0/alimiter limit.95, scene concat 및 format duration/nb_frames 검사. 현재 설치 Windows actual 제품 출력 결함 실측 아님.

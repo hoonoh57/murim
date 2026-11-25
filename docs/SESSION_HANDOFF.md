@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 A11/A15 실제 관측·품질 개선 계약 (최우선)
+
+실제 Core 구조 검사/UNADJUDICATED 리뷰 및 과거 Q4 경계 재확인. A11 실제 근거 8종 범위, 전문 평가/관측 modality/coverage, 경쟁 원인·국소 repair 6종 정책. A15 qualification/독립 holdout/비열화·선택효과 계약 상세화. 독립 semantic test/실제 관객·repair uplift NOT_RUN. **다음:** A12~A14 및 D0~D5 통합 원장에 이번 실제 설치/native API/DSP 증거와 잔여 시장·실행·독립 평가 gate를 대조, 다음 실질 blocker 해결 우선순위 결정. 중복 Deno 조사/예시 제작 금지. D0~D5 HOLD, 전 공정 NOT_QUALIFIED 및 코드 동결 유지.
+
 ## 활성 인계 — 2026-11-25 A09/A10 정밀 음향·편집 계약 (최우선)
 
 실제 render.py source 재대조, 격리 FFmpeg 7.1.5 impulse/adelay/source mapping fixture 관측: 기존 limiter auto-level/delay, 16 sample offset 차이, source audio 누락/중복 가능성 확인. A09/A10 최상단 계약 및 CURRENT_STATE 실측 범위 참조. Joint AV protected mix/voice-first/narration·독립 stems routing 및 전편 sample/frame clock/picture+audio separate assembly/repair. **다음:** A11/A15 통합 평가기 실제 artifact evidence와 independent qualification 설계 GAP 재대조; 신규 예시 제작·Deno 조사 반복 금지. 실제 Windows/GPU/AV 품질 및 전체 build/test/구조 미검증, 제품 코드 동결 및 D0~D5 HOLD 유지.
