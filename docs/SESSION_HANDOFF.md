@@ -1,3 +1,9 @@
+## 활성 인계 — 2026-11-25 실제 과거 Windows 증거 복구 및 큐 안전 경계 (최우선)
+
+이전 [전 공정 통합 설계](research/assurance/INTEGRATED_DESIGN_REVIEW_2026-11-25.md) 유지. 실제 Drive 과거 영수증 7개를 읽고 파일 해시/일부 chunk와 WAN 3개 가중치 이름 대조를 수행했다. 2026-11-21 환경 목록·기존 사용자 실행 증거 복구이지 현재 장비 실증 아님. 현재 상태 원장에 근거 ID/hash 및 실제 관측 범위 기록. WAN/SCAIL 기존 생성 성공과 검술 실패, LTX2.3 파일·workflow 존재, SoVITS v2 과거 합성과 성우 연기 미달을 보존. 우선 기존 후보 비교, 무단 신규 설치 금지.
+
+**다음 단일 작업 — 기존 Windows 큐 안전 확인 후 실제 inventory.** 11/23 current-workspace 폴더의 LTX read 요청 및 workspace_apply/create 4파일 요청은 대응 영수증 미확보, 실제 처리 UNKNOWN. 작업 root/claim/결과 확인 없이 기존 작업자 재시작·새 요청/재전송 금지. 타 프로젝트 LTX 배포와 Murim 분리, 기존 요청 이동·삭제·격리 필요 시 별도 권한. 안전한 기존 경로로 현재 설치 모델/버전/장비·권리 및 실행 가능 범위 실제 확인 후 A07/A08/A15 최소 비교·독립 평가로 진행. 사용자의 기술 선택/수동 코드 수정 위양 금지. Q1~Q4 재개 조건 및 D0~D5 HOLD/A01~A15 NOT_QUALIFIED/코드 동결 불변. 이번 신규 Windows 실행/CRUD/생성/비용 없음.
+
 ## 활성 인계 — 2026-11-25 전 공정 일괄 설계 수렴 (최우선)
 
 [전체 설계 심사](research/assurance/INTEGRATED_DESIGN_REVIEW_2026-11-25.md)에서 A12~A14 및 A01~A06/A15 역대조, A07~A11 포함 15공정 연결 및 교차 반례를 구체화했다. 작성자 설계 검토만, D0~D5 전부 HOLD/A01~A15 NOT_QUALIFIED. 제품 코딩 동결/권리·비용·게시 승인·5축 유지. 기존 과거 인계는 이력으로 보존.
