@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 A09/A10 정밀 음향·편집 계약 (최우선)
+
+실제 render.py source 재대조, 격리 FFmpeg 7.1.5 impulse/adelay/source mapping fixture 관측: 기존 limiter auto-level/delay, 16 sample offset 차이, source audio 누락/중복 가능성 확인. A09/A10 최상단 계약 및 CURRENT_STATE 실측 범위 참조. Joint AV protected mix/voice-first/narration·독립 stems routing 및 전편 sample/frame clock/picture+audio separate assembly/repair. **다음:** A11/A15 통합 평가기 실제 artifact evidence와 independent qualification 설계 GAP 재대조; 신규 예시 제작·Deno 조사 반복 금지. 실제 Windows/GPU/AV 품질 및 전체 build/test/구조 미검증, 제품 코드 동결 및 D0~D5 HOLD 유지.
+
 ## 활성 인계 — 2026-11-25 Deno 입력 규격 확인 및 음성 시간 연결 (최우선)
 
 실제 설치 3 source 전체 read 3/3 PASS, request/chunk SHA 일치. A07/A08 최상단 계약: LF 이미지 목록, slot별 frame/strength, loader silent skip/black fallback을 Murim preflight 및 실제 output 증거로 차단; UI 언어/negative 표시를 runtime 제어로 오인 금지. Deno 원형 변경/전수 역설계 제외. Joint AV / fixed voice-first A2V / narration 분리 및 rational timeline. **다음:** A09/A10 기존 실제 renderer·편집 로직과 공동 AV/독립 stems 통합 계약 구체화. Deno native multi runtime/LTXVAddGuide 실효 index/live schema 및 GPU/품질 미확인, 이후 D1/D4 검증에 남김. 제품 코드 동결 및 전체 HOLD 유지. CURRENT_STATE 최상단 참조.
