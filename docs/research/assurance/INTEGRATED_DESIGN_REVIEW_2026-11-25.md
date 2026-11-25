@@ -1,3 +1,7 @@
+## 2026-11-25 A14 후속 반증 (최신 보완)
+
+이전 통합 원장의 async context 위험을 실제 원본 JS 5개 발췌 Node 격리 8 scenarios(위험7/정상1), Python guard 8 scenarios(차단6/의도 결속 한계1/후보 상태1)로 확인했다. CURRENT_STATE 및 [A14 상세 계약](A14_NATURAL_LANGUAGE_DIRECTOR_DESIGN_2026-11-25.md) 참조. 실제 브라우저/Flask/DB/오부착/권한 우회/사용성 비교 미시험. 기존 서버 revision/asset/approval 검사 유지, 원래 operation context와 view generation, compound publication/stage receipt/reconcile 계약 보완. P1 동일 소스/fixture 조사 종료; 실제 승인 Murim root 및 원본 복구 경로 또는 독립 평가/새 반례 확보 시만 재개. P0 stop-reentry 불변. 다음 실제 근거 접근은 사용자가 로컬 선택한 Murim current root에서 기존 read-only inventory/복구 경로 확인(기존 ComfyUI root와 구분), 연결 없으면 HOLD. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / PRODUCT_CODING_FROZEN.
+
 ## 2026-11-25 P1 A13/A14 통합 재심사 — 실제 근거 대조 및 교차 실행 계약 (최우선)
 
 기준 main 06e4d7764aec1c24cefba0d8bef1e2adbf90023f; 이전 통합 checkpoint 0cde1b2fb989ccee33205aeb7b8a605434db6473 이후 실제 GitHub compare 6 commits, 3 docs modified, +98/-0, 제품/테스트 변경0. 기존 A13 상세 blob 5aea82f0600b5022b843b67f7c34eaf544145555, A14 a9e7155a1277cc7d3635b92b0000af4feea04dae, 5축 원계약 2fb798a0333fd2b412dea3bc40b86dd0bfe1dc5d, precode gate 52fd36bf8a7d8d0308adb7bdbc4de57cd4aedb58, 활성 CURRENT_STATE/SESSION_HANDOFF 및 기존 통합/수용 원장 대조. 작성자 desk review, 독립 심사/실제 신규 실행/전체 repo 감사 아님. 각 이전 probe의 관측 범위와 반례 분류 그대로 유지.

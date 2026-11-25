@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 A14 async context 반증 및 P1 종료
+
+실제 원본 JS 5 fragments Node22.16.0 8 scenarios(위험7/정상1), 원본 Python guard 8 scenarios(차단6/유효 slot 의도 결속 한계1/후보 상태1). A/B late load, cleared view reopen, image/video 후속 route 변경, scene/label 및 prompt 혼합, production stale 표시 재현. 실제 server/DB/Windows/asset mutation 미시험. A14 계약 보완; 동일 자료/fixture 반복 종료. **다음:** 실제 Murim 원본을 사용자 로컬 선택 current root로 연결한 뒤 기존 승인 read-only 도구로 root/HEAD/status 및 P133 원본·승인·media inventory/복구 가능 경로 확인. 마지막 관측 ComfyUI_New는 Murim 아님. 연결/권한 미확보면 HOLD, 외부 독립 평가/시장/권리 증거 대기; 신규 코드/runner/GPU/live 변경 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 A13/A14 통합 재심사
 
 이전 통합 checkpoint 이후 6 commits/3 docs/+98/-0, P131~136 실제 근거 및 여섯 교차 실행 계약 통합 원장 최상단/수용 원장에 반영. A13 동일 source/fixture 반복 종료; 실제 승인 원본/복구/실환경/독립 근거 또는 새 반례 시 재개. P0 시장/독립/실물 조건 유지. **다음:** A14 static/director_simple.js 원본 async project/selection context, late response 및 partial upload→attach 위험 최소 격리 반증과 기존 server CAS/asset/approval guard 대조(현재 소스 추론, 실제 오류 미재현). 신규 제품 코드/runner/실제 upload/Windows/GPU/live 변경 금지. 작성자 검토, 독립 심사 아님. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
