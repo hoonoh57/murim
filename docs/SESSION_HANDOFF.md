@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 A13 P134 Add-on 발견/등록/격리
+
+Windows 기존 current read-only 4/4, nodes.py full coverage SHA 및 manager 파일 확보. 실제 loader AST V1 4 scenarios: custom duplicate overwrite/base protected, failed import side effects, partial registration after false, stale class ref on reload. Entry Points discovery≠load, Pluggy exception propagates/unregister/duplicate/block 실제 확인; 0/100/300/500 metadata-only count, independent child exit/timeout isolation (Linux, actual host/Windows/GPU 아님). A13 P134 계약에 qualified identity/validate-before-load/atomic publication/generation drain+fencing 추가. **다음:** P135 DAG/shared dependencies/lease/budget/promotion 기반 비교 및 최소 격리 반증. 신규 제품 코드/runner/GPU/live 변경 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 A13 P133 SQLite 격리 검증
 
 SQLite3.46.1 Linux fixture DELETE/WAL 각 5 보호 PASS(UTF8, cross-process CAS, SIGKILL pre/post commit, backup full rows/digest), 반례5(old valid backup x2, external missing media x2, WAL raw main copy head3 vs4). 실제 Windows/원본/전원차단/commit 중 crash/부하 미시험. 공식 WAL-reset fix 3.51.3/3.44.6/3.50.7, 현재 빌드 영향 가능; WAL 채택 BLOCK, single DB rollback DELETE 우선 비교 후보/EXTRA 실제 검증 필요, 독립 최신 anchor+media inventory+backup restore 및 단일 SSOT 유지. **다음:** A13 P134 Add-on discovery/manifest/version/lifecycle/retire/isolated runtime 기반 비교, 기존 설치 custom-node loader 및 Murim routing 최소 읽기 분석. P133 실제 Windows/원본 복구 승인·검증 환경 확보 후 재개. 신규 제품 코드/runner/GPU/live 변경 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
