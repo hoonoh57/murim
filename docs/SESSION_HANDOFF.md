@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 A13/A14 통합 재심사
+
+이전 통합 checkpoint 이후 6 commits/3 docs/+98/-0, P131~136 실제 근거 및 여섯 교차 실행 계약 통합 원장 최상단/수용 원장에 반영. A13 동일 source/fixture 반복 종료; 실제 승인 원본/복구/실환경/독립 근거 또는 새 반례 시 재개. P0 시장/독립/실물 조건 유지. **다음:** A14 static/director_simple.js 원본 async project/selection context, late response 및 partial upload→attach 위험 최소 격리 반증과 기존 server CAS/asset/approval guard 대조(현재 소스 추론, 실제 오류 미재현). 신규 제품 코드/runner/실제 upload/Windows/GPU/live 변경 금지. 작성자 검토, 독립 심사 아님. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 A13 P136 보안/관측
 
 실제 comfy/workspace/web 7 fragments length/FNV 대조, Linux 격리 21 probes 보호13/반례6/범위2. UTF16 benign DTD, duplicate JSON, nonfinite, bool slot, post-binding predicate 불일치, raw error synthetic sentinel. GET token 생략은 현 local scope, OTel baggage in-memory propagation (no export). 실제 Flask/Windows/GPU/live 요청/권한 우회/정보유출 미시험. A13 P136 strict parse/final validation/least privilege/audit vs telemetry/diagnostic scope 보완. **다음:** P131~136 및 A14 연결 통합 재심사, 기존 integrated review/acceptance register에 실제 증거와 residual blocker/stop-reentry 갱신, 신규 제품 코드/runner/GPU/live mutation 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.

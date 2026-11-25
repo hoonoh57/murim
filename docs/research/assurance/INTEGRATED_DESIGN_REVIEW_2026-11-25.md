@@ -1,3 +1,34 @@
+## 2026-11-25 P1 A13/A14 통합 재심사 — 실제 근거 대조 및 교차 실행 계약 (최우선)
+
+기준 main 06e4d7764aec1c24cefba0d8bef1e2adbf90023f; 이전 통합 checkpoint 0cde1b2fb989ccee33205aeb7b8a605434db6473 이후 실제 GitHub compare 6 commits, 3 docs modified, +98/-0, 제품/테스트 변경0. 기존 A13 상세 blob 5aea82f0600b5022b843b67f7c34eaf544145555, A14 a9e7155a1277cc7d3635b92b0000af4feea04dae, 5축 원계약 2fb798a0333fd2b412dea3bc40b86dd0bfe1dc5d, precode gate 52fd36bf8a7d8d0308adb7bdbc4de57cd4aedb58, 활성 CURRENT_STATE/SESSION_HANDOFF 및 기존 통합/수용 원장 대조. 작성자 desk review, 독립 심사/실제 신규 실행/전체 repo 감사 아님. 각 이전 probe의 관측 범위와 반례 분류 그대로 유지.
+
+| 경계 | 실제 확보 근거 (CURRENT_STATE의 각 원장) | 잔여 필수 조건 |
+|---|---|---|
+| P131 | 기존 Core/Studio/직접 import·호출/저장 ownership source audit | 공용 계약 및 registry/Bridge/Manager 소유권 검증, 독립 설계 반대심사, 실제 host/integration 인수 별도 |
+| P132 | 설치 ComfyUI 0.20.1 실제 파일 및 PromptQueue AST duplicate/history/restart-memory 반례 | 실제 runtime version/HTTP/job identity/unknown/cancel·GPU 종료/비용 reconcile; durable intent before any external side effect |
+| P133 | Director/Editorial 발췌 9 probe(보호6/반례3), SQLite DELETE/WAL 15(보호10/반례5), 공식 WAL-reset 수정 버전 조건 | 승인 Murim 원본 전체 inventory, 무손실 XML/approval/history/media 복원, independent latest anchor, exact fixed engine and target Windows fault/restore; cutover 미승인 |
+| P134 | 설치 nodes.py V1 loader 4 scenarios, entry points/Pluggy, metadata 0/100/300/500, Linux child isolation | provider pin/atomic register/retire/permissions, 실제 Windows worker, A/B/미지 capability 및 host hash/registry scale 인수 |
+| P135 | NetworkX/graphlib/SQLite 15 probe(보호12/반례3), source cache/approval guards | 실제 DAG completeness/quality evidence/reuse/lease and real resource/cost, stale event and shared cancel end-to-end |
+| P136 | 기존 comfy/workspace/web 21 probe(보호13/반례6/범위2), OTel carrier in-memory | actual Windows ACL/reparse/handle/process tree/network/credential, Flask/protocol validation, authenticated audit/recovery and diagnostic UI |
+| A14 | 기존 human relay, revision/token, actual candidate vs quality 표시; 이번 static/director_simple.js 2f5baae1aa1a1a54810288ac3488c5198d0ea6ca L14~49,103~126,151~196 대조 | 비동기 context/partial mutation/uncertain state, actual independent user/comparator task and post-implementation WYSIWYG |
+
+### 교차 경계 계약 보완 (논리 검토, 아래 인수 시나리오 미실행)
+
+| 경계 및 위험 | 공통 계약 / 반증 인수 |
+|---|---|
+| A14 승인 semantic intent vs P132/P136 실제 bound payload | 사용자 승인 scope/immutable input+policy+plan digest를 잠금. 실행기가 생성하는 파일명/job ref 등 가변값은 허용된 typed binding 및 실제 hash/provenance 검증으로 결속, scope/권리/비용/의미 변경은 새 승인. upload 등 외부 side effect도 durable intent/reservation/permission 전에는 금지; 단계별 receipt/reconcile. 최종 payload 변경/미검증 입력 dispatch 차단. 승인 UI와 execution receipt는 서로 대체 불가. |
+| P131/P134 registry vs runtime lifecycle | Manager canonical registry/eligibility/selection, Bridge technical discovery/handshake/handle; atomic publish는 Manager CAS, Bridge physical connection. 늦은 worker event는 이전 generation/attempt history. unregister/health/transport state로 승인 또는 실제 종료 판단 금지. |
+| P132/P134/P135 취소/lease/비용 | cancel requested, provider terminal verified, resource released, cost settled/unknown, candidate disposition은 서로 별도 fact. shared consumer detach와 physical cancel 구별. timeout/lease expiry/HTTP ack만으로 자원/비용 release 금지; unknown charge reserve 유지, 실제 초과도 ledger 기록. |
+| P133/P135 revision CAS vs 무관 sibling 변경 | global head CAS mismatch는 자동 승격 거부. 영향 DAG와 immutable input/evidence/approval/policy pin을 재검증 후 현재 head에 별도 authorized commit 가능 여부 판단; 무관 sibling 재생성 강제 또는 stale approval 자동 승계 금지. 이전 candidate/history 유지. |
+| P133/P136 audit/anchor failure vs external action already happened | mandatory intent/audit failure before dispatch HOLD. dispatch 후 기록 실패는 side effect가 취소된 것이 아님: UNKNOWN/UNCERTAIN, 안전한 reconcilable evidence 보존, 추가 admission 중지 및 원장 복구 후 actual charges/results 귀속. independent anchor gap은 검증된 prefix라도 latest 확정 불가; 임의 rollback/auto promotion 금지. optional telemetry degraded 별도. |
+| A14/P135/P136 사용자 상태 및 async correlation | UI의 project/scene/revision/request/view generation과 operation snapshot 결속, stale response는 현 화면에 적용 금지, partial upload/attach는 actual asset ref와 incomplete operation으로 보고하고 원래 project에만 안전하게 reconcile. 사용자 승인·기술 완료·품질·권리/비용·publish는 서로 독립; source text/diagnostic content는 권한 아님. |
+
+이번 추가 소스 관찰: director_simple.js L39~49 load는 await 이후 shared project/director/token 갱신에 request generation guard가 보이지 않음; L103~126 refreshProduction/renderList 및 callback도 current global route를 다시 참조. L172~182 image upload 후 role/scene/current route/token 재조회, L188~197 video upload 후 current route 재조회; 두 단계 사이 project/selection 변경 및 실패 후 부분 성공 위험은 source-derived, 실제 UI/오부착/보안 우회 재현 아님. 기존 server CAS/asset/approval guard와 후보/품질 구분을 보존, 서버가 모두 차단하는지 단정 금지. 다음 허용 연구는 이 구체적 A14 async context 위험을 실제 원본 JS/Python 좁은 격리 시험으로 반증; 실제 브라우저/Windows/업로드/작품 변경 없이 해당 증거 범위만 기록.
+
+### 중복 조사 종료/재개 및 게이트
+
+P1 A13 기존 provider/source/기반 primitive 비교는 현재 근거 범위에서 종료. 같은 모듈·동일 fixture·공개 문서의 반복으로 합격률을 높이지 않는다. 새 A13 조사 재개는 실제 승인 Murim 원본 및 복구 경로, 명확한 기존 엔진 실행 위험과 허용 범위, 실제 독립 반대심사 근거 또는 새로운 반례가 있을 때만. P0 시장/독립 평가/실물 범위의 기존 stop-reentry 조건 유지. D0 HOLD(동종 시장 및 직접 비교), D1 HOLD(실환경·권리·실측 비용/품질), D2 HOLD(구체화된 설계, 독립 반증/실현성 미충족), D3 HOLD(독립 평가 보정/봉인 holdout), D4 HOLD(부분 실물/기반기술만, 동등 독립 비교 부족), D5 HOLD(D0~D4 및 독립 설계 심사 부족). 실제 신규 host hash/registry scale/통합 runtime/최종 UI는 구현 인수이며 사전 gate 순환 조건으로 금지. 기존 A01~A12/A15 수용 원장 및 A07 Deno 원형 Adopt 유지; A13/A14 포함 전 15공정 NOT_QUALIFIED. 현재 변경분 검증, 전체 repo 자동감사, 전체 compliance 별도. Windows Murim root/HEAD/status 신규 관측 없음; 코드 동결/권한 범위 유지. DESIGN_HOLD / PRODUCT_CODING_FROZEN / COMPETITIVE_ALPHA_NOT_PROVEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-25 P0 후속 통합 재심사 — 실제 반례 결속 및 연구 종료/재개 조건 (최우선)
 
 기준 main 0511b323c241a49ded9a6fd15e89b363ce191a0f. 이전 통합 재심사 기준 dc2bf1fcd1bfecf935cd70fa775acdfca7fff5a8 대비 GitHub compare 실제 6 commits, 4 docs modified, deletion0, 제품/테스트 변경0. 신규 실험을 수행한 것이 아닌 기존 CURRENT_STATE 상단 3개 실측 및 drama_bench 배치 원장의 작성자 역대조. A07/A10/A11/A15/A12/A13 상세 기존 계약과 D0~D5 원문 재확인. 최신 Windows root/HEAD/status/worker/GPU 별도 미조회; 기존 연결 증거의 범위만 인정. 독립 심사 및 repo-wide 자동 감사 아님.

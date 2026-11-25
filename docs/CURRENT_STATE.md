@@ -1,3 +1,10 @@
+## 2026-11-25 — P1 A13/A14 통합 재심사 및 중복 연구 종료 조건
+
+- 기준 main 06e4d7764aec1c24cefba0d8bef1e2adbf90023f, 이전 통합 checkpoint 0cde1b2fb989ccee33205aeb7b8a605434db6473 대비 GitHub compare 6 commits/3 docs/+98/-0/product-test0. 실제 AGENTS/활성 인계/A13/A14/5축/precode gate/통합/수용 원장 대조. 신규 probe나 독립 리뷰 아님. 중앙 계약 직전 연속 작업에서 확인, 실제 Windows Murim root/HEAD/status 신규 미확인.
+- 기존 P131~P136 관측과 A14 원계약을 통합 원장 최상단에 결속. 여섯 교차 경계 구체화: approved intent vs final bound dispatch(업로드 포함 side effect 이전 durable intent), Manager registry vs Bridge handles, cancel/resource/cost/quality separate facts, unrelated CAS conflict revalidation without stale promotion, post-dispatch audit/anchor failure→UNKNOWN/reconcile vs telemetry degraded, async UI operation context and partial mutation. 실제 인수 시나리오는 미실행. P1 A13 동일 자료/fixture 반복 종료; 신규 객관 근거/권한/원본 복구/독립 심사 시 재개. 기존 P0 조건 유지.
+- 실제 static/director_simple.js blob 2f5baae1aa1a1a54810288ac3488c5198d0ea6ca L39~49 load shared state after await, L103~126 production/render callbacks, L172~182 image upload→current role/scene/project/token, L188~197 video upload→current route; race/partial commit source-derived 위험, 실제 오부착/오류/서버 guard 우회 미재현. 기존 director_simple.py 27cf48324bfc5102d42fd9889f54b6d0ba9b68c3 source 대조.
+- 다음 단일 작업: A14 기존 UI async context/partial mutation/late response의 원본 함수 좁은 격리 반증 및 기존 server CAS/asset/approval guard 대조. 실제 browser/Windows/live service/파일 업로드/신규 제품 코드·runner/GPU 금지. 이후 추가 신규 근거 없으면 해당 반복 조사도 종료. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-25 — A13 P136 보안 경계/관측/진단 증거 보완
 
 - 기준 main a7ba5db999dba528a623e759f8754ee095f90ac6, 중앙 agent main 1417f2a6f082bc64c3a7e54bc4f62b027f6dbe8e 및 5개 권위 문서 조회, Murim AGENTS/활성 인계/A13/A14/acceptance register 재확인. 승인된 Windows current root 이전 ComfyUI_New; 실제 Murim Windows HEAD/status/사용자 원본 미관측, 범위 확장 금지. 기존 P136 조사 및 격리 반증만. 제품/테스트/runner/GPU/live 서비스 변경 0.
