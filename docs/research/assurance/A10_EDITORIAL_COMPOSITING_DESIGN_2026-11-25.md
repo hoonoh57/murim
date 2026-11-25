@@ -1,3 +1,20 @@
+## 2026-11-26 P145 새 객관 반례 — 제목·출처·자막 화면 경계 (A10 E104)
+
+P144 백업 PAUSED_BY_USER 유지. 기존 A10 자막 설계의 새로운 구체 위험을 read-only source 및 격리 synthetic fixture로 반증. 기준 main 8daecb2a498597577baa8051401fa42615b17846, render.py Git blob 24ab7cf85576d84d3d42d05bab2724e5b8e80d67 L78–102 overlay 원문 25줄 UTF-8 LF 추출 Git blob fb653b917ebf7d68f5431300b9e3bc7b4b014059 (connector create_blob 및 container git hash-object 일치). workspace.py blob a900fedf439c7003411f68c7e9de6e3c791c1e63 L91,103,124,139,147,158–164 대조. 원문 overlay 실행, 동등 XML lookup helper 및 고정 font path 주입, 실제 Pillow 12.3.0 / Linux NotoSerifCJK-Regular.ttc SHA256 5d9c31a059600193c9d7968a998bde886ccdc77e934006ad243b41794c496a7d /1920×1080. 합성 XML fixture 및 임시 PNG만; full workspace validation/FFmpeg/Windows/실제 작품 실행 미실행.
+
+| 반증/대조 | 실제 관측 |
+|---|---|
+| 정상 제목·출처·짧은 한글 자막 48px | 정상 출력, subtitle nontransparent bbox (65,916,1856,1061) |
+| 제목 '가'×70 + 서로 다른 2자 suffix | 서로 다른 제목의 PNG 픽셀 동일; 동일 origin/폰트로 확장 캔버스에 그린 70자 ink bbox (73,57,2642,96), 1920 경계 밖 ink 존재 |
+| label '자료'×50 및 서로 다른 source '출처 A'/'출처 B' | 렌더 픽셀 동일, source 차이가 화면에서 소실됨; 원인 label+source의 [:100] |
+| '가'×20, '나'×20, '다'×20 공백 구분, 72px | 3행 advance 각각 1390.9375<1700, overlay 수용; 동일 좌표·stroke의 확장 캔버스 ink bbox (267,878,1657,1105), 1080 아래 25px 영역에 실제 ink 존재 |
+| 동일 3행과 짧은 출처 동시 표시 | 원본 layer→subtitle alpha composite 결과 credit crop (48,875,1873,930) RGB difference bbox (22,3,1609,55) 상대좌표, 표시 영역 간 충돌 |
+| 단일 '가'×30, 72px | 기존 Subtitle exceeds safe region 예외 정상 |
+
+6/6 예상 관측 (정상/보호 2, 결함 반례 4), 제품 전체 PASS 아님. 제목/label의 길이와 자막 크기는 workspace.py의 길이/크기 제한과 양립하나 harness가 전체 XML validate를 실행한 것은 아님. 합성 fixture는 실제 작품 결함으로 확대 금지. 원문 글리프 배치 대비 출력 잘림/가시 출처 손실은 PRODUCT_DEFECT (발췌 렌더러 경계). 원인 해결은 E104 및 합성 계약의 하위 작업.
+
+Adopt 기존 Pillow textbbox/multiline_textbbox (https://pillow.readthedocs.io/en/stable/releasenotes/8.0.0.html ; advance와 실제 표시 경계 구분), Unicode UAX#14 (https://www.unicode.org/reports/tr14/tr14-57.html ; 한글 음절 및 locale tailoring), 기존 A10 libass/납품 profile 후보. Compose title/credit/subtitle layout plan: approved text & provenance ref 보존, 표시용 축약은 명시된 별도 승인 표현에 한함, 필수 출처 누락 HOLD. actual font/size/anchor/stroke/shaping/line-break plan & pixel bbox, safe region와 title/credit/subtitle 및 중요 화면 ROI, transition/reveal 전 구간의 transform 후 경계·겹침 검사. 승인 범위 내 재배치/줄바꿈/크기 조절/시간 분할 후보, 납품 최소 가독성·읽기속도/의미/권리 불충족 시 HOLD; 원문 임의 자르기 금지. Unicode 음절/cluster 및 한글 line-break, font coverage/fallback 검증. 화면 밖 ink/필수 출처 소실/정책 위반 충돌 0 기준; 6 fixtures는 독립 품질 기준이 아닌 regression counterexamples. 후속 구현 인수: 실제 목표 font/1920×1080 및 승인 portrait profile, frame별 animation/shot boundary, full actual mux/render/visual/원어민 비교. 기술적 bbox와 독립 가독성·작품성 별도. Core 공통 time/region/media contract, Add-on 전문 편집/자막 layout·adapter/검증, Bridge generic routing, Manager policy/approval/rework, JSON persistence-only. 새 renderer/제품 테스트/원본 수정 없음. A10 NOT_QUALIFIED, D0~D5 HOLD, PRODUCT_CODING_FROZEN, REMEDIATION_REQUIRED. 동일 fixture 재반복 금지; 다음은 새로운 실증/독립 근거 또는 실제 허용된 다음 제작 기술의 구체 반례. 백업 재개 요청 없음.
+
 # A10 전문 편집·합성·자막 기반기술 및 생산 설계 v0.1
 
 2026-11-25 KST | 기준 b31316ff6afbc4aca291f8408f473e7524d7eb7a | D2 상세 보완안 / A10 NOT_QUALIFIED / DESIGN_HOLD.
