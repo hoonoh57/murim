@@ -1,3 +1,9 @@
+## 2026-11-25 — 기존 Deno native API prompt 복구 / 연출 계획 연결
+
+- 현재 E:/ComfyUI_New read-only inventory req 1l5RXweBbAT-8wJmJrBYztYJeZ8RRk6Ba SHA256 180b32069dd0535c011f70ef7092f05c01d660e81b2df1e029bac11a9785453a / res 1ZhYMg3EDWz_5O8mw-Kji_jFDHf60pUmp SHA256 c36c450d9cc32eacafeefbde170a8a6346728abc2d8a0a5663b84db6675f531f 5/5 PASS 77ms. output 목록 total 2222, 첫 100개만 확인(next_cursor 100); 기존 40c1230dd7244615_shot_001~006 PNG/MP4/audio.mp4 목록 및 Deno 설치 25 entries 확인. 전체 output 검색 완료 아님.
+- req 1CavAJPaAILqsoZz-ypd822zwJh-Flrdq SHA256 309ec2c4412748933e8335418d99562c16d090646e3415f7a03410aa2f8b50dc / res 1QxJAphr-KRkpn7D8dzTVxf3tYxDwgq7h SHA256 c836e20a26801b002f52e0879afb5864557b8bba3c0efac6ae33c82b84551244 4/4 PASS 28ms. 양 receipt request hash 일치, side_effects_possible=false. README 5293B, __init__.py 13804B, existing PNG first 32768B chunk SHA 일치. PNG tEXt prompt 9114-byte chunk CRC32 PASS, raw JSON prompt SHA256 eecc5342a7741715fddaca43098bf057bb370d2809064e549bd9948559f2c08a, 46 nodes/79 connection pairs structurally valid. 기존 saved MP4 및 PNG 파일명 pairing 후보이지 실제 성공/품질 증명 아님. 해당 native graph에 downloader/RAMCleanup 없음. 기존 README는 downloader copy-link helper임을 명시. Deno native prompt 1장, 2 stage sequencer, GGUF/3 samplers/x2/AV decode/VHS, 8s/24fps 입력, 193 requested frames 산술 추정. 정확한 field mapping 및 A04~A08 ShotDirectionPlan 계약 A07 추가.
+- 원본 Deno 재개발 제외. 실제 native API 형식 확보로 수동 UI flatten 불필요; exact multi-image serialization, active node schema/health, 실제 output AV/품질 및 자동 실행 동등성 미입증. 제품 코드/Windows 원본 변경 0. 다음: Deno public input contract 및 기존 다중 참조 prompt metadata 좁은 확인 후 typed binding 확정, 이어 A08 음성/연출 연결. D0~D5 HOLD, A01~A15 NOT_QUALIFIED, PRODUCT_CODING_FROZEN, REMEDIATION_REQUIRED.
+
 ## 2026-11-25 — Deno 원형 재사용 채택 / 전문 자동화 연동 계약 확정 방향
 
 - 사용자 명시 Deno 원형 활용 성능 보고를 근거로 설계 선택 Adopt-original 확정. 내부 역설계/재개발/최적화 제외. 사용자 경험과 독립 성능 실측 구분. 기존 Deno 설치/원본 workflow/모델/설정 불변.

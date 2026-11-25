@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 native Deno API prompt 실물 복구 (최우선)
+
+E:/ComfyUI_New 읽기 5/5+4/4 PASS, 실제 기존 출력 PNG tEXt prompt CRC/JSON 확인 46 nodes/79 links, 실제 1-image native GGUF graph. A07 최상단 native 실행 형식 및 ShotDirectionPlan 계약 참조. 이전 원본 graph 변환 과제는 native prompt 재사용으로 좁힘. **다음:** public INPUT_TYPES/다중 이미지 serialization 또는 실제 multi-image metadata만 확인하여 compiler binding 확정, A06/A08 연계. 실제 /object_info/GPU/AV·독립 품질 및 multi-guide 실행 NOT_RUN. 원본 수정/다운로드/신규 영상 반복/제품 코딩 금지, D0~D5 HOLD. CURRENT_STATE 최상단 증거.
+
 ## 활성 인계 — 2026-11-25 Deno 원형 Adopt 및 연동 경계 (최우선)
 
 사용자 Deno 성능 확인을 근거로 원형 채택 설계 선택 확정. A07 최상단 추가 계약 우선; 내부 로직 재개발/전수 역설계 제외. 현재 comfy.py scalar-only/interface GAP 확인. **다음:** 기존 성공 workflow의 native API export/실행 prompt metadata/output evidence를 동일 승인 root에서 읽기 전용 확인하고 실제 typed binding manifest 경계 확정. 이후 A06/A08 연출·참조/음성 계약 연결. 현 worker/server/GPU 현재 상태 미확인; 신규 요청은 안전 범위 확인 후. 무단 모델 다운로드/원본 수정/graph surgery/guard 약화 금지. D0~D5 HOLD/제품 코딩 동결 유지. CURRENT_STATE 최상단 참조.

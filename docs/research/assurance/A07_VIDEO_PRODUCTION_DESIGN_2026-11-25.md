@@ -3,6 +3,28 @@
 2026-11-25 KST | 기준 ca38eee61cda7fd950e39095f00a36f886fecce1 | D2 설계 개선안(향후 구현 기준), D1/D3/D4/D5 HOLD, A07 NOT_QUALIFIED.
 권위: [5축](../../MURIM_FIVE_AXIS_ARCHITECTURE.md), [D0~D5](../../MURIM_PRECODE_DESIGN_GATE.md), [품질 캐스케이드](../../MURIM_CASCADING_QUALITY_CONTRACT.md). 사용자 목적: 코딩 전 강한 실제 구현과 로직 비교 후 설계의 기반 높이기. 예시 콘텐츠 생성 대신 source-level GAP 및 보완 계약. 코드, 테스트, 설치, 유료 실행 없음.
 
+## 2026-11-25 — 원본 Deno API prompt 복구 및 연출 계획 컴파일 계약
+
+### 기존 실물에서 복구한 native 실행 형식
+
+E:/ComfyUI_New의 기존 output/40c1230dd7244615_shot_001_00001.png (1452978 bytes) 첫 32768 bytes의 PNG tEXt prompt 전체(9114-byte chunk, CRC32 PASS)에서 API JSON 46 nodes / 79 links를 실제 복구, 각 connection pair의 source ID 및 index 구조 검사 PASS. prompt raw SHA256 eecc5342a7741715fddaca43098bf057bb370d2809064e549bd9948559f2c08a, CreationTime 메타데이터 2026-11-23 22:58:46(시간대 미상). 같은 prefix의 mp4/audio.mp4 목록 존재. 이미지 전체, MP4 decode/AV 품질, prompt_id history, 현재 object_info/schema 및 실제 실행 동일성은 미확인. 저장 metadata는 native API 구조 관측이지 성공·품질 증명이나 최신 runtime 보장 아님. 원본 prompt의 창작 텍스트나 이미지 bytes를 repo로 복제하지 않음. 상세 receipt CURRENT_STATE 참조.
+
+- 실제 DenoLTX23PresetLoader 5314 GGUF Style, LTX2.3 distilled Q4_K_M, split audio/video VAE, Gemma FP4/projection, latent x2. 3 SamplerCustomAdvanced, euler/manual sigmas, CFG 1.0, NAG, tiled VAE decode, joint AV. 모델 다운로더·RAMCleanup은 이 native prompt class 목록에 없음. UI graph의 setup/bypass 노드가 자동 실행된다는 추정은 취소. README는 downloader가 Python-side 자동 다운로드를 하지 않는 helper라고 명시; 실제 다른 side-effect 및 runtime 검증은 여전히 필요.
+- 관측된 native input mapping 후보: DenoMultiImageLoader 5281.image_paths string, resize profile; DenoLTXPromptGuide 5317.positive_prompt/negative_prompt string, language Korean; INTConstant 5036.value=8; PrimitiveFloat 5329.value=24.0→frame-rate casts 4983/5328/5385. 5038 SimpleCalculatorKJ expression 1 + 8*round((a*b - 1)/8), 이 입력에서는 산술상 193 requested frames(실제 렌더값 아님). DenoLTXSequencer 5284/5285 각각 num_images=1, insert_mode=frames, insert_frame_1=0, strength_1=1.0, strength_sync=false, bypass=false, frame_rate 및 multi_input은 연결값. 첫 stage는 preprocessing 5245, 후속은 5281 batch 직접 입력; 두 stage의 동일 역할·순서 매핑 필요. VHS_VideoCombine 4995 filename_prefix, save_output=true, audio/video linked. 이 ID들은 이 복구된 특정 graph에만 적용. 임의의 다른 recipe에 재사용 금지.
+- 실제 설치 README(5293 bytes)는 multi-image reorder/crop/fit, batch guides, Sequencer auto num_images·strength manual·bypass, preset loading, per-LoRA A/V strengths, dialogue minimum duration estimate(Korean 포함)를 설명. 실제 metadata의 multi-image count=1이므로 2장 이상 API encoding(구분자/JSON 등)은 아직 확정하지 않음. UI field name만 보고 guessed list/string format 만들지 않음. 해당 기능 public INPUT_TYPES/실행 인자 계약 또는 정상 multi-image native export 확인이 다음 좁은 검증.
+
+### A04/A05/A06/A07/A08 연출 계획의 연결 (설계)
+
+현 src/studio/director_simple.py blob 27cf48324bfc5102d42fd9889f54b6d0ba9b68c3 L286~346은 character/style 및 scene당 storyboard 1장 승인 후 scene image track patch, production state HUMAN_RELAY_UNTIL_WORKFLOW_VALIDATED. 그대로 두고 향후 전문 Add-on이 승인 storyboard를 대체하지 않는 ShotDirectionPlan을 만든다.
+
+1. A04 scene beat/관객에게 전달할 정보·인물 선택과 전후 상태를 받아 A05 shot 경계(공간/동선/시선/카메라/전후 손·소품 접촉)를 결정. 한 shot 내 복합 동작은 하나의 긴 prompt로 밀어넣지 않고, 필요시 서로 다른 연출 목적·제어 가능성에 따라 shot을 분리. 모든 scene을 같은 초/장면 수에 강제 금지.
+2. A06 approved AssetBible에서 실제 필요한 가시 참조를 선택: 시작/전환/종료 프레임, identity/의상/prop state를 목적별로 구분. 캐릭터 시트 자체를 영상의 시간 키프레임으로 무조건 삽입하지 않는다. 각 guide에 asset digest, 역할, time range, 적용 강도 후보, 선행/후속 상태, crop/fit 시 보호할 손/소품/얼굴 영역을 명시. 자료가 부족한 shot만 asset generation/repair 제안. 미승인 asset 사용 금지.
+3. Motion/Camera/Performance 계획은 각 beat별 시간 구간, 행동·반응·표정·카메라와 sound intent를 정의. Deno Prompt Guide의 대사 길이는 추정치로 사용하고 실제 고정 대사는 A08 발화 WAV/정렬 기준 사용. 생성 음성과 외부 고정 음성의 조건 의미를 혼용하지 않음. 편집 timeline range, engine requested frames 및 실제 output frames를 분리.
+4. Adapter는 plan을 검증된 native recipe의 typed bindings로 compile. image_paths의 형식 미확인 또는 필수 역할 미지원이면 HOLD. 실제 native graph에서 두 Deno sequencer의 동일 이미지 순서/num_images/time/strength와 upstream fps를 일관되게 결속. 사용자가 승인한 원본 graph, 모델, sampling/resize/AV/quality profile 유지. graph topology와 비허용 field mutation은 diff 검사에서 거절. 모호한 경우 강제 fallback/임의 그래프 재작성 금지.
+5. Manager의 기존 generic 실행/승격 계약에서 candidate를 평가: 객관 probe, 독립 시각·연기/원고/인접 shot 경계 평가. defect→원인 분류→해당 asset/guide/prompt/shot 경계 수정→영향받은 dependency만 다시 실행/평가. 승인된 다른 shot은 immutable refs로 유지. Deno 자체가 정상인 경우 Deno 개선이 아니라 연출 계획·입력·선택 정확도가 개선 대상.
+
+검증 상태: native metadata 형식과 source 구조 확인, Deno 원형 재사용 설계 선택 강화. 실제 API 제출/실행/성능 동등성, 다중 image_paths serialization, output A/V decode, 권리 및 독립 평가 NOT_RUN. D0~D5 HOLD 유지, 코드 동결. 다음은 public input contract 및 기존 2장 이상 prompt metadata를 제한적으로 확인해 실제 multi-guide compiler binding을 확정하는 작업. 새 예시 콘텐츠/노드 구현/원본 설치 수정 없음.
+
 ## 2026-11-25 사용자 결정 반영 — Deno 원형 Adopt / 연동 경계 상세화 (이전 후보 선정 서술보다 우선)
 
 사용자 직접 보고: "deno는 100% 그대로 활용해도 100% 성능 발휘함". 기존 Deno 기술을 재개발·최적화·축소하지 않고 원형 채택하는 **설계 선택** 확정. 사용자 경험은 채택 근거이며, 100%라는 수치를 독립 정량 시험 결과 또는 모든 shot/하드웨어에서의 성공 보증으로 바꾸지 않는다. D1/D3/D4/D5 및 권리/비용/실행 안전 심사는 유지. 기존 원본 graph/노드/가중치/환경 변경 0. Deno 소스 전체 역설계는 다음 작업에서 제외; 필요한 공개 입력/출력 계약과 부작용 경계만 확인.
