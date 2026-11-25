@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 실제 Murim current 연결
+
+사용자 READY E:/gpt/projects/comfyui/murim, read-only 1+7+3 ops PASS, request/receipt hashes CURRENT_STATE. 원본 3 source CRLF-normalized Git blob match. outputs/studio 3 dirs 및 기존 p1 artifacts 확인. local docs older inventory; agent receipt git_head_after is reaRoot, Murim HEAD/status 미확인. **다음:** 이미 전송한 murim-revisions-20261125-a (Drive req 1mPntqcZ9AdDn2osUaLbtRj7gt_TReUVZ) receipt 확인 후 실제 3개 project 원본 revision/approval/director/media inventory를 bounded read-only 검증. 재전송/신규 runner/원본 수정/무단 pull/GPU 금지. 복구 실행은 별도 승인·격리 및 원본 보호 전 HOLD. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 A14 async context 반증 및 P1 종료
 
 실제 원본 JS 5 fragments Node22.16.0 8 scenarios(위험7/정상1), 원본 Python guard 8 scenarios(차단6/유효 slot 의도 결속 한계1/후보 상태1). A/B late load, cleared view reopen, image/video 후속 route 변경, scene/label 및 prompt 혼합, production stale 표시 재현. 실제 server/DB/Windows/asset mutation 미시험. A14 계약 보완; 동일 자료/fixture 반복 종료. **다음:** 실제 Murim 원본을 사용자 로컬 선택 current root로 연결한 뒤 기존 승인 read-only 도구로 root/HEAD/status 및 P133 원본·승인·media inventory/복구 가능 경로 확인. 마지막 관측 ComfyUI_New는 Murim 아님. 연결/권한 미확보면 HOLD, 외부 독립 평가/시장/권리 증거 대기; 신규 코드/runner/GPU/live 변경 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
