@@ -1,3 +1,8 @@
+## 2026-11-25 — 전체 전문 공정 설계 일괄 보완 및 통합 반대심사
+
+- 사용자 요청에 따라 남은 A12~A14, 선행 A01~A06/A15 역대조를 한 작업에서 보완. [전체 설계 통합 심사](research/assurance/INTEGRATED_DESIGN_REVIEW_2026-11-25.md)에 15공정 계약/시간축·권한·SSOT·실행 복구·증거/시장 연결과 교차 반례 12개 기록. A07~A11 기존 설계·원장 유지. A12 공개/정산, A13 5축 durable execution/cutover, A14 자연어 intent/승인/실제 상태, 선행 7공정 구체 생산·평가 로직을 권위 gate 및 원장에 연결.
+- 문서 설계안 수렴 범위이며 전체 독립 감사/실물 품질/실환경/실제 관객 및 수익 검증 미완료. D0~D5 HOLD, A01~A15 NOT_QUALIFIED, 투자 후보 0. 제품 코드/Windows 변경 0. 중앙 5개 문서 적용 경로 확인, 현재 Windows 실제 연결/HEAD/사용자 변경 미확인. 다음은 기존 도구/환경 실제 inventory 및 대표 고위험 기술·독립 평가 근거 확보. DESIGN_HOLD / PRODUCT_CODING_FROZEN / COMPETITIVE_ALPHA_NOT_PROVEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-25 — A11 통합 작품·관객 평가 로직 GAP 및 D2 상세 설계 개선
 
 - [A11 설계](research/assurance/A11_INTEGRATED_WORK_AUDIENCE_EVALUATION_DESIGN_2026-11-25.md): 실제 quality_contract.py/web.py review 및 기존 통합·관객 계약, Q4 구조 검사 경계와 ITU P.910/NES, Microsoft 통제 실험/YouTube 공식 지표 비교. I111~I116 GAP, 전편 독립 감상 및 기술/전문/관객/시장 증거 분리, 사전 protocol·표본/편향/불확실성, retention 원인 가설과 국소 재검증/전역 스킬 holdout, 5축 D2 설계.

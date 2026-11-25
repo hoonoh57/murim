@@ -100,5 +100,8 @@ Alpha 후보: 전문 수준의 실제 산출물 + 적은 사용자 기술 개입
 
 - [A11 통합 작품·관객 평가 설계](research/assurance/A11_INTEGRATED_WORK_AUDIENCE_EVALUATION_DESIGN_2026-11-25.md): Core 구조검사/Studio raw review 및 기존 계약과 P.910/NES/Microsoft 통제실험/YouTube 지표 비교. I111~I116 GAP, 객관·전문·관객·공개시장 증거 분리, 통제 비교/표본·불확실성, 원인별 실험/캐스케이드·전역 개선 분리의 D2 상세 계약. 실제 독립 심사·관객/시장·평가 보정 미검증, 기존 게이트 유지.
 
+- [A12 공개·확장·수익화](research/assurance/A12_RELEASE_AND_ECONOMICS_DESIGN_2026-11-25.md), [A13 5축 실행·저장](research/assurance/A13_FIVE_AXIS_EXECUTION_DESIGN_2026-11-25.md), [A14 자연어 감독 UI](research/assurance/A14_NATURAL_LANGUAGE_DIRECTOR_DESIGN_2026-11-25.md), [A01~A06/A15 역대조](research/assurance/A01_A06_A15_DESIGN_RECONCILIATION_2026-11-25.md): 전문 생산·실행 계약 보완 및 기존 근거 결속.
+- [전체 D0~D5 통합 설계 심사](research/assurance/INTEGRATED_DESIGN_REVIEW_2026-11-25.md): 15개 공정 연결·교차 경계 반증 검토, 작성자 논리 검토 범위. D0~D5 HOLD 유지, 독립·실환경·실물 및 시장 증거 부족. 신규 코딩 승인 아님.
+
 ## 7. 다음 작업
 제품 코딩 재개 금지. [시나리오 전문 생산 상세 설계 심사](skills/screenplay-master/references/production-design-review.md)를 첫 대상 dossier로 발전. 각본 고위험 가정·평가자 보정·권리 확보 전문 원고/경쟁 앱/강한 LLM 대비 기존 도구로 실증할 수 있는 경로를 조사한다. 이어 모든 단위에 동일 절차를 적용하고 전체 설계 심사 완료 전 M1-B를 시작하지 않는다. 현 상태 DESIGN_HOLD, 전체 REMEDIATION_REQUIRED.

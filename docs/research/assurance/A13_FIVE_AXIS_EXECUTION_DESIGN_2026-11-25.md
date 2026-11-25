@@ -1,0 +1,32 @@
+# A13 5축 플랫폼·실행·저장 통합 상세 설계 v0.1
+
+2026-11-25 | 기준 22b0f9acc90c8d5d3fd09e902166ae2e96eecfd6 | D2 보완안 / A13 NOT_QUALIFIED. [5축 원계약](../../MURIM_FIVE_AXIS_ARCHITECTURE.md) blob 2fb798a0333fd2b412dea3bc40b86dd0bfe1dc5d 및 [캐스케이드](../../MURIM_CASCADING_QUALITY_CONTRACT.md) d762ae7c6fdcf2d9069a0e3f6c7582ce64c59523 우선. 기존 제품·테스트 변경 0. 전체 repository 자동 경계 검사/Windows 실행 미실행.
+
+## 실제 근거 및 대안
+현재 src/core/quality_contract.py 6b88cb3ef1465025e085ea6a4056b56f9def81c9는 순수 계약 검사; src/studio/workspace.py a900fedf439c7003411f68c7e9de6e3c791c1e63는 XML CRUD/revision; src/studio/director_simple.py 27cf48324bfc5102d42fd9889f54b6d0ba9b68c3는 별도 director book 및 M-VML 연계; 기존 web/comfy/voice/render 직접 실행 경로는 A07~A10 원장 참조. 목표 5축 routing/registry/일반 실행기·복구·migration 전체 입증 아님. 기존 M1-A 27 PASS와 M0 부분 16 PASS는 과거 국소 검증으로 유지. 이번 source 확인은 특정 경계, 전체 import/write graph 미확인.
+
+[Temporal workflow definition](https://docs.temporal.io/workflow-definition), [Activity definition](https://docs.temporal.io/activity-definition) 공식 검색/직접 본문: replay를 위한 결정적 workflow, 비결정적 외부 작업 activity, retry 및 idempotency 책임. [LangGraph persistence](https://docs.langchain.com/oss/python/langgraph/persistence) 직접 본문: thread checkpoint와 장기 store 분리, 재시작용 실제 durable checkpointer 필요; in-memory는 재시작 보장 아님. [JSON Schema 2020-12](https://json-schema.org/draft/2020-12/) 기존 5축 후보. 두 실행 기술의 장점은 재사용 후보, 실제 Windows/GPU/격리/버전/운영비 비교 전 확정 채택 금지. Temporal과 LangGraph를 동시에 공통 orchestration 권위로 사용하지 않음.
+
+| GAP | 상세 계약 |
+|---|---|
+| P131 현재 직접 호출 및 전문 로직 혼재 위험 | 단일 Bridge 경계, manager selection, manifest/schema |
+| P132 crash/timeout/중복 외부 side effect | durable intent/attempt/reconcile 및 fencing |
+| P133 XML/director JSON/목표 canonical JSON | 단일 SSOT cutover와 무손실 검증 |
+| P134 provider 추가·해제·장애 격리 | version handshake, isolated worker, drain/retire |
+| P135 다층 품질·비용·공유 자산 의존 | DAG, immutable refs, lease/budget/promotion |
+| P136 관측·보안·복구·확장성 | evidence trace, least privilege, 실증 계획 |
+
+## 목표 실행 프로토콜
+Core 공개 계약: versioned IDs/revision/digest/artifact refs/rational time, task/dependency/evidence/typed issue, 상태 전이 및 순수 structural validation. 전문 도메인 schema/validator는 등록 Add-on 소유. Bridge만 capability worker와 공통 통신, manifest/schema handshake·version compatibility·correlation/heartbeat/timeout/transport failure, lifecycle/route/cancel 전달. Manager만 registry selection, policy/authorization/budget/resource lease/job state/approval/commit/invalidation 및 승격. Add-on은 plan/generate/inspect/repair proposal/provider adapter·private state, 타 Add-on 직접 호출/공통 상태 파일 쓰기 금지. Persistence는 데이터·CAS·append/복구만. 외부 workflow runtime도 내부 실행기/adapter이며 canonical 프로젝트/승격의 별도 권위 아님.
+
+등록: discovered→validated→installed(명시 권한)→enabled→healthy/eligible, selected는 project/task별 별도 상태. versioned manifest에는 provides id/version/schema, resource/rights/cost/determinism/job/cancel/idempotency/health capabilities, settings/private schema, UI contribution 및 migration, license/evidence refs. 불명 version/권한/의존 충돌/필수 capability 불충족은 격리·HOLD. provider name을 공통 축에서 분기하지 않음. 실행 중 recipe/model/schema/skill/profile pin. 해제는 신규 job 차단→drain 또는 승인 cancel→실제 종료/lease 확인→route 제거; 원본/이력 보존, 필요한 작업만 HOLD. old/new 격리 비교와 rollback. 프로세스/환경/credential scope 분리, path canonicalization/link traversal/unauthorized network deny. 파일 경로/명령 문자열은 실행 권한 아님.
+
+Request에는 기존 envelope + attempt id/lease epoch/fencing token, expected project revision, actual input refs/hash, requested capability/schema, approved policy/rights/budget, deadline, idempotency key. Manager는 durable intent와 예산 예약을 commit한 뒤 dispatch. callback/event는 correlation, monotonic sequence/event id, provider job ref 및 actual artifact digest, execution evidence와 scope. 외부 API exactly-once를 주장하지 않음. local dedup/outbox 및 provider idempotency 지원 여부 명시. lost reply/timeout→UNCERTAIN, provider 상태·artifact를 reconcile, 확인 불가 시 HOLD 및 lease/비용 불확실성 보존, 자동 새 submit 금지. worker crash와 GPU job 종료를 동일시 금지. lease 만료만으로 이전 작업 부작용 사라졌다고 판단 금지; 실제 종료·fencing/ownership 확인. 늦은 결과는 원래 attempt 이력에 결속, 최신 revision 자동 적용 금지. retry는 일시 장애와 안전한 재실행만, 의미 개선은 새 attempt/변경 가설. parent cancel은 의존 공유 작업의 참조/소유권 확인; global kill/queue clear 금지. 중복 event 재처리해도 동일 commit/charge 기록을 보장하는 내부 정책, 외부 charge는 실제 reconciliation.
+
+DAG: hierarchy와 shared dependency graph 분리. cycle 거부; 승인 input snapshot/immutable artifact pin, affected descendants 및 부모 통합 stale; unrelated sibling 유지. parent budget reservation은 모든 child/failed attempt·uncertain cost 포함, overcommit 차단. 필요 시 동시성/자원 admission, lease 합계 및 실제 장비 건강. 품질 증거의 구조 검사와 인증/독립 의미 평가 별개(A15). 부모는 유효 child+자기 통합 심사 모두 AND, no average bypass. 동일 task의 실패 복구가 무한 실행되지 않도록 상한. scope/권리 변경 시 새 승인.
+
+Persistence: 기존 M-VML authority와 director/book/editorial 원본 읽기/쓰기는 현재 경로 보존. target JSON projection은 read-only isolated, schema version/digest, revision parent and artifact manifest, approval/evidence refs, private namespace. migration mapping은 scene/track/asset/range/rights/approval/history/review/cache provenance 전수 비교, 미지원 필드는 별도 보존·loss report; 승인 의미 손실 BLOCK. atomic file/transaction CAS와 crash-safe manifest journal/commit marker, partial media stage quarantine, orphan recovery(승인 없는 삭제 금지). 단일 authoritative revision pointer를 cutover 승인 후 변경; 양방향 dual-write 금지. rollback은 source immutable snapshot/새 authorized revision, conflict 발견 시 중지. 백업 restore 실제 검증 후 cutover. 기존 사용자 파일 보호. credentials은 OS secure store/권한 token handle, canonical JSON/telemetry/LLM에 원문 금지.
+
+## 선택 및 검증
+Adopt 기존 SDK/JSON Schema/OS 격리/검증된 durable runtime 후보, Compose generic orchestration 및 artifact/evidence/lease boundary, Build Murim 특유 정책/캐스케이드/adapter. Temporal의 서버 운영비·local Windows 설치/버전/replay migration, LangGraph checkpoint/replay와 외부 작업 idempotency를 동일 난제에서 비교 후 단일 선택. 외부 durable engine이 없으면 안전한 현재 범위 HOLD, 기능별 임시 queue 분산 금지.
+독립 반증: 0/100/300/500 registry(등록만 vs 실제 자원 실행 분리), A/B/미지 Add-on 설치·제거 전후 Core/Bridge/Manager/shell hash 불변, feature-specific source diff 검사, generic primitive 부족은 둘 이상 독립 사례로 제안. lost reply/duplicate/out-of-order/stale/restart/partial write/failed cancel/expired lease/외부 queue interference, multi-parent shared artifact, schema mismatch, malicious manifest/path/link, permission escalation, budget overrun, migration/restore/rollback 및 실제 Windows WYSIWYG. 기존 whole repo 자동 감사와 변경분 감사 및 전체 compliance 따로 판정. 현재 설계만 보완; runtime/5축 준수/실측/독립 감사 NOT_RUN, D5 HOLD.
