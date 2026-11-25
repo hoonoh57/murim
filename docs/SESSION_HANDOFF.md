@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 A13 P135 DAG/예약/fencing
+
+NetworkX3.6.1/graphlib + SQLite3.46.1 Linux fixture 15 probes, 보호12/반례3(미선언 dependency 자동 node x2, cap CHECK 실제 초과 청구 기록 거부). 공유 character 영향 shot1/2/edit/review, shot3 유지, 순환 차단, 두 thread conn reservation 60 중1, UNCERTAIN hold, 실제45 정산/중복 방지, epoch/revision late publication 차단. 기존 render cache/quality contract 정적 대조. A13 상세 계약에 graph identity, cache/evidence separation, shared consumer, admission vs factual overrun, fencing 보완. 실제 Windows/GPU/provider/scheduler/품질 미검증. **다음:** P136 observability/security/least privilege/recovery evidence, 기존 local-only token/path/redirect/graph/receipt 계약 및 기존 기술 비교, 최소 격리 반증. 신규 제품 코드/runner/GPU/live 변경 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 A13 P134 Add-on 발견/등록/격리
 
 Windows 기존 current read-only 4/4, nodes.py full coverage SHA 및 manager 파일 확보. 실제 loader AST V1 4 scenarios: custom duplicate overwrite/base protected, failed import side effects, partial registration after false, stale class ref on reload. Entry Points discovery≠load, Pluggy exception propagates/unregister/duplicate/block 실제 확인; 0/100/300/500 metadata-only count, independent child exit/timeout isolation (Linux, actual host/Windows/GPU 아님). A13 P134 계약에 qualified identity/validate-before-load/atomic publication/generation drain+fencing 추가. **다음:** P135 DAG/shared dependencies/lease/budget/promotion 기반 비교 및 최소 격리 반증. 신규 제품 코드/runner/GPU/live 변경 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
