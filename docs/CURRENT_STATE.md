@@ -1,3 +1,9 @@
+## 2026-11-25 — Windows Murim READ 연결 복구 PASS
+
+- 사용자 CMD 화면: [RECOVERED] 이전 PID 종료/잠금 보관, [READY] active workspace E:\gpt\projects\comfyui\murim. 사용자 [PASS] murim-reconnect-inventory-20261125-a 22ms. Drive 원본 요청 ID 1cz4QQHHYod53N9wYy4oyo2oAWBpHk6vF, 실제 응답 ID 1PtjzYUJlTVac2FQMySinTADmo_oIfAEL. 격리 Python에서 raw JSON 요청 453 bytes SHA256 2797a2b4260edeba87775638ab72d89913540466ade82af9db315e5550f4e7a7 = receipt request_sha256, receipt 5102 bytes SHA256 90e5692aa3130b9bbdb86fcc58c01a4f7c08aca72aec3639a85476acae962858, 2026-11-25T01:12:12.639Z~.663Z, 22ms, 5/5 PASS, side_effects_possible=false, README 512-byte chunk hash 일치. receipt git_head_after는 중앙 REA root이므로 Murim local HEAD로 해석 금지.
+- 현재 root 32 entries, workflows 3 entries (ltx2_i2v_api.json, scail2/, wan22_5b_api.json), outputs 7 entries, docs 21 entries. 로컬 docs에는 11/25 설계 원장 파일들이 목록상 없음; 원격 원본과 로컬 동기화/HEAD/dirty 상태 별도 확인 필요. 현 root 밖 엔진 및 GPU 실행·품질은 아직 NOT_RUN. 기존 읽기 연결만 복구, 제품 변경 없음.
+- 다음 읽기 전용 요청 murim-existing-evidence-20261125-a 제출: Drive ID 1epuV9P33b8xbNXaJBc3AZQfzn_rAeb4L, 746 bytes SHA256 78a4445c1f2cf3cf8cf895338a714fdb18f007b800e3038ec0d53775160d92fe. 기존 outputs/p1_comfyui, outputs/sehando, outputs/studio, outputs/voice-tests, experiments, workflows/scail2 목록 및 LTX/WAN workflow 읽기 8 operations. 응답 미확보 상태에서 신규 요청 재전송 금지. 기존 실제 결과/recipe 증거를 복구하고 그 다음 별도 승인 경로의 엔진 inventory/필요 실행 검증. D0~D5 HOLD, A01~A15 NOT_QUALIFIED, PRODUCT_CODING_FROZEN.
+
 ## 2026-11-25 — 사용자 승인 미응답 요청 2건 보관 완료
 
 - 사용자 현장 확인: 기존 Windows CMD 종료, 지정 claim glob 및 E:/ComfyUI_New/LTX_Talking_Studio* 읽기 전용 확인 출력 없음. 해당 경로의 관측이며 실제 요청 처리 여부 UNKNOWN 유지.

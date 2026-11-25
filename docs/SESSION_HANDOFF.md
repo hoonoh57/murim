@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 Windows Murim READ 복구 PASS (최우선)
+
+실제 READY 화면, read-only 왕복 응답 5/5 PASS(22ms), raw request/README chunk SHA 일치. CURRENT_STATE 최상단 참조. 새 read-only murim-existing-evidence-20261125-a 제출, 다음은 해당 receipt를 검증하고 기존 영상/음성·workflow 실제 근거를 확인. 현 root 밖 엔진·GPU 실행 불가, 별도 승인된 경로 필요. 기존 제품 파일 변경 및 코딩 금지; 전체 D0~D5 HOLD 유지. 사용자에게 반복 설치/소스 수동 수정 요구 금지.
+
 ## 활성 인계 — 2026-11-25 미응답 큐 보관 후 안전한 재연결 (최우선)
 
 사용자 승인으로 미응답 LTX 요청 2개를 Drive sibling archive로 이동, 활성 큐 미응답 0/원본 ID·크기 보존. 실제 로컬 동기화 및 CMD 실행은 미확인. **다음 단일 작업:** 동기화 완료 및 로컬 current-workspace에 두 요청이 없는지 확인 후 기존 start-workspace-agent.cmd로 Murim root 선택, READY 실제 경로 확인. 그 후 새로운 read-only 연결 검증/현재 inventory. 기존 요청 재전송·새 설치·무단 제품 코드 변경 금지. D0~D5 HOLD 및 코드 동결 유지. 상세 CURRENT_STATE 최상단.
