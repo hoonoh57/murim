@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 P133 actual media full SHA-256 PASS
+
+사용자 승인 중앙 generic workspace_hash 구현 및 Drive 기존 agent 안전 배포 완료; source fba3c7ec320ab5e25445f6d42f4f917b448fed5f, existing19+18/new11 isolated PASS, actual two current receipts 12+5 PASS, original 3 revision maps identical, full SHA and size 17/17 match 13,701,748B, 0 media bytes exported, receipt 9045B/207ms worker. 요청/영수증 SHA와 ID는 CURRENT_STATE. No Murim product/source/data mutation, no new runner, XML SSOT. **다음:** 기존 독립 durable backup/latest anchor custody 및 격리 복원 evidence contract의 read-only 평가; 실제 백업/복원 쓰기 별도 승인·독립 작업공간·원본 보호 전 HOLD. 동일 media 재검증 반복 금지, Windows negative scope tests, source live hash, Murim HEAD/status, atomic snapshot, full restore, rights/positive approval 미검증. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 P133 media size / hash-only capability HOLD
 
 실제 Murim current length1 17/17 PASS, all media size13701748B, request/receipt SHA CURRENT_STATE. 기존 중앙 runner current allowlist list/read/find/apply, chunk hash only, whole-file hash/Git status 미지원. 전체 전송 216 slices/54 batches 추정, 미실행. **다음:** 중앙 기존 agent에 범용 read-only local streaming hash 기능 보완에 대한 명시적 사용자 승인 필요(새 runner/제품 코드 아님); 승인 전 HOLD, 쉘/다른 scope 우회/대용량 전송 금지. 실제 전체 media SHA/Windows restore/rights/latest anchor/Git status 미검증. XML SSOT 유지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
