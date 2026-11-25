@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 A13 설치 ComfyUI queue/reconcile 반례
+
+실제 설치 0.20.1 server/execution/main/version 4개 전체 byte SHA 검증, read-only 5/5 PASS. source /prompt client ID 지정 가능하지만 기본 dedup 없음, 실제 PromptQueue AST 격리 실행 동일 ID 2개 pending/단일 delete 후1/두 완료 history overwrite/fresh instance empty. HTTP200 cancel/delete는 terminal proof 아님, targeted interrupt snapshot 이후 global flag 호출 경쟁 위험(소스 관측), /api/jobs도 queue/history 기반. 실제 Windows live 실행/재시작/DB/취소 미시험. CURRENT_STATE 최상단 증거. **다음:** A13 P133 기존 M-VML/XML·director book·review/approval/asset provenance 저장 경계 및 원본 보호·격리 round-trip 가능 범위 검증. 신규 제품 코드/runner/GPU/live queue mutation 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 15공정 P0 후속 통합 재심사
 
 이전 통합 기준 dc2bf1fcd1bfecf935cd70fa775acdfca7fff5a8 이후 6 commits/4 docs modified/delete0. 기존 통합 원장 최상단 15행 실제 AV/외부 평가기/재무 반례 및 잔여 조건, P0 종료·재개 조건 반영. 기존 p01_03 조립본 기술 decode 범위 완료, 독립 의미·동종 시장/정산·권리/실제 실행 미확보. **다음:** A13/A07 기존 설치 ComfyUI server/queue/history 관련 소스 read-only로 prompt_id 재제출/응답 유실/queue-history 전이/cancel 범위 확인, reconcile/중복 실행 방지 설계 대조. 실제 runtime 시험과 소스 분석 구분. live queue mutation/GPU/새 runner/제품 수정/동일 조사 반복 금지. 기존 P0는 새로운 독립 참조/승인 환경/동종 정산 근거 확보 시 재개. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
