@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 실제 ComfyUI/LTX 설치 및 전체 graph 실측 (최우선)
+
+사용자 READY E:\ComfyUI_New. 현재 설치 파일 inventory 12/12, 전체 LTX 5 graph 24/24 read/list PASS 및 request/chunk SHA 일치. CURRENT_STATE 최상단에 파일별 SHA/graph/모델 증거. GGUF 후보 6/6 모델 파일명 존재, 새 multi는 author와 동일 graph 및 저장된 참조 한 장. FP8 multi 예제 transition LoRA 목록 미발견 및 VHS mode4, 그대로 실행 금지. 모두 UI graph; 명시적 외부 음성 A2V 없음. **다음:** Deno node source/loader/side effects 및 기존 output metadata/API export/로그를 동일 root에서 확인, 신뢰 API recipe/실행 경로와 입력·출력 계약을 구체화. 신규 설치/다운로드/원본 수정 금지. 실제 GPU/품질/독립 평가 NOT_RUN, D0~D5 HOLD/제품 코딩 동결 유지.
+
 ## 활성 인계 — 2026-11-25 기존 SCAIL/음성 실제 설정 확인 (최우선)
 
 읽기 10/10,12/12 PASS, SCAIL graph 전체 복구·원격과 LF 정규화 일치, 두 graph는 입력 영상/출력 명칭만 다름. 검술 driving 기존 탈락, identity placeholder. GPT-SoVITS 4 WAV 헤더/설정 검증, v3/v4 custom.version=v2 불일치 후보 및 실제 runtime binding 미확인. CURRENT_STATE 최상단 증거 참조. **다음:** 기존 결과 receipt 및 실제 품질 근거 필요한 만큼 확인 후 별도 승인된 엔진 root에서 LTX 실제 workflow/모델·환경 inventory. 현 root 외 접근/임의 GPU 실행 불가, 새 설치·코드 변경 및 실패 실험 반복 금지. D0~D5 HOLD/코드 동결 유지.
