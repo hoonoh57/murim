@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 Deno 입력 규격 확인 및 음성 시간 연결 (최우선)
+
+실제 설치 3 source 전체 read 3/3 PASS, request/chunk SHA 일치. A07/A08 최상단 계약: LF 이미지 목록, slot별 frame/strength, loader silent skip/black fallback을 Murim preflight 및 실제 output 증거로 차단; UI 언어/negative 표시를 runtime 제어로 오인 금지. Deno 원형 변경/전수 역설계 제외. Joint AV / fixed voice-first A2V / narration 분리 및 rational timeline. **다음:** A09/A10 기존 실제 renderer·편집 로직과 공동 AV/독립 stems 통합 계약 구체화. Deno native multi runtime/LTXVAddGuide 실효 index/live schema 및 GPU/품질 미확인, 이후 D1/D4 검증에 남김. 제품 코드 동결 및 전체 HOLD 유지. CURRENT_STATE 최상단 참조.
+
 ## 활성 인계 — 2026-11-25 native Deno API prompt 실물 복구 (최우선)
 
 E:/ComfyUI_New 읽기 5/5+4/4 PASS, 실제 기존 출력 PNG tEXt prompt CRC/JSON 확인 46 nodes/79 links, 실제 1-image native GGUF graph. A07 최상단 native 실행 형식 및 ShotDirectionPlan 계약 참조. 이전 원본 graph 변환 과제는 native prompt 재사용으로 좁힘. **다음:** public INPUT_TYPES/다중 이미지 serialization 또는 실제 multi-image metadata만 확인하여 compiler binding 확정, A06/A08 연계. 실제 /object_info/GPU/AV·독립 품질 및 multi-guide 실행 NOT_RUN. 원본 수정/다운로드/신규 영상 반복/제품 코딩 금지, D0~D5 HOLD. CURRENT_STATE 최상단 증거.

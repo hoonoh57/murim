@@ -3,6 +3,19 @@
 2026-11-25 KST | 기준 6ec3ede4b163fd8796f37d2fa7b371e226703e24 | D2 상세 설계 보완안 / A08 NOT_QUALIFIED / DESIGN_HOLD.
 [5축](../../MURIM_FIVE_AXIS_ARCHITECTURE.md), [D0~D5](../../MURIM_PRECODE_DESIGN_GATE.md), [A07](A07_VIDEO_PRODUCTION_DESIGN_2026-11-25.md) 및 기존 공정 기준 유지. 현재 소스와 원저자 처리 로직 비교; 실측/코드/설치/지출 없음.
 
+## 2026-11-25 — Deno 공동 AV 생성과 확정 음성 기반 제작의 분리
+
+실제 설치 DenoLTXPromptGuide.build는 양·음성 prompt CLIP encode 및 int fps conditioning만 수행한다. language와 show_negative_prompt는 실행 함수에서 언어 강제/negative 비활성화에 사용되지 않는다. README의 대사 최소 길이 추정은 UI planning 보조이고 실제 생성 음성 길이/원문/발음/연기 보장이 아님. 이전 native Deno prompt의 EmptyLatentAudio→joint sampling→audio decode 경로는 외부 waveform 입력이 없는 공동 AV 생성이다. A07 최신 계약 참조.
+
+전문 Add-on이 shot마다 다음 제작 방식 중 필요 조건에 적합한 capability를 제안한다(Manager generic hard filter). 자동 모델 대체 금지.
+- Joint AV: 영상/대사/음향을 함께 생성하는 승인된 Deno recipe. A04 원문/UtterancePlan에서 화자·대사·연기·시간 제약을 prompt에 결속. 생성된 실제 음성 자체를 candidate take로 등록, 한국어 ASR/청취/화자 identity/정렬/실제 화면과 입모양을 평가. 음성이 나왔다는 사실만으로 원문 정확/특정 목소리 보장 금지. 사용자가 동일 음색/원문/시간을 필수로 요구하고 joint AV가 충족 못하면 해당 recipe HOLD. 대사 없는 shot에서 우발 대사도 검사.
+- Voice-first: 기존 승인 GPT-SoVITS 등의 실제 take를 먼저 생성·검증, 실제 sample count/rate 및 발화/호흡/반응 구간으로 shot duration과 guide time을 결속. 고정 음성을 입력받는 검증된 A2V 또는 face-dubbing capability에만 전달. 현재 확보한 Deno native graph에는 이 조건화 입력이 없다. 다른 오디오를 mux한다고 립싱크 성립하지 않음.
+- Narration/offscreen: 내레이션/화면 밖 음성의 실제 길이로 편집과 guide 시점을 계획하되 화면 인물의 입동작을 요구하지 않음. BGM/효과음/음성은 실제 분리 가능한 track/stem만 A09에 전달. 공동 AV audio를 D/M/E 분리된 원본으로 간주 금지.
+
+시간 계약: source script/shot revision, speaker/face visibility, 승인 take hash, sample interval [s,e), rate R, offset/trim/retime transform, rational fps F와 timeline start pin. t=sample/R의 정확한 유리수 시간으로 관리; half-open interval의 시작/끝 및 frame rounding policy 분리, 실제 발화 누락 방지. Deno 복구 recipe의 seconds INT 및 8n+1 frame calculator는 요청 frame 생성용이며 정확한 편집 duration이 아니다. 필요한 실제 발화+reaction/handles를 만족하는 승인된 duration/recipe를 선택하고 실제 output frames/PTS/audio sample range를 probe, A10 edit에서 사용 범위 지정. 부족하면 timeline/shot split/take 재연기 승인, 임의 절단/과속/음성 교체 금지. prompt의 quoted dialogue estimate를 actual timing으로 승격 금지. joint AV의 실제 발화가 바뀌면 guide/편집/자막/mix 의존성 재평가; voice-first에서는 승인 WAV 변경 없이 영상만 국소 수정 가능 범위 별도 확인. Deno 및 GPT-SoVITS 원본 변경 0.
+
+현재 Deno 공개 입력 규격 source 확인만 완료. Korean utterance 실제 독립 평가/정렬, A2V installed recipe, lip sync, 다중 화자/음색, D1/D3/D4/D5 미입증. A08 NOT_QUALIFIED 유지. 다음은 A09/A10에서 실제 공동 AV와 독립 stems/편집 시계 간 결합 및 기존 renderer GAP 상세화; 동일 Deno 입력 조사 반복 금지.
+
 ## 1. 현재 실제 구현 및 GAP
 
 - src/studio/voice.py blob 3f901f8243a595d30b228d3bb581818df9d8d761: rights_confirmed, 장면 voice 트랙 text/speed/temperature, 고정 narrator ref와 transcript, reference/worker digest 기록, subprocess 1800s, media_info, 자동 트랙 바인딩 및 기존 lip-bound 제거. 청취 승인 별도. 기존 권리·원본·무단 fallback 금지 유지.

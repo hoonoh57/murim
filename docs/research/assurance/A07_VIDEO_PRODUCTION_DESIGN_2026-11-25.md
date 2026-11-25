@@ -3,6 +3,35 @@
 2026-11-25 KST | 기준 ca38eee61cda7fd950e39095f00a36f886fecce1 | D2 설계 개선안(향후 구현 기준), D1/D3/D4/D5 HOLD, A07 NOT_QUALIFIED.
 권위: [5축](../../MURIM_FIVE_AXIS_ARCHITECTURE.md), [D0~D5](../../MURIM_PRECODE_DESIGN_GATE.md), [품질 캐스케이드](../../MURIM_CASCADING_QUALITY_CONTRACT.md). 사용자 목적: 코딩 전 강한 실제 구현과 로직 비교 후 설계의 기반 높이기. 예시 콘텐츠 생성 대신 source-level GAP 및 보완 계약. 코드, 테스트, 설치, 유료 실행 없음.
 
+## 2026-11-25 — Deno 실제 multi-guide 입력 계약 및 전문 연출 결정 로직
+
+### 설치 원본에서 확인한 계약 (원형 Adopt 유지)
+
+E:/ComfyUI_New, req comfy-deno-multi-input-20261125-a (CURRENT_STATE receipt), 설치 Python 3파일 전체 read-only 대조. 외부 최신 버전/README 추정 대신 설치 버전의 실제 INPUT_TYPES 및 실행 인자 처리 기준. 실행이나 import는 하지 않았다.
+
+| 계약 | 실제 원본 | Murim 전문 Add-on의 보완 경계 |
+|---|---|---|
+| 이미지 목록 | deno_multi_image_board.py _split_paths: splitlines→strip→빈 줄 제외, 순서 보존. _resolve_path는 현재 경로 존재 우선, 아니면 input_directory 결합 | 고유 승인 input 파일명만 LF로 join, CR/LF/경로 탈출/절대 경로/공백 오염/경로 충돌 거절. 업로드 응답 및 실제 저장 bytes 검증; 경로 존재 우선 해석의 다른 파일 충돌도 차단 |
+| 이미지 배치 | _load_single_image: EXIF transpose→RGB→resize. 실패 시 None, load_images는 성공분만 append. empty 또는 batch shape 불일치 시 1×64×64×3 zeros | 전량 decode/권리/digest/실제 경로/resize profile/crop 보호 영역을 preflight. 하나라도 실패하면 전체 해당 shot HOLD. 실제 batch count/order와 로그·출력 근거가 불충분하면 품질 승인 금지; 실패 이미지 skip 후 잘못된 시점에 다른 이미지가 결속되는 현상을 성공으로 인정 금지 |
+| 크기 | Keep Input Ratio는 첫 이미지 비율 기준; Preset Ratio 또는 Manual Input 가능. 전체 배치에 공통 크기 | 첫 이미지 역할과 종횡비를 명시, 변환 전후 구도 검증. 기존 resize/sampling profile을 임의 변경하지 않음 |
+| 시간 | deno_ltx_sequencer_plus.py INPUT_TYPES: num_images 0..50, frame_rate INT 1..120, frames/seconds; frame -9999..9999, second 0..9999 step 0.1. seconds 실행 int(float(seconds)*fps) | 승인된 shot-local rational time→정수 frame 변환, frames mode 우선. 0..N-1 범위 및 실효 guide 위치·충돌 검증. 음수 index/latent 양자화는 설치 LTXVAddGuide의 실제 동작 및 실증 확보 전 사용 금지 |
+| 개수와 순서 | effective_count=min(num_images,batch_size), 반복 index 1..N, multi_input[index-1:index]. 미지정/변환 실패 frame skip | batch count=declared count=guide count를 필수 invariant. 모든 slot의 time/strength 명시. 무단 잘림/누락/중복 시점 방치 금지 |
+| 강도 | strength_i FLOAT 0..1 step .01; 누락/변환 실패 default 1.0, <=0 skip, >1 clamp. strength_sync는 execute에서 미사용, bypass=true passthrough | 모든 active slot finite 및 0<strength<=1 명시; 의도적 비활성 guide는 계획에서 제거하거나 별도 명시. UI sync에 의존 금지. 필수 guide와 bypass 충돌 거절. stage별 strength는 의미 있는 검증된 profile에서만 달리 허용 |
+| 실제 guide | LTXVAddGuide.encode/get_latent_index/append_keyframe 호출, latent 범위 assert | Deno 알고리즘 수정/재구현 금지. 실제 latent index/실효 temporal resolution은 별도 installed core contract 확인 필요. nominal frame 차이가 latent상 동일할 수 있으므로 runtime evidence 없으면 해당 배치 승인 HOLD |
+| prompt | deno_ltx_prompt_guide.py build: CLIP 양/음성 prompt 각각 encode, int(frame_rate) conditioning; language, show_negative_prompt는 함수 내 실질적 제어에 미사용. 대사 길이 추정은 UI 계획 보조 | Korean label을 실제 음성 언어/정확한 발음/연기 보장으로 해석 금지. negative hide는 비활성화가 아님; 승인된 실제 negative text를 명시. 한국어 대사 및 시간 정보는 A08 계약과 검증 |
+
+기존 native prompt(46 nodes/79 links) 기준 5281.image_paths, 5284/5285.num_images 및 insert_frame_i/strength_i의 public optional slots, 5317.positive_prompt/negative_prompt, 5036.value duration(정수), 5329.value fps upstream, 4995.filename_prefix만 recipe-specific mapping 후보. 1장 prompt에는 slot 1만 실제 존재. slot 2+는 native API export/실제 object_info와 버전 검증 후 승인된 optional inputs로 추가 허용할 수 있다(원본 topology 변경과 구분). 50은 schema 상한, 현재 GPU 성능/동시 처리 권장 장수 아님. 실제 public schema/graph model/digest mismatch면 HOLD; 기존 parse_graph를 무조건 약화하지 않는다.
+
+### 연출 계획 결정: 의미 기반 sparse guide placement
+
+- A04의 beat별 의도/관객 정보/인물 선택과 전후 상태, A05의 shot 경계·blocking/카메라 축·시간 범위, A06 승인 reference/가시 상태/보호 영역, A08 발화/반응 시간을 입력. 각 guide는 해당 시점에서 해결해야 할 연출 문제(시작 구도, 물체 접촉/소유 변화, 표정·행동 전환, 종료 상태 등)를 명시. 정체성 전용 이미지와 실제 시간상 keyframe을 혼동하지 않음.
+- 먼저 필수 시작/종료 및 사건 상태 제약을 설정. 시작/끝 상태가 모순, 시간 부족, 서로 다른 얼굴/복장/공간, 동작의 물리적 불가능, 시점 충돌이면 shot split 또는 상위 plan/asset 수정을 제안. 단순 동작은 한 장 recipe도 가능; 이미지 개수를 많게 하는 것이 목표가 아님.
+- 기준점 후보는 사건 상태 전환 직전/직후, 소품 접촉/이동, 카메라 방향 변화, 실제 발화·반응에 필요한 시점. 승인된 시간 범위 안에서만 선택. 동일 이미지나 같은 의미의 근접 guide는 불필요한 중복 제거 후보; 필수 제약이 없어지면 제거 금지. 공통 batch resize 후 필요한 가시 상태가 보존되지 않으면 해당 asset 교체/shot 구도 수정. 도중에 인물 상태나 화면 방향을 무단 변경하지 않음.
+- strength는 목적별 고정 품질 수치가 아니라 검증된 recipe/profile에서 선택할 제어값. 시작/끝·필수 contact/identity를 보존하면서 움직임 자유도/전환 자연스러움과 trade-off. 과도한 강도로 장면 경직/자연스러움 저하 또는 낮은 강도로 상태 drift가 발생할 가능성을 평가. 임의로 0.8/0.5 같은 전역 상수 최적값 선언 금지. 기존 승인 profile(복구 1장 1.0)을 기준으로, 검증된 다중 가이드 결과와 실제 실패 근거로 해당 역할의 strength 정책을 보정. 보정 전 자동 선택은 명시된 후보/HOLD.
+- ShotDirectionPlan→GuidePlan(ordered guide IDs, approved asset hashes, role, shot-local rational time + integer frame, stage-specific strength, crop constraints, mandatory reason)→recipe adapter. A07과 A08 공통 generic job/evidence contract에서 Manager가 입력·권리·budget·resource·dependency 및 승격을 관리. 새 Deno-specific Core/Bridge/Manager 분기 금지. JSON은 저장만.
+- 순수 결정 계약 반례: 누락/깨진 두 번째 이미지로 3번째 이미지가 2번째 slot에 들어감, 빈 배치 black fallback, num_images>batch, 잘못된 frame 값/NaN/0 strength/bypass로 guide 소실, seconds float 절삭, linked fps 불일치, 다중 stage 순서 다름, 숨긴 negative text가 계속 encode됨, 외부음성 없는 graph에 GPT-SoVITS ref 지정. 현재 반례 분석은 source-derived design review, 실행 테스트 PASS 아님.
+- 실제 시각·음성 성능 기준 보정 전에는 자동 품질 승격 금지. 다음 A08/A09/A10 연결에서 실제 발화·편집 시간을 authority로 다룬다. 추가 Deno 전체 source 역설계/같은 영상 예시 반복은 제외. 설치 LTXVAddGuide 실효 index 및 native multi-guide runtime/schema/batch 증거는 D1/D4 통합 검증 항목으로 남긴다.
+
 ## 2026-11-25 — 원본 Deno API prompt 복구 및 연출 계획 컴파일 계약
 
 ### 기존 실물에서 복구한 native 실행 형식
