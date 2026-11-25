@@ -1,3 +1,9 @@
+## 2026-11-25 — Deno 원형 재사용 채택 / 전문 자동화 연동 계약 확정 방향
+
+- 사용자 명시 Deno 원형 활용 성능 보고를 근거로 설계 선택 Adopt-original 확정. 내부 역설계/재개발/최적화 제외. 사용자 경험과 독립 성능 실측 구분. 기존 Deno 설치/원본 workflow/모델/설정 불변.
+- A07 원장에 실제 comfy.py 재확인 근거 및 원형 보존형 typed binding/recipe manifest/출력·attempt 결속/최소 동등성 검증 계약 추가. scalar-only 제한과 UI/API 차이를 개선 대상으로 특정. 원본 재구현/임의 graph surgery/guard 완화 금지. Deno의 멀티 참조/시간 조건은 검증된 API field/linked input 기반으로만 제공. A08 외부 음성은 별도 capability.
+- 현재 Drive queue 74 entries, 대응 미응답 0 (목록 pagination 완료). 이번 Windows 신규 요청/실행 없음. 최신 사용자 확인 root E:/ComfyUI_New; 현재 worker/서버/GPU 상태는 신규 미실측. 다음: 기존 정상 recipe native API export 또는 기존 실행 metadata 및 출력 증거를 읽기 전용 확인, 원형 그대로 자동 호출할 계약을 확정. D0~D5 HOLD, A01~A15 NOT_QUALIFIED, PRODUCT_CODING_FROZEN, REMEDIATION_REQUIRED. 제품 변경 0.
+
 ## 2026-11-25 — 실제 ComfyUI 설치 및 LTX 5개 전체 그래프 확인
 
 - 처음 root probe는 Murim 목록(7ms), 실제 경로 변경 실패였음. 이후 사용자 CMD 명시 [READY] active workspace E:\ComfyUI_New 확인. current inventory 요청 1Dr0dAS3gp5pMywh40gK4gOJQXQNGdI1z / 응답 1jLi5-2rJIZM5lQ9LuVaFSnBQFdunitsy SHA256 4e22abf52a264776653f926530b54fa050e645543a3fba380b69c2fb52c535b6, 12/12 PASS 28ms, 원본 요청 SHA 일치, side_effects_possible=false. ComfyUI 0.20.1(설치 소스 comfyui_version.py; 실행 중 버전은 미확인), 모델 dir 32개, custom_nodes 22 entries, workflow 18 entries. 현재 WAN 5B/14B, LTX2.3 Q4 GGUF/FP8, split audio/video VAE, Gemma FP4/FP8, projection, spatial upscaler x2, ACE-Step v1/Stable Audio Open 파일명 존재. LTX2.5 및 ACE-Step1.5 설치 확정 근거 없음. 모델 bytes/loader health/VRAM 실제 실행 NOT_RUN.

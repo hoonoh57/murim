@@ -3,6 +3,34 @@
 2026-11-25 KST | 기준 ca38eee61cda7fd950e39095f00a36f886fecce1 | D2 설계 개선안(향후 구현 기준), D1/D3/D4/D5 HOLD, A07 NOT_QUALIFIED.
 권위: [5축](../../MURIM_FIVE_AXIS_ARCHITECTURE.md), [D0~D5](../../MURIM_PRECODE_DESIGN_GATE.md), [품질 캐스케이드](../../MURIM_CASCADING_QUALITY_CONTRACT.md). 사용자 목적: 코딩 전 강한 실제 구현과 로직 비교 후 설계의 기반 높이기. 예시 콘텐츠 생성 대신 source-level GAP 및 보완 계약. 코드, 테스트, 설치, 유료 실행 없음.
 
+## 2026-11-25 사용자 결정 반영 — Deno 원형 Adopt / 연동 경계 상세화 (이전 후보 선정 서술보다 우선)
+
+사용자 직접 보고: "deno는 100% 그대로 활용해도 100% 성능 발휘함". 기존 Deno 기술을 재개발·최적화·축소하지 않고 원형 채택하는 **설계 선택** 확정. 사용자 경험은 채택 근거이며, 100%라는 수치를 독립 정량 시험 결과 또는 모든 shot/하드웨어에서의 성공 보증으로 바꾸지 않는다. D1/D3/D4/D5 및 권리/비용/실행 안전 심사는 유지. 기존 원본 graph/노드/가중치/환경 변경 0. Deno 소스 전체 역설계는 다음 작업에서 제외; 필요한 공개 입력/출력 계약과 부작용 경계만 확인.
+
+### 실제 근거와 보완 범위
+
+- CURRENT_STATE의 실제 E:/ComfyUI_New inventory 및 다섯 graph 복원 근거(기준 9b7d164533f767997bc18d76e2d050447627ddc1) 우선. GGUF author/author2/multi recipes와 FP8 Deno ver2는 별도 capability/profile로 구분. 저장된 1장 설정이 최대 기능 수를 의미하지 않음. multi_images graph 이름만으로 다중 입력 실증을 선언하지 않음. 기존 Deno 사용자 실행 품질을 존중, 동일 검증 예제 반복 대신 자동화가 원형 성능을 보존하는지 최소 대조.
+- 직접 재확인한 src/studio/comfy.py blob 634e67ebfd8d6e51714e96218dce54be50c4ec10: parse_graph는 2MB/300 nodes/connection pair, HTTP URL 문자열 거부; describe_graph/resolve_binding은 기존 string 필드만 노출/수정; bind_inputs는 image/audio/motion/output 4 mapping 고정; generate는 image 1개와 optional untrimmed audio, upload 후 graph 기록, object_info class presence 확인. Deno UI graph 자체를 넣으면 거절되는 정상 경계이며, 숫자·boolean·다중 이미지 조건 전달 미구현. 타입 검증을 우회하거나 parse_graph allowlist/URL 검사를 약화하지 않음. Deno downloader 같은 별도 side effects를 포함한 실행 그래프는 사전 확인 없이 호출하지 않음.
+
+### 원형 보존형 Add-on 계약 (D2 설계, 아직 구현 없음)
+
+| 역할 | 입력/출력 계약 | 변경 금지/검증 |
+|---|---|---|
+| 승인 원본 recipe | source UI workflow SHA, ComfyUI 버전/installed node contract, 모델/LoRA/환경 refs, 실제 native API export digest | 원본 UI/노드/weights 불변; 지원되는 native export/실제 API history로 확보, 임의 flatten/rebuild 금지 |
+| 전문 shot planner | shot_revision, 목표 연출, reference roles/asset digests, time/rational fps/strength, prompt, audio requirement, output constraints | Deno에만 맞춘 Core schema 금지. 필수 제어 미지원이면 HOLD |
+| Deno adapter | 검증된 recipe별 typed input binding manifest, exact node id + class_type + field + type/limits + 연결 여부 | 실행 사본에 승인된 외부 입력만 bind; 구조·연결·알고리즘/기본 품질 profile 보존. 링크로 연결된 값은 실제 upstream 입력으로 매핑. 서로 다른 recipe의 ID/필드 추정 재사용 금지 |
+| 결과 수집 | attempt/ref, provider prompt_id, 지정 output node, saved artifact digest, actual fps/frames/duration/audio streams | 출력 추측/최신 파일 검색으로 다른 job 결과 결속 금지. 실제 AV probe와 원본 대비 성능 평가 별도 |
+| 공통 Manager/Bridge | capability manifest/lease/attempt/approval/reconcile/evidence | provider-specific if/else 금지. JSON persistence-only; direct addon-to-addon 호출 금지 |
+
+이미지 선택/프롬프트/삽입 시간·강도는 전문 Add-on의 결정이며 Deno의 내부 conditioning/샘플러는 원저자 구현에 맡긴다. DenoMultiImageLoader 및 DenoLTXSequencer의 저장된 UI contract를 native API export에서 확인한다: 실제 필드와 숫자 타입, image count, insert mode, frame/second 단위, fps, strength, bypass/strength_sync, 첫/후속 stage 연결. 지원 범위를 읽기 전 자동 값 생성 금지. 순서/삽입 시간이 충돌하거나 필수 참조가 누락되면 실행 전 거절. seed/steps/CFG/sigmas/NAG/VAE/업스케일/메모리 설정은 기존 승인 profile에 그대로 결속, 품질 저하형 임의 대체 금지. 기존 audio joint generation을 external audio-driven lip sync로 간주 금지; A08 별도 capability가 담당.
+
+### 최소 연동 검증 계획
+
+1. 기존 성공한 Deno workflow의 native API export 또는 실제 저장 prompt metadata 및 output evidence를 먼저 재사용. UI 원본과 API의 활성 실행 경로/linked inputs, 동일 모델/precision/profile 확인. 기존 graph가 다운로드/외부 경로/시스템 메모리 정리 등 부작용을 요구하면 명시적으로 검토; 안전하게 동일 동작을 보존하는 기존 실행 경로가 없으면 HOLD, 임의 삭제/우회하지 않음.
+2. 원본 UI run과 adapter run에 동일한 승인 입력/seed/profile를 결속하고 실제 실행 graph 차이가 허용 binding에 한정됨을 확인. 비결정적 GPU는 bitwise 동일을 요구하지 않고 사전 정의한 frame/audio/품질/시간·peak VRAM 동등성 측정. 비교 기준과 허용 편차는 실제 baseline 및 독립 평가 보정 전 임의 수치 확정 금지.
+3. 다중 참조·시간 제어에서 필수 input 손실 없는지 경계 사례 확인. 미지원 유형/연결값 충돌/누락/출력 불일치/timeout은 명시 HOLD/UNCERTAIN. 실패 숨기는 fallback 금지.
+4. 기존 Deno 엔진이 정상이어도 Murim 연동 자체의 실행/품질 판정은 별도. A07 NOT_QUALIFIED, PRODUCT_CODING_FROZEN 유지. 다음 우선 작업: native API export/기존 실제 출력 증거 확인 및 연동 가능한 입력 계약 확정; 이후 A06 참조자산/연출 계획과 A08 외부음성 capability 연결 설계. 새 작품 반복 제작·GPU 실행·모델 다운로드·노드 변경 없이 가능한 설계 작업 진행.
+
 ## 1. 실제 현재 수준과 강한 비교 기준
 
 현재 main 직접 읽은 파일:

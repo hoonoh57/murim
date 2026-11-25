@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 Deno 원형 Adopt 및 연동 경계 (최우선)
+
+사용자 Deno 성능 확인을 근거로 원형 채택 설계 선택 확정. A07 최상단 추가 계약 우선; 내부 로직 재개발/전수 역설계 제외. 현재 comfy.py scalar-only/interface GAP 확인. **다음:** 기존 성공 workflow의 native API export/실행 prompt metadata/output evidence를 동일 승인 root에서 읽기 전용 확인하고 실제 typed binding manifest 경계 확정. 이후 A06/A08 연출·참조/음성 계약 연결. 현 worker/server/GPU 현재 상태 미확인; 신규 요청은 안전 범위 확인 후. 무단 모델 다운로드/원본 수정/graph surgery/guard 약화 금지. D0~D5 HOLD/제품 코딩 동결 유지. CURRENT_STATE 최상단 참조.
+
 ## 활성 인계 — 2026-11-25 실제 ComfyUI/LTX 설치 및 전체 graph 실측 (최우선)
 
 사용자 READY E:\ComfyUI_New. 현재 설치 파일 inventory 12/12, 전체 LTX 5 graph 24/24 read/list PASS 및 request/chunk SHA 일치. CURRENT_STATE 최상단에 파일별 SHA/graph/모델 증거. GGUF 후보 6/6 모델 파일명 존재, 새 multi는 author와 동일 graph 및 저장된 참조 한 장. FP8 multi 예제 transition LoRA 목록 미발견 및 VHS mode4, 그대로 실행 금지. 모두 UI graph; 명시적 외부 음성 A2V 없음. **다음:** Deno node source/loader/side effects 및 기존 output metadata/API export/로그를 동일 root에서 확인, 신뢰 API recipe/실행 경로와 입력·출력 계약을 구체화. 신규 설치/다운로드/원본 수정 금지. 실제 GPU/품질/독립 평가 NOT_RUN, D0~D5 HOLD/제품 코딩 동결 유지.
