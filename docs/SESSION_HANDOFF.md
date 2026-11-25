@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 A13 P133 기존 저장/복구 반례
+
+실제 workspace/editorial/director source 확인. 발췌 함수 3개 원문 길이/FNV 대조 후 임시 root 격리 9 probes: 보호6, Director 과거 손상 미검출/최신 tail 유실 silent fallback/Editorial 마지막 event 유실 유효 prefix로 수용 3개 재현. XML→승인 event/book 순차 저장 crash 위험은 source-derived, 실제 crash 미시험. state projection은 원문/자산 경로/일부 provenance 누락, migration SSOT 아님. CURRENT_STATE 최상단 상세. **다음:** A13 P133 aggregate commit 및 cross-process CAS 기존 기반기술(예: SQLite transaction/backup) 최소 격리 위험 실증, 엔진 확정 아님. 실제 Murim Windows 원본/승인 전체 inventory 및 복구는 접근 확보 후. 신규 제품 코드/runner/원본 수정 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 A13 설치 ComfyUI queue/reconcile 반례
 
 실제 설치 0.20.1 server/execution/main/version 4개 전체 byte SHA 검증, read-only 5/5 PASS. source /prompt client ID 지정 가능하지만 기본 dedup 없음, 실제 PromptQueue AST 격리 실행 동일 ID 2개 pending/단일 delete 후1/두 완료 history overwrite/fresh instance empty. HTTP200 cancel/delete는 terminal proof 아님, targeted interrupt snapshot 이후 global flag 호출 경쟁 위험(소스 관측), /api/jobs도 queue/history 기반. 실제 Windows live 실행/재시작/DB/취소 미시험. CURRENT_STATE 최상단 증거. **다음:** A13 P133 기존 M-VML/XML·director book·review/approval/asset provenance 저장 경계 및 원본 보호·격리 round-trip 가능 범위 검증. 신규 제품 코드/runner/GPU/live queue mutation 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
