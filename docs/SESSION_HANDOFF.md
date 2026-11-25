@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 기존 SCAIL/음성 실제 설정 확인 (최우선)
+
+읽기 10/10,12/12 PASS, SCAIL graph 전체 복구·원격과 LF 정규화 일치, 두 graph는 입력 영상/출력 명칭만 다름. 검술 driving 기존 탈락, identity placeholder. GPT-SoVITS 4 WAV 헤더/설정 검증, v3/v4 custom.version=v2 불일치 후보 및 실제 runtime binding 미확인. CURRENT_STATE 최상단 증거 참조. **다음:** 기존 결과 receipt 및 실제 품질 근거 필요한 만큼 확인 후 별도 승인된 엔진 root에서 LTX 실제 workflow/모델·환경 inventory. 현 root 외 접근/임의 GPU 실행 불가, 새 설치·코드 변경 및 실패 실험 반복 금지. D0~D5 HOLD/코드 동결 유지.
+
 ## 활성 인계 — 2026-11-25 READ 복구 후 기존 파일 실측 (최우선)
 
 연속 read-only 5/5, 8/8 PASS, 요청/데이터 SHA 일치. 현재 Murim LTX API 파일 0 bytes, WAN API 3811 bytes, SCAIL workflow 2개, 과거 영상/음성 후보 폴더 존재 확인. **다음:** 기존 결과 영수증 및 SCAIL graph 원본 대조, 실제 관측 가능한 증거 확보 후 별도 승인된 엔진 경로의 LTX/설치 환경 확인. 현재 GPU 및 품질 NOT_RUN; 새 설치/제품 코드 금지. D0~D5 HOLD. CURRENT_STATE 최상단 참조.
