@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 A01/A12 시장 실제 재무·유통 반례 / 동종 정산 미확보
+
+中文在线 공식 2025 보고 p14/32/35/186 원문 이미지 확인: 연결 매출+42.92%, 판매비+105.02%, 지배주주 손실 확대, 판매비 매출57.54%, 숏드라마+IP 합산 총이익률38.41%(-8.95%p). 개별 ReelShort/AI 작품으로 귀속 금지. Lackadaisy 감독 광고비 회수 불가·상품 의존 자기보고, Sundance Unrest gross/net 혼재 및 지원금/유통비 부족12,777 USD, Thunder Road 무급 노동/분기 수취/지역 공개 오류 손실 사례. 비동종 반례이며 실제 동종 신규 AI 창작자 정산·완전원가 cohort 없음. 자체 batch 81.63 wall-second/output-second, 품질 합격·전체 비용 미확보. CURRENT_STATE 최상단 상세 원출처/범위. **다음:** 15공정 통합 심사 원장에 새 AV·평가기·시장 실제 반례 역대조, 해결 가능 설계 GAP와 권한/환경/독립 증거 blocker 분리 및 종료 조건 명확화. 반복 검색·신규 콘텐츠/제품 코드·외부 전송·지출 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 독립 평가 후보 실소스 검증 / 실행 권한 미확보
 
 VideoPhy2 공개 human label/test/weight, VideoGen-RewardBench 공개 전문가 비교, Microsoft AVGen-Bench 실제 main 1049eabac472d479fe5feeb1ee202961f8e0982a 소스 확인. 발췌 함수 격리 실행: p01_03 frame count121에서 default32/89 omitted/max step4, substring 점수 parser 비정형 응답 오류 및 unknown→0. 집계 missing 제외 재정규화, 실패 clip 평균 제외, Gemini uncertain 감점0 및 같은 모델 두 질의, Q-Align 비상업 제한. 도구의 benchmark 용도와 Murim non-compensatory 승격 분리; 기존 A11/A15 계약 유지. Korea 대상 Prolific 공개 모집 경로/일반 관객 비용 산식 확보, 실제 참여자/전문가/API/권리/봉인 holdout/추론 미확보. 상세 source pin/실측 CURRENT_STATE 최상단. **다음:** P0 A01/A12 시장 비교 cohort 및 실제 수취/완전원가 근거 확보 경로 확인. 독립 평가는 승인된 실제 evaluator/독립 참조 및 봉인 시험 확보 시 재개. 외부 영상 전송/지출/게시/새 영상/제품 수정 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
