@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 큐 결속 및 로컬 영수증 대조 (최우선)
+
+기존 agent source의 queue-key ledger/별도 root 선택과 local claim 확인. 11/23 두 요청의 응답 미확보 재확인, 배포 요청 네 파일 SHA256은 CURRENT_STATE 최상단 참조. **다음 작업: 현장 read-only 증거 확보**(기존 CMD READY root, 이전 ledger claim 유무 및 hash, 의도된 E:/ComfyUI_New 네 파일 존재/hash). 원격에서 실제 확인할 수 없으므로 같은 검색 반복/새 요청·재시작·재전송 금지. 현장 증거로 상태 분류 및 안전한 기존 경로 확보 후 현재 inventory/대표 비교. D0~D5 HOLD/제품 코딩 동결. 타 프로젝트 변경·삭제·격리 별도 승인.
+
 ## 활성 인계 — 2026-11-25 실제 과거 Windows 증거 복구 및 큐 안전 경계 (최우선)
 
 이전 [전 공정 통합 설계](research/assurance/INTEGRATED_DESIGN_REVIEW_2026-11-25.md) 유지. 실제 Drive 과거 영수증 7개를 읽고 파일 해시/일부 chunk와 WAN 3개 가중치 이름 대조를 수행했다. 2026-11-21 환경 목록·기존 사용자 실행 증거 복구이지 현재 장비 실증 아님. 현재 상태 원장에 근거 ID/hash 및 실제 관측 범위 기록. WAN/SCAIL 기존 생성 성공과 검술 실패, LTX2.3 파일·workflow 존재, SoVITS v2 과거 합성과 성우 연기 미달을 보존. 우선 기존 후보 비교, 무단 신규 설치 금지.

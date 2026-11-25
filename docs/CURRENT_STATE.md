@@ -1,3 +1,9 @@
+## 2026-11-25 — 큐 안전성 소스 확인 / 현장 증거 필요
+
+- 기준 main edb78b74ee8f87f9cbae9110ef6aec107be6ffbb. 중앙 `scripts/google-drive-local-agent.mjs` blob 8e8d7f1cacf0d11ffd50b484f47b85de3063001a L915~967 확인: ledger/lock은 queue 경로 hash에 결속되고 root는 로컬 환경에서 별도 선택; current 요청의 expected_head=null이며 claim은 local ledger에 생성, receipt/claim 존재 시 재실행 방지. root binding이 없는 기존 요청의 다른 root 실행 가능성은 소스 기반 위험이며 실제 발생 여부 UNKNOWN. 11/23 두 정확한 res 파일명 Drive 검색 결과 0건 재확인. 현재 연결/claim/root 미확인. 새 요청·재시작·기존 작업 변경 금지.
+- 실제 보존된 req-ltx-studio-deploy-20261123-a.json SHA256 cd44a2ee51e2c38fe6346027d8609a7f102342b3bb7cbf9c3b8f0932f788776d의 4 create payload를 읽기 전용 decode/hash: E:/ComfyUI_New/LTX_Talking_Studio.py d2d4351d19131904412d886c6a2db1ef02fa79def124c3e354446b183f4ecdfe; LTX_Talking_Studio_START.cmd ce7dbfd9672761cf62021da213cd9492e8d6a00c402cb3da20345854fa5b1d95; LTX_Talking_Studio_README.md ed8cd038a69df77453521fa6443f4426efd48df3797cc1d4404197f12210b08a; LTX_Talking_Studio_test.py f3609878637483762cc39267f5ef403921d541c42a66fd86e0aafdd68968bfc3. 기존 preview receipt의 ledger key gdrive-current-42dacb81aface258은 과거 증거. 현재 로컬 존재·해시·claim 확인 필요. 파일 일치도 그 요청의 실행 인과/현재 root를 단독 입증하지 않는다.
+- 현재 연결 도구에 Windows shell/기존 Actions 신규 dispatch 경로 확인되지 않음. 기존 실행기 재사용, 새 workflow/runner 작성 안 함. 사용자에게 기존 CMD READY 표시와 최소 읽기 전용 현장 확인만 요청(제품 수동 편집 없음). 미응답 요청과 타 프로젝트 파일은 보존. blocker ENVIRONMENT_ISSUE, 제품 상태 UNKNOWN/신규 변경 없음. D0~D5 HOLD 및 코드 동결 유지.
+
 ## 2026-11-25 — 기존 Windows 실행 증거 복구 및 큐 안전 경계 확인
 
 - 기준 main 5e3a5c6adff9b7047e50335c9347cd24c242437a. 기존 중앙 agent/LOCAL_WORKSPACE_AGENT.md blob ed5670db956ca37a6e4ff5a1757341331951c494 및 SESSION_HANDOFF 2e91cef449f7276fb03bf5e2fd867baa420740b4 확인. Murim 원격 개발/Windows 소비, 로컬 선택 root만 허용, current API는 임의 명령/GPU 실행 불가, Git metadata 원격 CRUD 제외.
