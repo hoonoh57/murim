@@ -1,3 +1,9 @@
+## 2026-11-25 — 15공정 P0 후속 통합 재심사 / 다음 A13 실행 경계
+
+- 기준 main 0511b323c241a49ded9a6fd15e89b363ce191a0f, 이전 통합 재심사 기준 dc2bf1fcd1bfecf935cd70fa775acdfca7fff5a8 대비 실제 compare 6 commits/4 docs modified/delete0/product/test0. 기존 통합 심사/공정 원장 및 D0~D5 원계약과 A07/A10/A13/A14 상세 계약을 대조. [통합 재심사 최상단](research/assurance/INTEGRATED_DESIGN_REVIEW_2026-11-25.md)에 15행 최신 증거와 잔여 조건, P0 조사 종료/재개 및 P1 작업 명시. 신규 실물/실행 시험, Windows HEAD/status, 독립 심사, repo-wide audit 아님.
+- P0 기존 AV 1개 조립본 decode 범위 완료(원본 snapshot/전편 미검증); A07 실제 guide range 실패, A10 누락 merge/PTS·AAC clock 반례, A11/A15 실제 외부 함수/coverage/권리 반례, A01/A12 재무·유통 반례는 기존 non-compensatory/typed binding/time/evidence/settlement 계약의 근거. 별도 bench PRODUCT_DEFECT와 Murim 제품 및 benchmark 오용 AUTHORITY_DRIFT 구분. 독립 평가/시장 동종 실제 증거 미확보 ENVIRONMENT_ISSUE, 동일 연구 반복 종료. 기존 5개 투자 후보 제외.
+- 다음: A13/A07 기존 설치 ComfyUI server/queue/history 소스의 동일 prompt_id/응답 유실/queue-history/cancel 범위를 필요한 파일만 읽기 전용으로 실제 설치 계약과 대조. live queue mutation/GPU/새 runner/제품 수정 금지. 접근 불가 시 HOLD; 공개 upstream 반복 조사 금지. 독립 evaluator/봉인 reference/권리/실행 및 시장 실제 동종 자료 확보 시 해당 P0 재개. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED. 
+
 ## 2026-11-25 — P0 A01/A12 실제 재무·유통 원자료 비교 / 시장 보정 미확보
 
 - 시작 main 3a5d7e139e0d4e0382c7d60e2534afcd5f12b2f8, 활성 인계/Q1/MARKET-M0~M6/A12 원문 대조. 기존 한국 펀딩 반복 대신 공개 재무/독립 애니메이션/유통 손익 사례를 연구자가 비교 범위로 선정(동종 cohort 아님).

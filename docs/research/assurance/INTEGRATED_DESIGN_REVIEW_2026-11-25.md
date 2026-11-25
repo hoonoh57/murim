@@ -1,3 +1,39 @@
+## 2026-11-25 P0 후속 통합 재심사 — 실제 반례 결속 및 연구 종료/재개 조건 (최우선)
+
+기준 main 0511b323c241a49ded9a6fd15e89b363ce191a0f. 이전 통합 재심사 기준 dc2bf1fcd1bfecf935cd70fa775acdfca7fff5a8 대비 GitHub compare 실제 6 commits, 4 docs modified, deletion0, 제품/테스트 변경0. 신규 실험을 수행한 것이 아닌 기존 CURRENT_STATE 상단 3개 실측 및 drama_bench 배치 원장의 작성자 역대조. A07/A10/A11/A15/A12/A13 상세 기존 계약과 D0~D5 원문 재확인. 최신 Windows root/HEAD/status/worker/GPU 별도 미조회; 기존 연결 증거의 범위만 인정. 독립 심사 및 repo-wide 자동 감사 아님.
+
+| 공정 | 현 증거/설계 반영 | 남은 선행 조건 및 재개 단위 |
+|---|---|---|
+| A01 | Q1 및 中文在线/독립 영화 실제 유통·재무 반례로 판매비/지원금/수취·원가 분리 | 동종 신규 성공/실패 cohort 및 정산/비용/노출 또는 검증된 계약·원가 대안, 독립 concept/선별 검증. 후보5 제외 유지 |
+| A02 | W009 제작 기록 일부, provenance/coverage/pack 계약 | 권리 확보 실제 작품 AV, 독립 pack 효과. 동일 미수신 영상 검색 종료 |
+| A03 | Deno native/installed input 및 실제 별도 bench 실패, 출력 1개 격리 decode | 실제 설치 version/target runtime/권리·비용/강한 비교군. 단일 출력을 전체 엔진 합격으로 승격 금지 |
+| A04 | A/B 및 B r2 실제 원고, 작성자 비독립, outline/state/repair 설계 | 동등 brief/강한 baseline 및 독립 작가·관객 검증 |
+| A05 | 83초 도식 animatic, 국소 수정, rational timeline | 실제 연출/동작/시간·공간 관측 및 독립 비교 |
+| A06 | 일부 참조 이미지와 허위 QA 격리, asset state/rights 설계 | 승인 reference/권리·다각도/손·소품·identity 실제 검증 |
+| A07 | 원형 Adopt 유지. 별도 bench 5초/121frame의 guide168 범위 초과; 기존 typed binding·stage별 guide/latent preflight 요구의 실제 반례. p01_03 조립본 H264121 frames strict decode PASS | 실제 설치 multi-guide/latent 유효 index, native attempt/provenance, target 품질/시간/비용·독립 평가. Deno 원본 수정 없음 |
+| A08 | WAV header4 및 p01_03 AAC priming1024/PCM tail32 samples; 발화·presentation clock 분리 | 실제 한국어 발화/음성 binding·권리·원어민 평가/정렬/외부 voice-first sync. ambient clip은 발화 검증 아님 |
+| A09 | 격리 DSP 및 실제 clip -50.7 LUFS, true peak -26.5 dBTP, nonzero ambient signal | source role/실제 stem·master 청취, delivery profile 및 권리. ambient를 최종 master 기준으로 불합격 처리 금지 |
+| A10 | 12개 계획 중 p02_05 누락에도 merge OK, pilot video55.458333s. p01_03 DTS/decoded PTS 연속, B-frame packet PTS 역전60 정상, AAC presentation241632 vs PCM241664 | mandatory shot coverage, actual attempt binding, source→presentation→edit transform, 실제 전편 decode/round-trip/편집 품질. 기존 A10 계약 보강 근거, 구현 검증 아님 |
+| A11 | 실제 AV decode/누락과 외부 AVGen-Bench available-only 평균/실패 제외 반례 | required evidence 미평가 HOLD, 전체 감상·전문/관객 평가·repair uplift. 기술 PASS를 의미 PASS로 변경 금지 |
+| A12 | 실제 판매비/현금/유통 손실 반례, 81.63 wall-s/output-s 단일 실패 포함 batch | 실제 품질 합격당 완전원가/정산, 시장/정책/권리/계정/별도 승인. 공개/수익 확대 없음 |
+| A13 | 기존 Core/Studio/CRUD, A13 durable intent/reconcile/lease/CAS/cutover 설계. bench filename skip/last candidate/완료 표시의 위험 확인 | 기존 설치 provider의 prompt_id/queue/history/restart/cancel 실제 의미 및 기존 persistence 원본·복구 위험 검증. 구현 이후 host/registry/runtime 인수 별도 |
+| A14 | 기존 Director 및 자연어 proposal/diff/CAS, 실제 batch FINISHED≠전체 성공 반례 | 실제 상태/권한/경쟁 앱 비전문가 비교, 구현 후 WYSIWYG |
+| A15 | Q4 구조 반례, 공개 VideoPhy2/VideoGen-RewardBench 후보; AVGen-Bench 발췌 함수 32/121 frames, 89 omitted, substring 오판·unknown→0 실제 실행. Q-Align 비상업 제한 | strict enum/coverage/unknown contract, rights/환경, independent evaluator/봉인 reference/holdout/selection lift. 공개 label은 개발 보정 후보, 독립 시험 아님 |
+
+위 15행은 기존 수용 요구를 대체하거나 전체 기능 inventory 완전성을 입증하지 않는다. A01~A15 NOT_QUALIFIED. 구체적인 반례로 기존 설계에서 이미 요구한 typed guide/mandatory coverage/actual PTS/평가 독립·실수취 조건의 필요성이 확인됐으므로 이 조건을 새 문서/별도 평가 엔진으로 중복 구현하지 않는다. Deno bench orchestration PRODUCT_DEFECT는 Murim/Deno 엔진 결함으로 확대 금지. 공개 benchmark를 작품 합격 게이트로 오용하는 것은 AUTHORITY_DRIFT, 실제 미확보 환경/권리/데이터는 ENVIRONMENT_ISSUE; 독립 의미 품질/실패 원인은 UNKNOWN 또는 NOT_RUN으로 구분.
+
+### 실행 가능한 설계 작업과 실제 증거 blocker
+
+| 범위/책임 | 종료 및 재개 조건 |
+|---|---|
+| P0 실물 관측 (A07~A10) | 기존 1개 조립본 strict AV decode 및 packet/frame/sample 분석 완료 범위 종료. 원본 전체 digest/atomic snapshot과 실제 Windows/pilot 전체 decode는 미확인. 신규 생성/반복 전체 전송 없이 새로운 구체 가정 및 승인된 실제 경로가 있을 때만 재개 |
+| P0 독립 평가 (A11/A15, 전 공정) | 공개 후보/원본 함수 및 모집 경로 조사 완료 범위 종료. 실제 독립 전문 평가자·권리/예산/실행 환경·봉인 reference와 사전 기준 확보 후 실제 평가·보정. 자기평가·같은 clip 반복·공개 label로 우회 금지 |
+| P0 시장 (A01/A12) | 비동종 반례 확보 범위 종료, qualified pool0. 동종 성공·실패 정산/완전원가/노출 자료 또는 검증된 계약·원가 대안과 사전 조건 확보 시만 재개. 동일 공개 사례 반복 검색 금지 |
+| P1 기술/구조 (A13/A07/A14) | 독립 평가/시장 blocker와 별도로 기존 승인 읽기 도구로 실제 provider 실행 의미를 확인 가능. 다음 단일 작업: 기존 설치 ComfyUI server/queue/history 관련 소스에서 동일 prompt_id 재제출, 응답 유실, queue/history 전이, cancel/interrupt 범위의 계약을 실제 설치 revision에 묶어 반증하고 A13/A07 reconcile 설계와 대조. 필요한 소스만 읽고 live API/GPU/queue mutation/신규 runner/제품 수정 금지. 원본 경로/접근 제한이면 HOLD, 기존 공개 upstream 재조사 반복 금지. 관측 가능한 source 의미와 실제 runtime 시험 구분 |
+| P1 이후 실증 | 실제 권한 및 전제 확보 후 기존 도구로 위험 가정의 최소 시험, 강한 baseline/독립 평가/원가, M-VML 원본·승인 의미 보존/restore 및 독립 설계 반대심사. 미구현 host/registry 0/100/300/500/최종 UI/실제 신규 runtime은 구현 인수 조건이며 사전 통과로 표현 금지 |
+
+D0 HOLD(동종 시장 및 직접 경쟁 앱 비교), D1 HOLD(부분 기술 증거; 실제 대상 환경/권리/품질/비용), D2 HOLD(DESIGN_DRAFT_CONVERGED 범위; 실제 구현 가능성/독립 반증), D3 HOLD(독립 평가 보정/holdout), D4 HOLD(부분 실물 및 격리 decode; 동등 비교/독립 평가/실제 비용), D5 HOLD(D0~D4 및 독립 반대심사/누락·통합 근거). 모든 필수 gate/권리/승인 불변. DESIGN_HOLD / PRODUCT_CODING_FROZEN / COMPETITIVE_ALPHA_NOT_PROVEN / REMEDIATION_REQUIRED. 실제 지출/외부 전송/게시/새 영상/제품 수정 없음. 본 재심사는 독립 D5 승인 및 제품 착수 승인 아님.
+
 # Murim 전 공정 통합 설계 수렴 및 D0~D5 반대심사 v0.1
 
 2026-11-25 | 기준 22b0f9acc90c8d5d3fd09e902166ae2e96eecfd6. 사용자 요청: 남은 설계 한 번에 개선. 중앙 agent 권위 5개 문서(AGENTS 37a5f9998781dfef746d92b13d8c70dea6e31378, portability 7562db6dd81958e3aa656e6b301d196c3cd2d149, runbook 3145a55042708efb6b589cb4f2e2c04319bbba1d, state edeed0966ece795d1adee368981e08082334174e, handoff 2e91cef449f7276fb03bf5e2fd867baa420740b4)의 적용 경로/활성 상태 확인. Murim GitHub 원본/Windows 소비 계약 우선. 역사상 중앙 Windows Murim read PASS가 있으나 현재 실제 연결/로컬 HEAD/사용자 변경 확인 안 됨. 이번 변경은 remote 문서만. 독립 평가자나 repo-wide 자동 검사 아님.

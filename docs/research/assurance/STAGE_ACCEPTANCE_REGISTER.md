@@ -1,3 +1,7 @@
+## 2026-11-25 P0 후속 통합 재심사 (최신 참조)
+
+[통합 심사 최상단](INTEGRATED_DESIGN_REVIEW_2026-11-25.md)에 15행 최신 실제 근거/잔여 조건 및 P0 조사 종료·재개/P1 A13 기존 실행 경계 검증 우선순위 반영. 이 원장의 모든 기존 합격 조건 유지. A01~A15 NOT_QUALIFIED, D0~D5 HOLD, 신규 코드 금지.
+
 # 공정별 선행 심사 원장 v0.1
 
 2026-11-24 | [상위 심사 계약](../../MURIM_ASSURANCE_AND_COMMITTED_EXECUTION_CONTRACT.md)

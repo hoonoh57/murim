@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 15공정 P0 후속 통합 재심사
+
+이전 통합 기준 dc2bf1fcd1bfecf935cd70fa775acdfca7fff5a8 이후 6 commits/4 docs modified/delete0. 기존 통합 원장 최상단 15행 실제 AV/외부 평가기/재무 반례 및 잔여 조건, P0 종료·재개 조건 반영. 기존 p01_03 조립본 기술 decode 범위 완료, 독립 의미·동종 시장/정산·권리/실제 실행 미확보. **다음:** A13/A07 기존 설치 ComfyUI server/queue/history 관련 소스 read-only로 prompt_id 재제출/응답 유실/queue-history 전이/cancel 범위 확인, reconcile/중복 실행 방지 설계 대조. 실제 runtime 시험과 소스 분석 구분. live queue mutation/GPU/새 runner/제품 수정/동일 조사 반복 금지. 기존 P0는 새로운 독립 참조/승인 환경/동종 정산 근거 확보 시 재개. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 활성 인계 — 2026-11-25 A01/A12 시장 실제 재무·유통 반례 / 동종 정산 미확보
 
 中文在线 공식 2025 보고 p14/32/35/186 원문 이미지 확인: 연결 매출+42.92%, 판매비+105.02%, 지배주주 손실 확대, 판매비 매출57.54%, 숏드라마+IP 합산 총이익률38.41%(-8.95%p). 개별 ReelShort/AI 작품으로 귀속 금지. Lackadaisy 감독 광고비 회수 불가·상품 의존 자기보고, Sundance Unrest gross/net 혼재 및 지원금/유통비 부족12,777 USD, Thunder Road 무급 노동/분기 수취/지역 공개 오류 손실 사례. 비동종 반례이며 실제 동종 신규 AI 창작자 정산·완전원가 cohort 없음. 자체 batch 81.63 wall-second/output-second, 품질 합격·전체 비용 미확보. CURRENT_STATE 최상단 상세 원출처/범위. **다음:** 15공정 통합 심사 원장에 새 AV·평가기·시장 실제 반례 역대조, 해결 가능 설계 GAP와 권한/환경/독립 증거 blocker 분리 및 종료 조건 명확화. 반복 검색·신규 콘텐츠/제품 코드·외부 전송·지출 금지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / REMEDIATION_REQUIRED.
