@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 미응답 큐 보관 후 안전한 재연결 (최우선)
+
+사용자 승인으로 미응답 LTX 요청 2개를 Drive sibling archive로 이동, 활성 큐 미응답 0/원본 ID·크기 보존. 실제 로컬 동기화 및 CMD 실행은 미확인. **다음 단일 작업:** 동기화 완료 및 로컬 current-workspace에 두 요청이 없는지 확인 후 기존 start-workspace-agent.cmd로 Murim root 선택, READY 실제 경로 확인. 그 후 새로운 read-only 연결 검증/현재 inventory. 기존 요청 재전송·새 설치·무단 제품 코드 변경 금지. D0~D5 HOLD 및 코드 동결 유지. 상세 CURRENT_STATE 최상단.
+
 ## 활성 인계 — 2026-11-25 큐 결속 및 로컬 영수증 대조 (최우선)
 
 기존 agent source의 queue-key ledger/별도 root 선택과 local claim 확인. 11/23 두 요청의 응답 미확보 재확인, 배포 요청 네 파일 SHA256은 CURRENT_STATE 최상단 참조. **다음 작업: 현장 read-only 증거 확보**(기존 CMD READY root, 이전 ledger claim 유무 및 hash, 의도된 E:/ComfyUI_New 네 파일 존재/hash). 원격에서 실제 확인할 수 없으므로 같은 검색 반복/새 요청·재시작·재전송 금지. 현장 증거로 상태 분류 및 안전한 기존 경로 확보 후 현재 inventory/대표 비교. D0~D5 HOLD/제품 코딩 동결. 타 프로젝트 변경·삭제·격리 별도 승인.

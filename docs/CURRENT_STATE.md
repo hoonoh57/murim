@@ -1,3 +1,9 @@
+## 2026-11-25 — 사용자 승인 미응답 요청 2건 보관 완료
+
+- 사용자 현장 확인: 기존 Windows CMD 종료, 지정 claim glob 및 E:/ComfyUI_New/LTX_Talking_Studio* 읽기 전용 확인 출력 없음. 해당 경로의 관측이며 실제 요청 처리 여부 UNKNOWN 유지.
+- 명시 승인 후 Drive current-workspace에서 req-comfyui-ltx-workflow-inspect-20261123-a.json (ID 1Bu0NT_-J1KulqBiUVKMOjg2prsEkiLHO, 501 bytes), req-ltx-studio-deploy-20261123-a.json (ID 1buMmIYz2NzUXgTii8T3qT19619ELbFKM, 46734 bytes)만 sibling archive archived-unresolved-requests-20261125 (ID 13vP8OMRZC9fezubU-Um5MqOaMy0pTuQz)로 metadata-only parent 이동. 원본 ID/이름/크기 보존, 삭제/내용 변경 없음. 이동 전 활성 큐 56개, 이동 후 54개(요청 27 및 대응 응답 27), 미응답 0, archive 2개; 두 목록 pagination 종료 확인. 현재 Windows 동기화/실제 실행은 아직 NOT_VERIFIED. 타 프로젝트 요청 재실행 금지.
+- 다음: 로컬 Drive 동기화 완료 및 current-workspace의 두 요청 부재 확인 후 기존 start-workspace-agent.cmd 실행, 신뢰 로컬 root E:\gpt\projects\comfyui\murim 선택. READY 실제 경로 확인 후 새 read-only 연결 probe 및 inventory. 기존 엔진 경로는 승인된 root 내에서만 접근, GPU 실행 capability 별도. 제품 코드 0, D0~D5 HOLD, A01~A15 NOT_QUALIFIED, DESIGN_HOLD / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-25 — 큐 안전성 소스 확인 / 현장 증거 필요
 
 - 기준 main edb78b74ee8f87f9cbae9110ef6aec107be6ffbb. 중앙 `scripts/google-drive-local-agent.mjs` blob 8e8d7f1cacf0d11ffd50b484f47b85de3063001a L915~967 확인: ledger/lock은 queue 경로 hash에 결속되고 root는 로컬 환경에서 별도 선택; current 요청의 expected_head=null이며 claim은 local ledger에 생성, receipt/claim 존재 시 재실행 방지. root binding이 없는 기존 요청의 다른 root 실행 가능성은 소스 기반 위험이며 실제 발생 여부 UNKNOWN. 11/23 두 정확한 res 파일명 Drive 검색 결과 0건 재확인. 현재 연결/claim/root 미확인. 새 요청·재시작·기존 작업 변경 금지.
