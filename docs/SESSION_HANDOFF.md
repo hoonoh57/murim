@@ -1,3 +1,7 @@
+## 활성 인계 — 2026-11-25 P0 기존 Deno 출력 파일 접근 차단
+
+기존 Drive Windows 에이전트 왕복·작업공간 목록 조회 PASS, 그러나 대표 MP4 읽기 WORKSPACE_PARENT_NOT_FOUND. 현재 `ComfyUI/output`의 기존 두 작업 ID 검색은 2/2 PASS(각 858항목, denied0/incomplete=false), 파일 결과 모두0. 마지막 receipt ID 1fLV1801kITBEaCSruvLwrQZjHtrGNegN, 현재 상태 원장 최상단에 요청/응답 SHA 및 세부 증거. 연결 자체는 동작하며 실물 접근 차단 원인 ENVIRONMENT_ISSUE, 이동·삭제 등 세부 원인 UNKNOWN. 다음 단일 작업은 승인 범위에서 기존 Deno 영상/음성의 실제 현존 경로 또는 사용자 제공 기존 파일 확보 후 size/stream/PTS/decode 실측 가능성 확인. 동일 출력 경로 반복 검색/새 영상 제작/새 runner/원본 수정/제품 코딩 금지. 독립 평가 및 시장 근거 별도 blocker, D0~D5 HOLD / A01~A15 NOT_QUALIFIED / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED 유지.
+
 ## 활성 인계 — 2026-11-25 15공정 후속 통합 재심사 (최우선)
 
 기준 dc2bf1fcd1bfecf935cd70fa775acdfca7fff5a8, 이전 통합 이후 12 commits/docs8 only/delete0. 통합 심사 최상단 15행 실제 근거/미결 조건, D0~D5 및 선행/구현 인수 구분. **다음:** 기존 Deno MP4/audio 1개 size/stream/PTS/decode 가능한 승인 read-only 경로 확인(마지막 root E:/ComfyUI_New, queue80 unmatched0). CRUD는 shell/GPU 제어 아님. 새 runner/원본 수정/전체 출력 전송/동일 예시 제작 금지. 평가 독립성/시장 cohort/권리 등 별도 blocker. D0~D5 HOLD, 전 공정 NOT_QUALIFIED, 코드 동결 유지. CURRENT_STATE 및 INTEGRATED_DESIGN_REVIEW 최상단 참조.

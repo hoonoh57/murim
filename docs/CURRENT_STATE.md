@@ -1,3 +1,10 @@
+## 2026-11-25 — P0 기존 Deno 실물 접근 검증 / 현재 출력 파일 미발견
+
+- 복구 시작 GitHub main HEAD 7530d896664310a864ae929fa86735d3864d4cf3, 중앙/프로젝트 권위 및 활성 인계 재대조. Windows 기존 Drive 작업 큐는 실제 요청/응답 가능, 요청 SHA-256 일치. 현 선택 작업공간의 목록은 이전 ComfyUI 구조와 일치하나 절대 루트·Murim local Git 상태는 별도 미확인.
+- 대표 `ComfyUI/output/40c1230dd7244615_shot_001_00001.mp4` 읽기는 WORKSPACE_PARENT_NOT_FOUND, 해당 파일명 검색 0건. 마지막 좁은 cohort 검색 request `comfy-deno-av-cohort-20261125-a` (Drive ID 1pIhShcUB0GdVO2jm-1KalfqxCF_XNreN, SHA256 8c75667efbcc765f2f4303bfe4aa76fc41b7144d0a2b0d862eea4b6379020b23), receipt ID 1fLV1801kITBEaCSruvLwrQZjHtrGNegN (SHA256 46d330903a8c9fbb3747ea354a8ca79fb18f2de475757d098b7c7c763bf5c5ac), 2/2 검색 PASS, 각각 858항목 scanned, denied0/incomplete=false, `40c1230dd7244615_shot_` 및 `049633c34c914bfd_shot_` 모두 결과0. 응답 시간 1462ms, side_effects_possible=false. 마지막 큐 88 entries, 해당 요청 응답 확인.
+- 분류: 실증 자료 접근 차단 ENVIRONMENT_ISSUE, 파일 이동/삭제/다른 저장 위치 여부 UNKNOWN. 검색 PASS는 파일 존재나 영상 품질 PASS가 아님. 새 영상 제작, 원본 수정, 모델 변경, 제품 코드 변경 없음. MP4/audio bytes·digest·stream·PTS·decode·의미 평가 NOT_RUN.
+- 재개 조건: 기존 Deno 영상/음성 쌍의 실제 현존 경로(승인 작업공간 내) 또는 사용자가 직접 제공한 기존 실물 확보. 그때 읽기 전용 크기·헤더·실제 stream/timing/decode 검증 가능한 경로 확인. 동일 경로 반복 검색, 무단 전체 출력 전송, 신규 영상 생성·새 runner 금지. 독립 평가·시장 cohort blocker 유지. D0~D5 HOLD / A01~A15 NOT_QUALIFIED / PRODUCT_CODING_FROZEN / REMEDIATION_REQUIRED.
+
 ## 2026-11-25 — 15공정 후속 통합 재심사 / 실제 blocker 우선순위
 
 - 기준 dc2bf1fcd1bfecf935cd70fa775acdfca7fff5a8, 이전 통합 5e3a5c6adff9b7047e50335c9347cd24c242437a 대비 실제 compare ahead12 commits, docs8 modified/delete0/product/test0. A01~A15 및 D0~D5/A12~A14 권위 대조. 전체 repo 감사 아님. Drive queue80, unmatched0, 마지막 승인 root E:/ComfyUI_New. 현 worker/server/GPU 및 Murim local git 상태 미실측.
